@@ -2,9 +2,7 @@ import { Router } from 'express';
 import axios from 'axios'
 import * as line from '@line/bot-sdk';
 
-import {handleEvent} from './bot'
-
-import config from './config'
+import { handleEvent } from './Bot'
 
 const routes = Router();
 
