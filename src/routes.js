@@ -2,7 +2,7 @@ import { Router } from 'express';
 import axios from 'axios'
 import * as line from '@line/bot-sdk';
 
-import {handleEvent} from './bot'
+import { handleEvent } from './Bot'
 
 import config from './config'
 

@@ -6,7 +6,7 @@ import routes from './routes';
 
 import * as line from '@line/bot-sdk';
 
-import config from './config'
+import config from './Config/Line'
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(logger('dev', {
   skip: () => app.get('env') === 'test'
 }));
 
-app.use('/webhook', line.middleware(config.line_bot))
+app.use('/webhook', line.middleware(config))
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
