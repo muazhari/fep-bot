@@ -4,8 +4,6 @@ import * as line from '@line/bot-sdk';
 
 import { handleEvent } from './Bot'
 
-import config from './config'
-
 const routes = Router();
 
 /**
