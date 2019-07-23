@@ -1,4 +1,4 @@
-import { getStore, setStore } from "./Services/Store";
+import { getStore, setStore } from "../Services/Store";
 import * as line from "@line/bot-sdk";
 import config from "./Config/Line";
 
