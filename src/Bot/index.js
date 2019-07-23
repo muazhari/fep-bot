@@ -1,13 +1,33 @@
 import { getStore, setStore } from "../Services/Store";
 import * as line from "@line/bot-sdk";
+import { FEPList, StoreAdvance, Basic } from "./Features";
 
 import config from "../Config/Line";
 
-const CommandList = {
-    fepl: new FEPList(),
-    storeAdv: new StoreAdvance(),
-    basic: new Basic()
+class Commands {
+  constructor(props) {
+    this.props = props;
+  }
+
+  sendMessage = msg => {
+    const echo = {
+      type: "text",
+      text: msg
+    };
+    return client.replyMessage(this.props.event.replyToken, echo);
   };
+}
+
+// Bot main declare
+const Bot = new Commands();
+
+export default Bot;
+
+const CommandList = {
+  fepl: new FEPList(),
+  storeAdv: new StoreAdvance(),
+  basic: new Basic()
+};
 
 // create LINE SDK client
 const client = new line.Client(config);
@@ -30,21 +50,19 @@ export const handleEvent = async event => {
 };
 
 const handleCommand = props => {
+  Bot(props);
   const { event } = props;
-  const x = new Commands(props);
-
-  const { fepl, storeAdv, basic } = connectProps;
 
   const commandList = {
-    add: fepl.add,
-    upd: fepl.update,
-    rem: fepl.remove,
-    view: fepl.view,
-    rstore: storeAdv.reset_store,
-    pstore: storeAdv.pre_store,
-    bstore: storeAdv.backup_store,
-    "]]": basic.admin,
-    help: basic.help
+    add: FEPList.add,
+    upd: FEPList.update,
+    rem: FEPList.remove,
+    view: FEPList.view,
+    rstore: StoreAdvance.reset_store,
+    pstore: StoreAdvance.pre_store,
+    bstore: StoreAdvance.backup_store,
+    "]]": Basic.admin,
+    help: Basic.help
   };
 
   const content_splitted = event.message.text.split(" ");
@@ -72,17 +90,3 @@ const handleCommand = props => {
     }
   }
 };
-
-class Commands {
-  constructor(props) {
-    this.props = props;
-  }
-
-  sendMessage = msg => {
-    const echo = {
-      type: "text",
-      text: msg
-    };
-    return client.replyMessage(this.props.event.replyToken, echo);
-  };
-}
