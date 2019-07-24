@@ -1,4 +1,4 @@
-import { Bot, StoreAdvance } from "../../Bot/internal";
+import { Bot } from "../../Bot/internal";
 
 export const Access = Bot => {
   const blacklist_check = () => {

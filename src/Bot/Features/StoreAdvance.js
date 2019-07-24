@@ -1,4 +1,4 @@
-import { Bot, Access } from "../../Bot/internal";
+import { Bot } from "../../Bot/internal";
 import { getStore, setStore } from "../../Services/Store";
 
 export const StoreAdvance = Bot => {

@@ -44,7 +44,6 @@ export const Handler = async event => {
   const Worker = new Bot({ event });
   
   const { FEPList, StoreAdvance, Basic } = Worker.Command
-  console.log(Worker.Command)
 
   const commandList = {
     add: FEPList.add,

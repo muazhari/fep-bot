@@ -1,4 +1,4 @@
-import { Bot, Access, StoreAdvance } from "../../Bot/internal";
+import { Bot } from "../../Bot/internal";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 
 import { getStore, setStore } from "../../Services/Store";
@@ -25,7 +25,7 @@ export const FEPList = Bot => {
 
       FEPStoreCRUD.view([args[0], args[args.length - 1]]);
 
-      Access.backup_store("silent");
+      Bot.Command.Access.backup_store("silent");
     } else {
       Bot.sendMessage(
         `${Bot.command_prefix}add <batch> <name> <campus> <room>`
@@ -45,7 +45,7 @@ export const FEPList = Bot => {
       };
       FEPStoreCRUD.update_store(data);
       Bot.sendMessage("Done!");
-      StoreAdvance.backup_store.backup_store("silent");
+      Bot.Command.StoreAdvance.backup_store.backup_store("silent");
     } else {
       Bot.sendMessage(
         `${Bot.command_prefix}upd <batch> <number> <name> <campus> <room>`
@@ -62,7 +62,7 @@ export const FEPList = Bot => {
       };
       FEPStoreCRUD.delete_store(data);
       Bot.sendMessage("Done!");
-      StoreAdvance.backup_store("silent");
+      Bot.Command.StoreAdvance.backup_store("silent");
     } else {
       Bot.sendMessage(`${Bot.command_prefix}del <batch> <number>`);
     }
