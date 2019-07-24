@@ -1,13 +1,10 @@
-import Bot from "../Bot";
+import Bot from "../../Bot";
+// import { batch_list } = "../../Bot";
+import { getStore, setStore } from "../../Services/Store";
 
-export default class FepStoreCRUD extends Bot.Commands {
-  constructor(props) {
-    super(props);
-    this.event = this.props.event;
-  }
 
-  set_store = data => {
-    if (Object.keys(batch_list).includes(data.batch)) {
+const set_store = data => {
+    if (Object.keys(Bot.batch_list).includes(data.batch)) {
       const store = getStore("fep");
       if (Object.keys(store).includes(data.batch)) {
         store[data.batch] = [];
@@ -17,10 +14,10 @@ export default class FepStoreCRUD extends Bot.Commands {
 
       setStore({ fep: store });
     }
-  };
+};
 
-  update_store = data => {
-    if (Object.keys(batch_list).includes(data.batch)) {
+const update_store = data => {
+    if (Object.keys(Bot.batch_list).includes(data.batch)) {
       const store = getStore("fep");
       try {
         const selected_user_data = [data.name, data.campus, data.room];
@@ -30,14 +27,19 @@ export default class FepStoreCRUD extends Bot.Commands {
         this.set_store(data);
       }
     }
-  };
+};
 
-  delete_store = data => {
+const delete_store = data => {
     const store = getStore("fep");
 
     if (store[data.batch].length > 0) {
       store[data.batch].splice(parseInt(data.num, 10) - 1, 1);
     }
     setStore({ fep: store });
-  };
-}
+};
+  
+export default {
+  set_store,
+  delete_store,
+  update_store  
+} 

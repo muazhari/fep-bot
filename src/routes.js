@@ -2,7 +2,7 @@ import { Router } from 'express';
 import axios from 'axios'
 import * as line from '@line/bot-sdk';
 
-import { handleEvent } from './Bot'
+import { Handler } from './Bot'
 
 const routes = Router();
 
@@ -14,7 +14,9 @@ const routes = Router();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 routes.post('/webhook', (req, res) => {
-  Promise.all(req.body.events.map(handleEvent))
+  Promise.all(req.body.events.map(event => {
+    Handler(event)
+  }))
     .then(result => res.json(result))
     .catch(e => {
       console.log(e)
