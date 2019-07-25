@@ -1,4 +1,20 @@
 import app from './app';
 
 const { PORT = 8080 } = process.env;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`)); // eslint-disable-line no-console
+
+let baseURL = process.env.BASE_URL
+
+app.listen(PORT, () => {
+  if (baseURL) {
+    console.log(`listening on ${baseURL}:${PORT}`);
+  } else {
+//     console.log("It seems that BASE_URL is not set. Connecting to ngrok...")
+//     ngrok.connect(PORT, (err, url) => {
+//       if (err) throw err;
+
+//       baseURL = url;
+//       console.log(`listening on ${baseURL}`);
+//     });
+  }
+});
+

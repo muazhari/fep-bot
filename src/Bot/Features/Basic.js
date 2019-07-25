@@ -1,17 +1,29 @@
-import { Bot, Access, StoreAdvance } from "../../Bot/internal";
+import { Bot, StoreAdvance, command_prefix } from "../../Bot/internal";
 
 export const Basic = Bot => {
   const admin = args => {
     const { source } = Bot.props.event;
-    if (Access.whitelist_check(source.userId)) {
-      Bot.sendMessage("privilage: {}".format(Bot.props.event));
+    if (Bot.Command.Access.whitelist_check(source.userId)) {
+      Bot.replyText("privilage: {}".format(Bot.props.event));
     }
   };
 
   const help = () => {
     const msg =
-      "add <batch> <name> <campus> <room> - .add a kamu Kemanggisan 000\n    upd <batch> <number> <name> <campus> <room> - .upd a 1 kamu Kemanggisan 000\ndel <batch> <number> - .del a 1\nview <batch> - .view a / .view\n    ";
-    Bot.sendMessage(msg);
+      `FEP Days & Rooms Commands
+1. add <batch> <name> <campus> <room>
+    ${command_prefix}add a kamu Kemanggisan 000
+
+2. upd <batch> <number> <name> <campus> <room>
+    ${command_prefix}upd a 1 kamu Kemanggisan 000
+
+3. del <batch> <number>
+    ${command_prefix}del a 1
+
+4. view <batch>
+    ${command_prefix}view a`;
+    
+    Bot.replyText(msg);
   };
 
   return {

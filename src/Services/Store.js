@@ -1,21 +1,33 @@
-const store = {}
+import storage from "node-persist";
 
-const setStore = obj => {
-  Object.keys(obj).map(key => {
-    store[key] = obj[key]
+// const fepStore = storage.create({});
+
+const init = async () => {
+  await storage.init()
+}
+
+const setStore = async obj => {
+ Object.keys(obj).map(async key => {
+    await storage.setItem(key, obj[key])
   })
 }
 
-const getStore = storeName => {
-  return store[storeName]
+const getStore = async storeName => {
+  return await storage.getItem(storeName)
 }
 
-const delStore = storeName => {
-  delete store[storeName]
+const remStore = async storeName => {
+  await storage.removeItem(storeName)
+}
+
+const updStore = async (storeName, value) => {
+  await storage.updateItem(storeName, value)
 }
 
 export default {
+  init,
   setStore,
   getStore,
-  delStore,
+  remStore,
+  updStore,
 }

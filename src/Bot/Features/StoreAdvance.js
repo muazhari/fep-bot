@@ -1,51 +1,67 @@
-import { Bot, Access } from "../../Bot/internal";
-import { getStore, setStore } from "../../Services/Store";
+import { Bot, command_prefix, batch_list } from "../../Bot/internal";
+import FEPCleaner from "../../Bot/Helper/FEPCleaner";
+import Store from "../../Services/Store";
+import storage from "node-persist";
+import autoBind from "auto-bind";
 
-export const StoreAdvance = Bot => {
-  const reset_store = data => {
-    const { storeName } = data;
-    setStore({ [storeName]: {} });
-    Bot.sendMessage("Done!");
-  };
+import axios from "axios";
 
-  const pre_store = args => {
-    if (args.length <= 2) {
-      const default_url =
-        "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/5fe8b969ab5d3286f31026951edbb73ea030b460/feplist";
-      const data = {
-        url: args.length === 1 ? default_url : args[0],
-        user_id: args[args.length - 1].source.userId
-      };
-      // const feplc = cleaner(data.url)
-      // feplc.run()
-      // const { store } = feplc
-      // setStore({ fep: store })
-      Bot.sendMessage("Done!");
-    } else {
-      Bot.sendMessage(`${Bot.command_prefix}pre_store <url>`);
+
+const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
+
+
+export const StoreAdvance = Bot  => {
+  const reset_store = async args => {
+    if (args.length === 1) {
+      await Store.setStore({ [args[0]]: {} });
+      Bot.replyText("Done!");
     }
   };
 
-  const backup_store = args => {
+  const pre_store = async args => {
+    if (args.length <= 1) {
+      const data = {
+        url: args.length === 1 ? args[0] : default_url
+      };
+
+      const response = await axios({
+        method: "get",
+        url: default_url,
+        // responseType: "text"
+      });
+      
+      console.log(typeof response.data);
+      await Store.setStore({ fep: response.data });
+      Bot.replyText("Done!");
+    } else {
+      Bot.replyText(`${command_prefix}pre_store <url>`);
+    }
+  };
+
+  const backup_store = async args => {
     const headers = {
       "Content-type": "application/json"
     };
 
-    const store = getStore();
-    const { backup } = store;
+    const fep = await Store.getStore("fep");
+    const backup = await Store.getStore("backup_fep");
 
-    if (backup.fep) {
-      backup.fep = [];
+    if (backup) {
+      backup.splice(-20);
     } else {
-      backup.fep.slice(-20);
+      const backup = [];
     }
     // const response = requests.post('https://paste.c-net.org/')
-    // if (args === null || args !== 'silent') {
-    //   Bot.sendMessage(`Done!\n${response.text}`)
-    // }
-    // backup.fep.push([[Date.now(), response]])
 
-    setStore({ ...store, backup });
+    const timeStamp = Date.now();
+
+    backup.push([{ timeStamp: timeStamp, content: fep }]);
+
+    await Store.setStore({ backup_fep: backup });
+
+    if (args !== "silent") {
+      Bot.replyText(`Done!\n${Date.now()}`);
+    }
   };
 
   return {
