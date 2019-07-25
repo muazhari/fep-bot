@@ -8,12 +8,11 @@ export const batch_list = {
   e: "26 - 03 SEPTEMBER 2019"
 };
 
-const command_prefix = ".";
+export const command_prefix = "/";
 
 const messageToCommandValidate = chat => {
   const content_command = chat[0].slice(1, chat[0].length);
   const content_args = chat.slice(1, chat.length).map(item => item.trim());
-  // content_args.push(this.event)
 
   console.log(content_command, content_args);
 
@@ -39,26 +38,34 @@ const handleCommand = (commandList, chat) => {
 };
 
 export const Handler = async event => {
-
   console.log(event);
-  const Worker = new Bot({ event });
-  
-  const { FEPList, StoreAdvance, Basic } = Worker.Command
-
-  const commandList = {
-    add: FEPList.add,
-    upd: FEPList.udpdate,
-    rem: FEPList.remove,
-    view: FEPList.view,
-    rstore: StoreAdvance.reset_store,
-    pstore: StoreAdvance.pre_store,
-    bstore: StoreAdvance.backup_store,
-    "]]": Basic.admin,
-    help: Basic.help
-  };
+  const Worker = new Bot({ event });  
+  // Worker.Command.StoreAdvance.pre_store([])
   
 
-  const chat_splitted = event.message.text.split(" ");
-  const response = handleCommand(commandList, chat_splitted);
+  if (event.type === 'message') {
+    const profile = await Worker.client.getProfile(event.source.userId) 
 
+    const { FEPList, StoreAdvance, Basic } = Worker.Command
+
+    const commandList = {
+      add: FEPList.add,
+      upd: FEPList.update,
+      rem: FEPList.remove,
+      view: FEPList.view,
+      rstore: StoreAdvance.reset_store,
+      pstore: StoreAdvance.pre_store,
+      bstore: StoreAdvance.backup_store,
+      "]]": Basic.admin,
+      help: Basic.help
+    };
+  
+      const chat_splitted = event.message.text.split(" ");
+      handleCommand(commandList, chat_splitted);
+  }
+  
+  if (event.type === 'memberJoined') { 
+    const profile = await Worker.client.getProfile(event.joined.members[0].userId)
+    Worker.sendMessage(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`) 
+  }
 };
