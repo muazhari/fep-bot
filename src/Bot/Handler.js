@@ -100,10 +100,10 @@ export const Handler = event => {
 };
 
 const handleText = Bot => {
- 
+
   const { message, replyToken, source } = Bot.props.event;
-  const { FEPList, StoreAdvance, Basic, Button } = Bot.Command;
-  
+  const { FEPList, StoreAdvance, Basic, Template } = Bot.Command;
+
 
   const commandList = {
     add: FEPList.add,
@@ -115,7 +115,10 @@ const handleText = Bot => {
     bstore: StoreAdvance.backup_store,
     "]]": Basic.admin,
     help: Basic.help,
-    button: Button.view
+    button: Template.button,
+    profile: Basic.profile,
+    confirm: Template.confirm,
+    imap: Template.imap,
   };
 
   const chat_splitted = message.text.split(" ");
@@ -129,7 +132,7 @@ const handleImage = Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "downloaded",
+      "../src/Bot/Assets/downloaded",
       `${message.id}.jpg`
     );
     const previewPath = path.join(
@@ -172,12 +175,12 @@ const handleVideo = Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "downloaded",
+      "../src/Bot/Assets/downloaded",
       `${message.id}.mp4`
     );
     const previewPath = path.join(
       __dirname,
-      "downloaded",
+      "../src/Bot/Assets/downloaded",
       `${message.id}-preview.jpg`
     );
 
@@ -213,7 +216,7 @@ const handleAudio = Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "downloaded",
+      "../src/Bot/Assets/downloaded",
       `${message.id}.m4a`
     );
 
