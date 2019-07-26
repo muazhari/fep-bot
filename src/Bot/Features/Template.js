@@ -52,46 +52,30 @@ export const Template = Bot => {
     });
   };
 
-  const imap = () => {
+  const bifest = () => {
+    const backgroundImageURL = `${baseURL}/static/imagemap/background.jpg`;
+
     return Bot.sendMessage({
       type: "imagemap",
-      baseUrl: `${baseURL}/static/rich`,
-      altText: "Imagemap alt text",
-      baseSize: { width: 1040, height: 1040 },
-      actions: [
-        {
-          area: { x: 0, y: 0, width: 520, height: 520 },
-          type: "uri",
-          linkUri: "https://store.line.me/family/manga/en"
-        },
-        {
-          area: { x: 520, y: 0, width: 520, height: 520 },
-          type: "uri",
-          linkUri: "https://store.line.me/family/music/en"
-        },
-        {
-          area: { x: 0, y: 520, width: 520, height: 520 },
-          type: "uri",
-          linkUri: "https://store.line.me/family/play/en"
-        },
-        {
-          area: { x: 520, y: 520, width: 520, height: 520 },
-          type: "message",
-          text: "URANAI!"
-        }
-      ],
+      baseUrl: backgroundImageURL,
+      altText: "Bifest 2019",
+      baseSize: {
+        width: 1040,
+        height: 585
+      },
       video: {
-        originalContentUrl: `${baseURL}/static/imagemap/video.mp4`,
-        previewImageUrl: `${baseURL}/static/imagemap/preview.jpg`,
+        originalContentUrl: `${baseURL}/static/imagemap/bifest2019.mp4`,
+        previewImageUrl: `${baseURL}/static/imagemap/bifest2019_preview.jpg`,
         area: {
-          x: 280,
-          y: 385,
-          width: 480,
-          height: 270
+          x: 156,
+          y: 137,
+          width: 738,
+          height: 371
         },
         externalLink: {
-          linkUri: "https://line.me",
-          label: "LINE"
+          linkUri:
+            "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/",
+          label: "Lebih lengkap"
         }
       }
     });
