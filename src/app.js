@@ -26,8 +26,11 @@ app.use(
 );
 
 // serve static and downloaded files
-app.use("/static", express.static("src/static"));
-app.use("/downloaded", express.static("src/downloaded"));
+app.use("static", express.static(path.join(__dirname, "Bot/Assets/static")));
+app.use(
+  "downloaded",
+  express.static(path.join(__dirname, "Bot/Assets/downloaded"))
+);
 
 app.use("/webhook", line.middleware(config));
 
