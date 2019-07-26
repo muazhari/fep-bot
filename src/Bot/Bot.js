@@ -20,7 +20,7 @@ export class Bot {
     };
   }
 
-  replyText(token, texts) {
+  replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
     return this.client.replyMessage(
       this.props.event.replyToken,

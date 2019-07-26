@@ -4,7 +4,7 @@ import path from "path";
 import cp from "child_process";
 
 // base URL for webhook server
-let baseURL = process.env.BASE_URL;
+export const baseURL = process.env.BASE_URL;
 
 export const batch_list = {
   a: "22 - 27 JULI 2019",
@@ -32,7 +32,7 @@ const handleCommand = (commandList, chat) => {
     if (Object.keys(commandList).includes(content_command)) {
       if (
         commandList[content_command] &&
-        commandList[content_command].length > 0
+        commandList[content_command].length >= 1
       ) {
         commandList[content_command](content_args);
       } else {
@@ -42,7 +42,7 @@ const handleCommand = (commandList, chat) => {
   }
 };
 
-export const Handler = async event => {
+export const Handler = event => {
   console.log(event);
   const Worker = new Bot({ event });
   // Worker.Command.StoreAdvance.pre_store([])
@@ -68,12 +68,9 @@ export const Handler = async event => {
       }
 
     case "memberJoined":
-      const profile = await Worker.client.getProfile(
-        event.joined.members[0].userId
-      );
-      return Worker.sendMessage(
-        `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
-      );
+      return Worker.client.getProfile(event.joined.members[0].userId).then(profile => {
+        Worker.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`)
+        })
 
     case "follow":
       return Worker.replyText("Got followed event");
@@ -102,12 +99,12 @@ export const Handler = async event => {
   }
 };
 
-const handleText = async Bot => {
+const handleText = Bot => {
   const { message, replyToken, source } = Bot.props.event;
 
-  const profile = await Bot.client.getProfile(source.userId);
+  // const profile = await Bot.client.getProfile(source.userId);
 
-  const { FEPList, StoreAdvance, Basic } = Bot.Command;
+  const { FEPList, StoreAdvance, Basic, Button } = Bot.Command;
 
   const commandList = {
     add: FEPList.add,
@@ -118,7 +115,8 @@ const handleText = async Bot => {
     pstore: StoreAdvance.pre_store,
     bstore: StoreAdvance.backup_store,
     "]]": Basic.admin,
-    help: Basic.help
+    help: Basic.help,
+    button: Button.view,
   };
 
   const chat_splitted = message.text.split(" ");
@@ -161,7 +159,7 @@ const handleImage = Bot => {
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    return Bot.client.replyMessage({
+    Bot.client.replyMessage({
       type: "image",
       originalContentUrl,
       previewImageUrl
@@ -202,7 +200,7 @@ const handleVideo = Bot => {
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    return Bot.client.replyMessage({
+    Bot.client.replyMessage({
       type: "video",
       originalContentUrl,
       previewImageUrl
@@ -233,7 +231,7 @@ const handleAudio = Bot => {
   }
 
   return getContent.then(({ originalContentUrl }) => {
-    return Bot.client.replyMessage({
+    Bot.client.replyMessage({
       type: "audio",
       originalContentUrl,
       duration: message.duration
@@ -243,7 +241,7 @@ const handleAudio = Bot => {
 
 const handleLocation = Bot => {
   const { message, replyToken } = Bot.props.event;
-  return Bot.client.replyMessage({
+  Bot.client.replyMessage({
     type: "location",
     title: message.title,
     address: message.address,
@@ -254,7 +252,7 @@ const handleLocation = Bot => {
 
 const handleSticker = Bot => {
   const { message, replyToken } = Bot.props.event;
-  return Bot.client.replyMessage({
+  Bot.client.replyMessage({
     type: "sticker",
     packageId: message.packageId,
     stickerId: message.stickerId
