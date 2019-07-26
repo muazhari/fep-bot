@@ -9,6 +9,7 @@ import * as line from "@line/bot-sdk";
 import config from "./Config/Line";
 
 import Store from "./Services/Store";
+
 Store.init();
 
 const app = express();
@@ -24,13 +25,12 @@ app.use(
     skip: () => app.get("env") === "test"
   })
 );
+console.log(path.join(__dirname, "../src/Bot/Assets/static"))
 
-// serve static and downloaded files
-app.use("static", express.static(path.join(__dirname, "Bot/Assets/static")));
+app.use("/static", express.static(path.join(__dirname, "../src/Bot/Assets/static")));
 app.use(
-  "downloaded",
-  express.static(path.join(__dirname, "Bot/Assets/downloaded"))
-);
+  "/downloaded",
+  express.static(path.join(__dirname, "../src/Bot/Assets/downloaded"))
 
 app.use("/webhook", line.middleware(config));
 

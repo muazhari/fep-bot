@@ -1,6 +1,6 @@
 import { getStore, setStore } from "../Services/Store";
 import * as line from "@line/bot-sdk";
-import { FEPList, StoreAdvance, Basic, Access } from "./internal";
+import { FEPList, StoreAdvance, Basic, Access, Button } from "./internal";
 import fs from "fs";
 
 import config from "../Config/Line";
@@ -16,7 +16,8 @@ export class Bot {
       FEPList: FEPList(this),
       StoreAdvance: StoreAdvance(this),
       Basic: Basic(this),
-      Access: Access(this)
+      Access: Access(this),
+      Button: Button(this),
     };
   }
 

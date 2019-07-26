@@ -100,11 +100,10 @@ export const Handler = event => {
 };
 
 const handleText = Bot => {
+ 
   const { message, replyToken, source } = Bot.props.event;
-
-  // const profile = await Bot.client.getProfile(source.userId);
-
   const { FEPList, StoreAdvance, Basic, Button } = Bot.Command;
+  
 
   const commandList = {
     add: FEPList.add,
@@ -116,7 +115,7 @@ const handleText = Bot => {
     bstore: StoreAdvance.backup_store,
     "]]": Basic.admin,
     help: Basic.help,
-    button: Button.view,
+    button: Button.view
   };
 
   const chat_splitted = message.text.split(" ");
