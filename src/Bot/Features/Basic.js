@@ -7,6 +7,22 @@ export const Basic = Bot => {
       Bot.replyText("privilage: {}".format(Bot.props.event));
     }
   };
+  
+  const profile = () => {
+    const { source } = Bot.props.event
+    
+    if (source.userId) {
+        return Bot.client.getProfile(source.userId)
+          .then((profile) => Bot.replyText(
+            [
+              `Display name: ${profile.displayName}`,
+              `Status message: ${profile.statusMessage}`,
+            ]
+          ));
+      } else {
+        return Bot.replyText('Bot can\'t use profile API without user ID');
+      }
+  }
 
   const help = () => {
     const msg =
@@ -28,6 +44,7 @@ export const Basic = Bot => {
 
   return {
     admin,
-    help
+    help,
+    profile
   };
 };

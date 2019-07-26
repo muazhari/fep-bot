@@ -1,6 +1,6 @@
 import { getStore, setStore } from "../Services/Store";
 import * as line from "@line/bot-sdk";
-import { FEPList, StoreAdvance, Basic, Access, Button } from "./internal";
+import { FEPList, StoreAdvance, Basic, Access, Template } from "./internal";
 import fs from "fs";
 
 import config from "../Config/Line";
@@ -17,7 +17,7 @@ export class Bot {
       StoreAdvance: StoreAdvance(this),
       Basic: Basic(this),
       Access: Access(this),
-      Button: Button(this),
+      Template: Template(this),
     };
   }
 
@@ -27,6 +27,11 @@ export class Bot {
       this.props.event.replyToken,
       texts.map(text => ({ type: "text", text }))
     );
+  }
+  
+  sendMessage(message) {
+    message = Array.isArray(message) ? message : [message];
+    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => (msg)))
   }
 
   downloadContent(messageId, downloadPath) {
