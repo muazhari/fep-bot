@@ -30,14 +30,11 @@ const handleCommand = (commandList, chat) => {
   if (content_prefix === command_prefix) {
     const { content_command, content_args } = messageToCommandValidate(chat);
     if (Object.keys(commandList).includes(content_command)) {
-      if (
-        commandList[content_command] &&
-        commandList[content_command].length >= 1
-      ) {
-        commandList[content_command](content_args);
-      } else {
-        commandList[content_command]();
-      }
+       if (commandList[content_command].length >= 1){
+          commandList[content_command](content_args);
+        } else {
+          commandList[content_command]();
+        }
     }
   }
 };
@@ -100,7 +97,6 @@ export const Handler = event => {
 };
 
 const handleText = Bot => {
-
   const { message, replyToken, source } = Bot.props.event;
   const { FEPList, StoreAdvance, Basic, Template } = Bot.Command;
 
@@ -118,7 +114,7 @@ const handleText = Bot => {
     button: Template.button,
     profile: Basic.profile,
     confirm: Template.confirm,
-    imap: Template.imap,
+    bifest: Template.bifest,
   };
 
   const chat_splitted = message.text.split(" ");

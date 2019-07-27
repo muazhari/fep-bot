@@ -8,11 +8,11 @@ export const Basic = Bot => {
     }
   };
   
-  const profile = () => {
+  const profile = (arg) => {
     const { source } = Bot.props.event
     
     if (source.userId) {
-        return Bot.client.getProfile(source.userId)
+        return Bot.client.getProfile(arg || source.userId)
           .then((profile) => Bot.replyText(
             [
               `Display name: ${profile.displayName}`,

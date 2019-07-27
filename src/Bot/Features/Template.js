@@ -1,4 +1,8 @@
 import { Bot, StoreAdvance, command_prefix, baseURL } from "../../Bot/internal";
+import YoutubeDL from "../../Bot/Helper/YoutubeDL";
+import ResponseCheck from "../../Bot/Helper/ResponseCheck";
+import Store from "../../Services/Store";
+
 
 export const Template = Bot => {
   const { event } = Bot.props.event;
@@ -51,18 +55,25 @@ export const Template = Bot => {
     });
   };
 
-  const bifest = () => {
+  const bifest = async () => {
     const backgroundImageURL = `${baseURL}/static/background`;
-    console.log(backgroundImageURL);
+    
+    
+    const youtubeUrl = new YoutubeDL('https://www.youtube.com/watch?v=nikc3FeeVs8')
+    const options = {
+      force: true
+    }
+    const {url: videoURL, thumbnail: thumbnailURL} = await youtubeUrl.generateUrl('bifest', options)
+    console.log(videoURL)
 
     return Bot.sendMessage({
       type: "imagemap",
       baseUrl: backgroundImageURL,
       altText: "Bifest 2019",
-      baseSize: { width: 1040, height: 1040 },
+      baseSize: { width: 1040, height: 600 },
       actions: [
         {
-          area: { x: 0, y: 0, width: 1040, height: 1040 },
+          area: { x: 0, y: 0, width: 1040, height: 600 },
           type: "uri",
           linkUri:
             "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/"
@@ -70,12 +81,12 @@ export const Template = Bot => {
       ],
       video: {
         // originalContentUrl: `${baseURL}/static/imagemap/bifest2019.mp4`,
-        originalContentUrl:
-          "https://r2---sn-npoe7ney.googlevideo.com/videoplayback?expire=1564189277&ei=_U07XeeHKIuToAOX8pSQDA&ip=112.215.65.127&id=o-ANsMFQ0_Rr2D3G2l0LCu5NftSRrjT1eAdmRZoUJpwLTt&itag=22&source=youtube&requiressl=yes&mime=video%2Fmp4&ratebypass=yes&dur=60.162&lmt=1557567004104746&fvip=6&beids=9466586&c=WEB&txp=2216222&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=ALgxI2wwRAIgMMIZ5BPSU8iIP_bMS7QAKNPQJYmt9fMiIe8YIOttE1wCIDKSwXzy3RG4PmLXP_ZlHFQ18bAb7RXc-UU5dKz4B0xG&cm2rm=sn-xmjxajvh-jb3s7k,sn-nposk7l&fexp=9466586&req_id=3b4644aeeebaa3ee&rm=sn-npoz77l&ipbypass=yes&redirect_counter=3&cms_redirect=yes&mip=140.213.11.178&mm=34&mn=sn-npoe7ney&ms=ltu&mt=1564167695&mv=m&mvi=1&pl=24&lsparams=ipbypass,mip,mm,mn,ms,mv,mvi,pl&lsig=AHylml4wRgIhAIoJFZpC__NenmYw-5L7PG1HogJJB-VpcfrsGHbY2i1kAiEAnjzPaeCmQPUOlKW36nP6d9waxzuT9pO8GZGBtXpYmqU=",
         previewImageUrl: `${baseURL}/static/imagemap/bifest2019_preview.jpg`,
+        originalContentUrl: videoURL,
+        // previewImageUrl: thumbnailURL,
         area: {
           x: 156,
-          y: 137,
+          y: 126,
           width: 738,
           height: 371
         },

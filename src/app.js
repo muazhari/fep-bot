@@ -25,7 +25,6 @@ app.use(
     skip: () => app.get("env") === "test"
   })
 );
-console.log(path.join(__dirname, "../src/Bot/Assets/static"))
 
 // serve static and downloaded files
 app.use("/static", express.static(path.join(__dirname, "../src/Bot/Assets/static")));
