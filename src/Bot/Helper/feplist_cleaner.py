@@ -53,7 +53,7 @@ class cleaner:
             
             if len(args) >= 1 and '' not in args:
                 data = {
-                    'batch': args[0],
+                    'batch': batch,
                     'name': args[1],
                     'campus': args[2],
                     'room': '' if len(args) < 4 else args[3],

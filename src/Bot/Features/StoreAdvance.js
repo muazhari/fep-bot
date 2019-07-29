@@ -34,8 +34,9 @@ export const StoreAdvance = Bot  => {
 //       console.log(typeof response.data);
       
       const response = await FEPCleaner.run(data.url)
-      console.log(response)
       const parsed = JSON.parse(response)
+      console.log(parsed)
+
       
       await Store.setStore({ fep: parsed });
       Bot.replyText("Done!");
