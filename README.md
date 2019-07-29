@@ -1,4 +1,4 @@
 # fep-bot
 
 ## License
-License. See the [LICENSE](LICENSE) file.
+See the [LICENSE](LICENSE) file.
