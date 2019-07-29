@@ -41,7 +41,10 @@ const handleCommand = (commandList, chat) => {
 
 export const Handler = event => {
   console.log(event);
+  // if (event.source.userId === 'U016bfe22df53b903b404a80efdd8ec65') { 
+    
   const Worker = new Bot({ event });
+  // Worker.log()
   // Worker.Command.StoreAdvance.pre_store([])
 
   switch (event.type) {
@@ -94,7 +97,8 @@ export const Handler = event => {
     default:
       throw new Error(`Unknown event: ${JSON.stringify(event)}`);
   }
-};
+  // }
+}
 
 const handleText = Bot => {
   const { message, replyToken, source } = Bot.props.event;
@@ -115,6 +119,7 @@ const handleText = Bot => {
     profile: Basic.profile,
     confirm: Template.confirm,
     bifest: Template.bifest,
+    greet: Basic.greet
   };
 
   const chat_splitted = message.text.split(" ");
@@ -127,41 +132,39 @@ const handleImage = Bot => {
 
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
-      __dirname,
+      __dirname, 
       "../src/Bot/Assets/downloaded",
-      `${message.id}.jpg`
-    );
+      `${message.id}.jpg`)
     const previewPath = path.join(
       __dirname,
-      "downloaded",
+      "../src/Bot/Assets/downloaded",
       `${message.id}-preview.jpg`
     );
 
     getContent = Bot.downloadContent(message.id, downloadPath).then(
       downloadPath => {
-        // ImageMagick is needed here to run 'convert'
-        // Please consider about security and performance by yourself
-        cp.execSync(
-          `convert -resize 240x jpeg:${downloadPath} jpeg:${previewPath}`
-        );
+        // cp.execSync(
+        //   `convert -resize 240x jpeg:${downloadPath} jpeg:${previewPath}`
+        // );
+        console.log('premature_resolve', downloadPath)
 
         return {
           originalContentUrl:
             baseURL + "/downloaded/" + path.basename(downloadPath),
-          previewImageUrl: baseURL + "/downloaded/" + path.basename(previewPath)
+          // previewImageUrl: baseURL + "/downloaded/" + path.basename(previewPath)
         };
       }
-    );
+    ).catch((err) => {throw err});
   } else if (message.contentProvider.type === "external") {
     getContent = Promise.resolve(message.contentProvider);
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    Bot.client.replyMessage({
-      type: "image",
-      originalContentUrl,
-      previewImageUrl
-    });
+    // Bot.client.replyMessage({
+    //   type: "image",
+    //   originalContentUrl,
+    //   previewImageUrl
+    // });
   });
 };
 
@@ -198,11 +201,11 @@ const handleVideo = Bot => {
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    Bot.client.replyMessage({
-      type: "video",
-      originalContentUrl,
-      previewImageUrl
-    });
+    // Bot.client.replyMessage({
+    //   type: "video",
+    //   originalContentUrl,
+    //   previewImageUrl
+    // });
   });
 };
 
@@ -229,11 +232,11 @@ const handleAudio = Bot => {
   }
 
   return getContent.then(({ originalContentUrl }) => {
-    Bot.client.replyMessage({
-      type: "audio",
-      originalContentUrl,
-      duration: message.duration
-    });
+    // Bot.client.replyMessage({
+    //   type: "audio",
+    //   originalContentUrl,
+    //   duration: message.duration
+    // });
   });
 };
 
@@ -250,9 +253,9 @@ const handleLocation = Bot => {
 
 const handleSticker = Bot => {
   const { message, replyToken } = Bot.props.event;
-  Bot.client.replyMessage({
-    type: "sticker",
-    packageId: message.packageId,
-    stickerId: message.stickerId
-  });
+  // Bot.client.replyMessage({
+  //   type: "sticker",
+  //   packageId: message.packageId,
+  //   stickerId: message.stickerId
+  // });
 };

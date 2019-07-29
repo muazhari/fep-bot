@@ -1,7 +1,10 @@
-import { getStore, setStore } from "../Services/Store";
+import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
 import { FEPList, StoreAdvance, Basic, Access, Template } from "./internal";
-import fs from "fs";
+import fs from "fs-extra";
+import mkdirp from "mkdirp";
+import path from "path";
+
 
 import config from "../Config/Line";
 
@@ -19,6 +22,33 @@ export class Bot {
       Access: Access(this),
       Template: Template(this),
     };
+  }
+  
+  async log() {
+    let log_chat = await Store.getStore("log_chat")
+    if (!log_chat || Object.keys(log_chat).length === 0) {
+      log_chat = {
+        groups: {},
+        users: {},
+      }
+    }
+    
+    // switch (this.props.event.source.type) {
+        // case 'user':
+        //     const { userId } = this.props.event.source
+        //     if (!log_chat['users'][userId]) {
+        //       log_chat['users'][userId] = []
+        //     }
+        //     log_chat['user'][userId].push(this.props.event)
+        //     return await Store.setStore({ log_chat: log_chat })
+        // case 'group':
+        //     const { groupId } = this.props.event.source
+        //     if (!log_chat['groups'][groupId]) {
+        //       log_chat['groups'][groupId] = []
+        //     }
+        //     log_chat['groups'][groupId].push(this.props.event)
+        //     return await Store.setStore({ log_chat: log_chat })   
+    // }
   }
 
   replyText(texts) {
@@ -38,10 +68,11 @@ export class Bot {
     return this.client.getMessageContent(messageId).then(
       stream =>
         new Promise((resolve, reject) => {
-          const writable = fs.createWriteStream(downloadPath);
-          stream.pipe(writable);
-          stream.on("end", () => resolve(downloadPath));
-          stream.on("error", reject);
+          const writeable = fs.createWriteStream(downloadPath);
+            stream.pipe(writeable);
+            stream.on("end", () => resolve(downloadPath));
+            stream.on("error", reject);
+          
         })
     );
   }
