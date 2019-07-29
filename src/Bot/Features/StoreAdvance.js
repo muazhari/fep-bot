@@ -4,10 +4,11 @@ import Store from "../../Services/Store";
 import storage from "node-persist";
 import autoBind from "auto-bind";
 
+
 import axios from "axios";
 
 
-const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
+// const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
 
 
 export const StoreAdvance = Bot  => {
@@ -19,19 +20,25 @@ export const StoreAdvance = Bot  => {
   };
 
   const pre_store = async args => {
-    if (args.length <= 1) {
+    if (args.length === 1) {
       const data = {
-        url: args.length === 1 ? args[0] : default_url
+        url: args[0]
       };
 
-      const response = await axios({
-        method: "get",
-        url: default_url,
-        // responseType: "text"
-      });
+//       const response = await axios({
+//         method: "get",
+//         url: data.url,
+//         // responseType: "text"
+//       });
       
-      console.log(typeof response.data);
-      await Store.setStore({ fep: response.data });
+//       console.log(typeof response.data);
+      
+      const response = await FEPCleaner.run(data.url)
+      const parsed = JSON.parse(response)
+      console.log(parsed)
+
+      
+      await Store.setStore({ fep: parsed });
       Bot.replyText("Done!");
     } else {
       Bot.replyText(`${command_prefix}pre_store <url>`);

@@ -45,7 +45,9 @@
     "node-persist": "^3.0.5",
     "pug": "^2.0.3",
     "rimraf": "^2.6.3",
-    "youtube-dl": "^2.0.0"
+    "youtube-dl": "^2.0.0",
+    "fs-extra": "^8.1.0",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

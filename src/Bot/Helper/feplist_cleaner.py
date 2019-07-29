@@ -1,14 +1,15 @@
 import requests
 import json
+import sys
+import unicodedata
 
 def hasNumbers(inputString):
     return any(char.isdigit() for char in inputString)
 
 
 class cleaner:
-    def __init__(self, url='https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/108e665e24b63184f92444436b83142a4bf1fb0b/feplist'):
-        # self.file = requests.get(url).text.splitlines()
-        self.file = list(open('fepl.txt'))
+    def __init__(self, url):
+        self.file = requests.get(url).text.splitlines()
         self.store = {}
         self.batch_list = ['a', 'b', 'c', 'd', 'e']
 
@@ -45,11 +46,10 @@ class cleaner:
 
             lstrip = self.file[line].strip()
             lsplit = self.file[line].split('-')
-
-            args = list(map(str.strip, lsplit))
-
+            normalize = [unicodedata.normalize('NFKD', l).encode('ascii','ignore') for l in lsplit]
+            args = list(map(str.strip, normalize))
             args.insert(0, self.numbers_sect(args))
-
+          
             if len(args) >= 1 and '' not in args:
                 data = {
                     'batch': batch,
@@ -59,10 +59,11 @@ class cleaner:
                 }
                 self.set_store(data)
 
-fp = cleaner()
-fp.run()
-j = json.dumps(fp.store, indent=4)
-
-print(j)
-with open('feplj.json', 'w') as f:
-    f.write(j)
+                
+if __name__ == "__main__":
+    url = str(sys.argv[1])
+    if url is not None:
+        fep_list = cleaner(url)
+        fep_list.run()
+        fepl_json = json.dumps(fep_list.store, indent=4)
+        sys.stdout.write(fepl_json)
