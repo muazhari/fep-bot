@@ -61,10 +61,9 @@ export const Template = Bot => {
     
     const youtubeUrl = new YoutubeDL('https://www.youtube.com/watch?v=nikc3FeeVs8')
     const options = {
-      force: true
+      force: false
     }
     const {url: videoURL, thumbnail: thumbnailURL} = await youtubeUrl.generateUrl('bifest', options)
-    console.log(videoURL)
 
     return Bot.sendMessage({
       type: "imagemap",
