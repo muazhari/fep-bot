@@ -49,7 +49,8 @@ class cleaner:
             normalize = [unicodedata.normalize('NFKD', l).encode('ascii','ignore') for l in lsplit]
             args = list(map(str.strip, normalize))
             args.insert(0, self.numbers_sect(args))
-          
+            
+            
             if len(args) >= 1 and '' not in args:
                 data = {
                     'batch': batch,
@@ -59,7 +60,7 @@ class cleaner:
                 }
                 self.set_store(data)
 
-                
+
 if __name__ == "__main__":
     url = str(sys.argv[1])
     if url is not None:

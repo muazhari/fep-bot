@@ -97,7 +97,6 @@ export const Handler = event => {
     default:
       throw new Error(`Unknown event: ${JSON.stringify(event)}`)
   }
-  // }
 }
 
 const handleText = Bot => {
