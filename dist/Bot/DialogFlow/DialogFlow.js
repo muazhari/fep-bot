@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.DialogFlow = undefined;
 
 var _dialogflow = require("dialogflow");
 
@@ -18,46 +19,49 @@ var _DialogFlow2 = _interopRequireDefault(_DialogFlow);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const DialogFlow = async Bot => {
+const DialogFlow = exports.DialogFlow = Bot => {
+  const { message } = Bot.props.event;
   const projectId = "newagent-nlaqvy";
   // A unique identifier for the given session
   const sessionId = _uuid2.default.v4();
 
   // Create a new session
-  const sessionClient = await new _dialogflow2.default.SessionsClient(_DialogFlow2.default);
+  const sessionClient = new _dialogflow2.default.SessionsClient(_DialogFlow2.default);
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
+  const phrases = {
+    talk: ['feppi', 'mulai bicara'],
+    silent: ['feppi selesai', 'berhenti bicara']
+  };
+
+  let intent_status = false;
+
   // Send request and log result
-  const request = message => {
-    console.log(_DialogFlow2.default, message);
-    return new Promise((resolve, reject) => {
-      try {
-        const query = {
-          session: sessionPath,
-          queryInput: {
-            text: {
-              // The query to send to the dialogflow agent
-              text: message,
-              // The language used by the client (en-US)
-              languageCode: "en-US"
-            }
-          }
-        };
-        const responses = sessionClient.detectIntent(query);
-        console.log("Detected intent", responses);
-        const result = responses[0].queryResult;
-        resolve(result);
-      } catch (err) {
-        reject(err);
-        throw err;
+  const talk = async msg => {
+    if (phrases.talk.includes(msg.toLowerCase())) intent_status = true;
+    const query = {
+      session: sessionPath,
+      queryInput: {
+        text: {
+          // The query to send to the dialogflow agent
+          text: msg,
+          // The language used by the client (en-US/id)
+          languageCode: "id"
+        }
       }
-    });
+    };
+    const responses = await sessionClient.detectIntent(query);
+    const { fulfillmentText } = responses[0].queryResult;
+    console.log("Detected intent", fulfillmentText);
+
+    if (intent_status && fulfillmentText.length >= 1) {
+      await Bot.replyText(fulfillmentText);
+    }
+    if (phrases.silent.includes(msg.toLowerCase())) intent_status = false;
   };
 
   return {
-    request
+    talk
   };
 };
-
-exports.default = DialogFlow;
 //# sourceMappingURL=DialogFlow.js.map

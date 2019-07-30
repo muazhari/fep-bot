@@ -17,6 +17,7 @@ export const Basic = Bot => {
       Bot.replyText(`${command_prefix}say <msg>`);
     }
   };
+  
 
   const greet = args => {
     const groupId = args[0] || Bot.props.event.source.groupId;

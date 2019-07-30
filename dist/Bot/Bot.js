@@ -27,10 +27,6 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _DialogFlow = require("./DialogFlow/DialogFlow");
-
-var _DialogFlow2 = _interopRequireDefault(_DialogFlow);
-
 var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
@@ -55,7 +51,7 @@ class Bot {
     };
 
     // DialogFlow assist
-    this.DFlow = (0, _DialogFlow2.default)(this);
+    this.DialogFlow = (0, _internal.DialogFlow)(this);
   }
 
   async log() {
@@ -105,4 +101,6 @@ class Bot {
   }
 }
 exports.Bot = Bot;
+
+// import DialogFlow from "./DialogFlow/DialogFlow"
 //# sourceMappingURL=Bot.js.map

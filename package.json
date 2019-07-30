@@ -51,7 +51,7 @@
     "mkdirp": "^0.5.1",
     "photoeditorsdk-server": "^4.19.1",
     "uuid": "^3.3.2",
-    "dialogflow": "^4.0.3"
+    "dialogflow": "0.6.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

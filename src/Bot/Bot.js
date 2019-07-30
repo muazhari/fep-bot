@@ -6,13 +6,13 @@ import {
   Basic,
   Access,
   Template,
-  // DialogFlow
+  DialogFlow
 } from "./internal";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
 
-import DialogFlow from "./DialogFlow/DialogFlow"
+// import DialogFlow from "./DialogFlow/DialogFlow"
 import config from "../Config/Line";
 
 export class Bot {
@@ -31,7 +31,7 @@ export class Bot {
     };
 
     // DialogFlow assist
-    this.DFlow = DialogFlow(this);
+    this.DialogFlow = DialogFlow(this);
   }
 
   async log() {

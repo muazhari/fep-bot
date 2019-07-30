@@ -6,7 +6,7 @@ var _app2 = _interopRequireDefault(_app);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const { PORT = 8080 } = process.env;
+const { PORT } = process.env;
 
 let baseURL = process.env.BASE_URL;
 
