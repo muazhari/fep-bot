@@ -49,7 +49,8 @@
     "youtube-dl": "^2.0.0",
     "fs-extra": "^8.1.0",
     "mkdirp": "^0.5.1",
-    "photoeditorsdk-server": "^4.19.1"
+    "photoeditorsdk-server": "^4.19.1",
+    "nodejs-assistant": "^0.7.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

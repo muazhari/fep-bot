@@ -39,6 +39,34 @@ const handleCommand = (commandList, chat) => {
   }
 };
 
+const userQueue = (Bot) => {
+  const queue = {}
+  
+  const increment = () => {
+    const { userId } = Bot.props.event.source
+    if (!queue[userId]) {
+      queue[userId] = 0
+    }    
+    queue[userId] += 1
+  }
+  
+  const decrement = () => {
+    const { userId } = Bot.props.event.source
+    if (!queue[userId]) {
+      queue[userId] = 0
+    }
+    if (queue[userId] >= 1) {
+    queue[userId] -= 1
+    }
+  }
+  
+  return {
+    increment,
+    decrement
+  }
+  
+}
+
 export const Handler = event => {
   console.log(event);
 
@@ -123,7 +151,8 @@ const handleText = Bot => {
     profile: Basic.profile,
     confirm: Template.confirm,
     bifest: Template.bifest,
-    greet: Basic.greet
+    greet: Basic.greet,
+    say: Basic.say
   };
 
   const chat_splitted = message.text.split(" ");
@@ -170,12 +199,12 @@ const handleImage = async Bot => {
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     console.log({ originalContentUrl, previewImageUrl });
-    // Bot.replyText(`transmitted img url: ${originalContentUrl}`)
-    // Bot.client.replyMessage({
-    //   type: "image",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
+    Bot.replyText(`transmitted img url: ${JSON.stringify({originalContentUrl, previewImageUrl})}`)
+    Bot.client.replyMessage({
+      type: "image",
+      originalContentUrl,
+      previewImageUrl
+    });
   });
 };
 

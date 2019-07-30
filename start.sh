@@ -1,5 +1,5 @@
 touch /tmp/INSTALLED_PACKAGES
-PACKAGES="libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++"
+PACKAGES="libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++ python3-venv"
 if [ ! "$PACKAGES" == "$(cat /tmp/INSTALLED_PACKAGES)" ]; then
   cd /tmp
   rm -rf notroot
