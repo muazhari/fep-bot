@@ -158,6 +158,7 @@ const handleImage = async Bot => {
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     console.log({ originalContentUrl, previewImageUrl })
+    // Bot.replyText(`transmitted img url: ${originalContentUrl}`)
     // Bot.client.replyMessage({
     //   type: "image",
     //   originalContentUrl,
