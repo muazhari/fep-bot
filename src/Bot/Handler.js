@@ -39,33 +39,32 @@ const handleCommand = (commandList, chat) => {
   }
 };
 
-const userQueue = (Bot) => {
-  const queue = {}
-  
+const userQueue = Bot => {
+  const queue = {};
+
   const increment = () => {
-    const { userId } = Bot.props.event.source
+    const { userId } = Bot.props.event.source;
     if (!queue[userId]) {
-      queue[userId] = 0
-    }    
-    queue[userId] += 1
-  }
-  
+      queue[userId] = 0;
+    }
+    queue[userId] += 1;
+  };
+
   const decrement = () => {
-    const { userId } = Bot.props.event.source
+    const { userId } = Bot.props.event.source;
     if (!queue[userId]) {
-      queue[userId] = 0
+      queue[userId] = 0;
     }
     if (queue[userId] >= 1) {
-    queue[userId] -= 1
+      queue[userId] -= 1;
     }
-  }
-  
+  };
+
   return {
     increment,
     decrement
-  }
-  
-}
+  };
+};
 
 export const Handler = event => {
   console.log(event);
@@ -133,7 +132,7 @@ export const Handler = event => {
   }
 };
 
-const handleText = Bot => {
+const handleText = async Bot => {
   const { message, replyToken, source } = Bot.props.event;
   const { FEPList, StoreAdvance, Basic, Template } = Bot.Features;
 
@@ -154,6 +153,12 @@ const handleText = Bot => {
     greet: Basic.greet,
     say: Basic.say
   };
+
+  // The text query request.
+
+  const response = await Bot.DialogFlow.request(message);
+
+  Bot.replyText(response);
 
   const chat_splitted = message.text.split(" ");
   handleCommand(commandList, chat_splitted);
@@ -199,7 +204,12 @@ const handleImage = async Bot => {
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     console.log({ originalContentUrl, previewImageUrl });
-    Bot.replyText(`transmitted img url: ${JSON.stringify({originalContentUrl, previewImageUrl})}`)
+    Bot.replyText(
+      `transmitted img url: ${JSON.stringify({
+        originalContentUrl,
+        previewImageUrl
+      })}`
+    );
     Bot.client.replyMessage({
       type: "image",
       originalContentUrl,
