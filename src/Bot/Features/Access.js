@@ -38,11 +38,6 @@ export const Access = Bot => {
     const allowed_roomIds = ["R79ed98bf49e8cc183bd2af948f5bb297"]
     const allowed_types = [];
 
-    let validate_user;
-    let validate_group;
-    let validate_room;
-    let validate_type;
-    
     const validate = {}
 
     if (source.userId) {
