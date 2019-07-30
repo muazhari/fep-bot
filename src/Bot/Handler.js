@@ -45,7 +45,9 @@ export const Handler = event => {
   const Worker = new Bot({ event });
   // Worker.log()
 
-  const type = Bot.Features.Access.whitelist_check() ? event.type : null;
+  const whitelist = Worker.Features.Access.whitelist()
+  console.log(whitelist)
+  const type = whitelist.user || whitelist.room ? event.type : null;
 
   switch (type) {
     case "message":
