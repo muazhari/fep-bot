@@ -14,7 +14,7 @@ export const FEPList = Bot => {
       };
       await FEPStoreCRUD.set_store(data);
 
-      Bot.Command.StoreAdvance.backup_store("silent");
+      Bot.Features.StoreAdvance.backup_store("silent");
       
       Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
     } else {
@@ -35,7 +35,7 @@ export const FEPList = Bot => {
       };
       await FEPStoreCRUD.update_store(data);
       Bot.replyText("Done!");
-      Bot.Command.StoreAdvance.backup_store("silent");
+      Bot.Features.StoreAdvance.backup_store("silent");
     } else {
       Bot.replyText(
         `${command_prefix}upd <batch> <number> <name> <campus> <room>`
@@ -50,7 +50,7 @@ export const FEPList = Bot => {
         num: args[1],
       };
       await FEPStoreCRUD.delete_store(data);
-      Bot.Command.StoreAdvance.backup_store("silent");
+      Bot.Features.StoreAdvance.backup_store("silent");
       Bot.replyText("Done!");
       
     } else {

@@ -3,7 +3,7 @@ import { Bot, StoreAdvance, command_prefix } from "../../Bot/internal";
 export const Basic = Bot => {
   const admin = args => {
     const { source } = Bot.props.event;
-    if (Bot.Command.Access.whitelist_check(source.userId)) {
+    if (Bot.Features.Access.whitelist_check(source.userId)) {
       Bot.replyText("privilage: {}".format(Bot.props.event));
     }
   };
