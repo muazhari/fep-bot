@@ -1,6 +1,13 @@
 import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
-import { FEPList, StoreAdvance, Basic, Access, Template } from "./internal";
+import {
+  FEPList,
+  StoreAdvance,
+  Basic,
+  Access,
+  Template,
+  DialogFlow
+} from "./internal";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -13,7 +20,7 @@ export class Bot {
     this.props = props;
     this.client = new line.Client(config);
 
-    // Command creator
+    // Features creator
     this.Features = {
       FEPList: FEPList(this),
       StoreAdvance: StoreAdvance(this),
@@ -21,6 +28,8 @@ export class Bot {
       Access: Access(this),
       Template: Template(this)
     };
+    // DialogFlow conversation
+    this.DialogFlow = DialogFlow(this);
   }
 
   async log() {
