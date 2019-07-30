@@ -12,7 +12,8 @@
   },
   "scripts": {
     "prestart": "npm run -s build",
-    "start": "node dist/index.js",
+    "run": "node dist/index.js",
+    "start": "bash start.sh",
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
@@ -32,7 +33,7 @@
     "eslint"
   ],
   "dependencies": {
-    "@line/bot-sdk": "^6.8.0",
+    "@line/bot-sdk": "^6.8.1",
     "auto-bind": "^2.1.0",
     "axios": "^0.19.0",
     "babel-cli": "^6.26.0",
@@ -47,7 +48,8 @@
     "rimraf": "^2.6.3",
     "youtube-dl": "^2.0.0",
     "fs-extra": "^8.1.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "photoeditorsdk-server": "^4.19.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
