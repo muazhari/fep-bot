@@ -50,7 +50,8 @@
     "fs-extra": "^8.1.0",
     "mkdirp": "^0.5.1",
     "photoeditorsdk-server": "^4.19.1",
-    "nodejs-assistant": "^0.7.0"
+    "uuid": "^3.3.2",
+    "dialogflow": "^4.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
