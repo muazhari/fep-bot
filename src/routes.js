@@ -28,9 +28,10 @@ routes.post('/webhook', (req, res) => {
     Handler(event)
   }))
     .then(result => res.json(result))
-    .catch(e => {
-      console.log(e)
+    .catch(err => {
+      console.log(err)
       res.status(500).end();
+      throw err
     })
 })
 

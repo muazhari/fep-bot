@@ -1,6 +1,6 @@
 import app from './app';
 
-const { PORT = 8080 } = process.env;
+const { PORT } = process.env;
 
 let baseURL = process.env.BASE_URL
 

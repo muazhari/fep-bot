@@ -12,6 +12,7 @@ import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
 
+// import DialogFlow from "./DialogFlow/DialogFlow"
 import config from "../Config/Line";
 
 export class Bot {

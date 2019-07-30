@@ -16,26 +16,27 @@ export const batch_list = {
 
 export const command_prefix = "/";
 
-const messageToCommandValidate = chat => {
-  const content_command = chat[0].slice(1, chat[0].length);
-  const content_args = chat.slice(1, chat.length).map(item => item.trim());
-
-  console.log(content_command, content_args);
-
-  return { content_command, content_args };
+const commandValidate = chat => {
+  const prefix = chat[0][0];
+  const command = chat[0].slice(1, chat[0].length);
+  const args = chat.slice(1, chat.length).map(item => item.trim());
+  
+  if (prefix === command_prefix) {
+    console.log({ prefix, command, args })
+    return { prefix, command, args };
+  } else {
+    return false
+  }
 };
 
-const handleCommand = (commandList, chat) => {
-  const content_prefix = chat[0][0];
-  if (content_prefix === command_prefix) {
-    const { content_command, content_args } = messageToCommandValidate(chat);
+const handleCommand = (commandList, commandValidate) => {
+  const { prefix: content_prefix, command: content_command, args: content_args } = commandValidate;
     if (Object.keys(commandList).includes(content_command)) {
       if (commandList[content_command].length >= 1) {
         commandList[content_command](content_args);
       } else {
         commandList[content_command]();
       }
-    }
   }
 };
 
@@ -155,13 +156,14 @@ const handleText = async Bot => {
   };
 
   // The text query request.
-
-  const response = await Bot.DialogFlow.request(message);
-
-  Bot.replyText(response);
-
   const chat_splitted = message.text.split(" ");
-  handleCommand(commandList, chat_splitted);
+  const msgToCmdValidate = commandValidate(chat_splitted)
+  if (msgToCmdValidate) {
+    handleCommand(commandList, msgToCmdValidate);
+  } else {
+    Bot.DialogFlow.talk(message.text);
+  }
+  
 };
 
 const handleImage = async Bot => {
@@ -204,17 +206,17 @@ const handleImage = async Bot => {
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     console.log({ originalContentUrl, previewImageUrl });
-    Bot.replyText(
-      `transmitted img url: ${JSON.stringify({
-        originalContentUrl,
-        previewImageUrl
-      })}`
-    );
-    Bot.client.replyMessage({
-      type: "image",
-      originalContentUrl,
-      previewImageUrl
-    });
+    // Bot.replyText(
+    //   `transmitted img url: ${JSON.stringify({
+    //     originalContentUrl,
+    //     previewImageUrl
+    //   })}`
+    // );
+    // Bot.client.replyMessage({
+    //   type: "image",
+    //   originalContentUrl,
+    //   previewImageUrl
+    // });
   });
 };
 

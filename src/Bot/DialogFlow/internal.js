@@ -1,1 +1,1 @@
-import * from "./DialogFlow"
+export * from "./DialogFlow"

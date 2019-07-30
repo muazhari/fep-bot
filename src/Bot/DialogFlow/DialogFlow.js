@@ -1,41 +1,56 @@
 import dialogflow from "dialogflow";
 import uuid from "uuid";
+import config from "../../Config/DialogFlow";
 
-/**
- * Send a query to the dialogflow agent, and return the query result.
- * @param {string} projectId The project to be used
- */
-const TextFlow = async (Bot, projectId = "newagent-nlaqvy") => {
+export const DialogFlow = Bot => {
+  const { message } = Bot.props.event;
+  const projectId = "newagent-nlaqvy";
   // A unique identifier for the given session
   const sessionId = uuid.v4();
 
   // Create a new session
-  const sessionClient = new dialogflow.SessionsClient();
+  const sessionClient = new dialogflow.SessionsClient(config);
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
+  
+  const phrases = {
+    talk: [
+    'feppi',
+    'mulai bicara'
+    ],
+    silent: [
+      'feppi selesai',
+      'berhenti bicara'
+    ]
+  }
+  
+  let intent_status = false
+  
   // Send request and log result
-  const request = message => {
+  const talk = async msg => {
+    if (phrases.talk.includes(msg.toLowerCase())) intent_status = true
     const query = {
       session: sessionPath,
       queryInput: {
         text: {
           // The query to send to the dialogflow agent
-          text: message,
-          // The language used by the client (en-US)
-          languageCode: "en-US"
+          text: msg,
+          // The language used by the client (en-US/id)
+          languageCode: "id"
         }
       }
     };
-
-    const responses = await sessionClient.detectIntent(request);
-    console.log("Detected intent");
-    const result = responses[0].queryResult;
-    return result;
+    const responses = await sessionClient.detectIntent(query);
+    const { fulfillmentText } = responses[0].queryResult;
+    console.log("Detected intent", fulfillmentText);
+    
+    if (intent_status && fulfillmentText.length >= 1) {
+      await Bot.replyText(fulfillmentText);
+    }
+    if (phrases.silent.includes(msg.toLowerCase())) intent_status = false
   };
 
   return {
-    request
+    talk
   };
 };
-
-export default TextFlow;
