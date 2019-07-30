@@ -39,14 +39,42 @@ const handleCommand = (commandList, chat) => {
   }
 };
 
+const userQueue = (Bot) => {
+  const queue = {}
+  
+  const increment = () => {
+    const { userId } = Bot.props.event.source
+    if (!queue[userId]) {
+      queue[userId] = 0
+    }    
+    queue[userId] += 1
+  }
+  
+  const decrement = () => {
+    const { userId } = Bot.props.event.source
+    if (!queue[userId]) {
+      queue[userId] = 0
+    }
+    if (queue[userId] >= 1) {
+    queue[userId] -= 1
+    }
+  }
+  
+  return {
+    increment,
+    decrement
+  }
+  
+}
+
 export const Handler = event => {
   console.log(event);
 
   const Worker = new Bot({ event });
   // Worker.log()
 
-  const whitelist = Worker.Features.Access.whitelist()
-  console.log(whitelist)
+  const whitelist = Worker.Features.Access.whitelist();
+  console.log(whitelist);
   const type = whitelist.user || whitelist.room ? event.type : null;
 
   switch (type) {
@@ -123,7 +151,8 @@ const handleText = Bot => {
     profile: Basic.profile,
     confirm: Template.confirm,
     bifest: Template.bifest,
-    greet: Basic.greet
+    greet: Basic.greet,
+    say: Basic.say
   };
 
   const chat_splitted = message.text.split(" ");
@@ -137,12 +166,12 @@ const handleImage = async Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "../../src/Bot/Assets/downloaded",
+      "../../src/Bot/Assets/downloaded/images",
       `${message.id}.jpg`
     );
     const previewPath = path.join(
       __dirname,
-      "../../src/Bot/Assets/downloaded",
+      "../../src/Bot/Assets/downloaded/images",
       `${message.id}-preview.jpg`
     );
 
@@ -153,10 +182,12 @@ const handleImage = async Bot => {
           `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
         );
         return {
-          originalContentUrl: `${baseURL}/downloaded/${path.basename(
+          originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
             downloadPath
           )}`,
-          previewImageUrl: `${baseURL}/downloaded/${path.basename(previewPath)}`
+          previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
+            previewPath
+          )}`
         };
       })
       .catch(err => {
@@ -168,12 +199,12 @@ const handleImage = async Bot => {
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     console.log({ originalContentUrl, previewImageUrl });
-    // Bot.replyText(`transmitted img url: ${originalContentUrl}`)
-    // Bot.client.replyMessage({
-    //   type: "image",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
+    Bot.replyText(`transmitted img url: ${JSON.stringify({originalContentUrl, previewImageUrl})}`)
+    Bot.client.replyMessage({
+      type: "image",
+      originalContentUrl,
+      previewImageUrl
+    });
   });
 };
 
@@ -183,12 +214,12 @@ const handleVideo = Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "../../src/Bot/Assets/downloaded",
+      "../../src/Bot/Assets/downloaded/videos",
       `${message.id}.mp4`
     );
     const previewPath = path.join(
       __dirname,
-      "../../src/Bot/Assets/downloaded",
+      "../../src/Bot/Assets/downloaded/videos",
       `${message.id}-preview.jpg`
     );
 
@@ -199,10 +230,12 @@ const handleVideo = Bot => {
         cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
 
         return {
-          originalContentUrl: `${baseURL}/downloaded/${path.basename(
+          originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(
             downloadPath
           )}`,
-          previewImageUrl: `${baseURL}/downloaded/${path.basename(previewPath)}`
+          previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(
+            previewPath
+          )}`
         };
       }
     );
@@ -225,14 +258,14 @@ const handleAudio = Bot => {
   if (message.contentProvider.type === "line") {
     const downloadPath = path.join(
       __dirname,
-      "../../src/Bot/Assets/downloaded",
+      "../../src/Bot/Assets/downloaded/audios",
       `${message.id}.m4a`
     );
 
     getContent = Bot.downloadContent(message.id, downloadPath).then(
       downloadPath => {
         return {
-          originalContentUrl: `${baseURL}/downloaded/${path.basename(
+          originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
             downloadPath
           )}`
         };

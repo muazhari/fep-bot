@@ -7,6 +7,16 @@ export const Basic = Bot => {
       Bot.replyText("privilage: {}".format(Bot.props.event));
     }
   };
+  
+  const say = args => {
+    if (args.length >= 1) {
+      const { source } = Bot.props.event;
+      const msg = [...args].join(' ')
+        Bot.replyText(msg);
+    } else {
+      Bot.replyText(`${command_prefix}say <msg>`);
+    }
+  };
 
   const greet = args => {
     const groupId = args[0] || Bot.props.event.source.groupId;
@@ -28,7 +38,7 @@ export const Basic = Bot => {
     if (arg || source.userId) {
       const userId = arg[0] || source.userId;
       console.log(userId);
-      return Bot.client
+      Bot.client
         .getProfile(userId)
         .then(profile =>
           Bot.replyText([
@@ -37,7 +47,7 @@ export const Basic = Bot => {
           ])
         );
     } else {
-      return Bot.replyText("Bot can't use profile API without user ID");
+      Bot.replyText("Bot can't use profile API without user ID");
     }
   };
 
@@ -62,6 +72,7 @@ export const Basic = Bot => {
     admin,
     help,
     profile,
-    greet
+    greet,
+    say,
   };
 };
