@@ -29,11 +29,11 @@ app.use(
 // serve static and downloaded files
 app.use(
   "/static",
-  express.static(path.join(__dirname, "../../src/Bot/Assets/static"))
+  express.static(path.join(__dirname, "../src/Bot/Assets/static"))
 );
 app.use(
   "/downloaded",
-  express.static(path.join(__dirname, "../../src/Bot/Assets/downloaded"))
+  express.static(path.join(__dirname, "../src/Bot/Assets/downloaded"))
 );
 
 app.use("/webhook", line.middleware(config));
