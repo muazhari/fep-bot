@@ -1,8 +1,7 @@
-import { Bot, StoreAdvance, command_prefix, baseURL } from "../../Bot/internal";
+import { Bot, StoreAdvance, command_prefix, baseURL } from "../../Bot";
 import YoutubeDL from "../../Bot/Helper/YoutubeDL";
 import ResponseCheck from "../../Bot/Helper/ResponseCheck";
 import Store from "../../Services/Store";
-
 
 export const Template = Bot => {
   const { event } = Bot.props.event;
@@ -57,13 +56,17 @@ export const Template = Bot => {
 
   const bifest = async () => {
     const backgroundImageURL = `${baseURL}/static/background`;
-    
-    
-    const youtubeUrl = new YoutubeDL('https://www.youtube.com/watch?v=nikc3FeeVs8')
+
+    const youtubeUrl = new YoutubeDL(
+      "https://www.youtube.com/watch?v=nikc3FeeVs8"
+    );
     const options = {
       force: false
-    }
-    const {url: videoURL, thumbnail: thumbnailURL} = await youtubeUrl.generateUrl('bifest', options)
+    };
+    const {
+      url: videoURL,
+      thumbnail: thumbnailURL
+    } = await youtubeUrl.generateUrl("bifest", options);
 
     return Bot.sendMessage({
       type: "imagemap",

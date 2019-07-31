@@ -1,4 +1,4 @@
-import { Bot, command_prefix, batch_list } from "../../Bot/internal";
+import { Bot, command_prefix, batch_list } from "../../Bot";
 import FEPCleaner from "../../Bot/Helper/FEPCleaner";
 import Store from "../../Services/Store";
 import storage from "node-persist";
@@ -30,14 +30,14 @@ export const StoreAdvance = Bot  => {
 //         url: data.url,
 //         // responseType: "text"
 //       });
-      
+
 //       console.log(typeof response.data);
-      
+
       const response = await FEPCleaner.run(data.url)
       const parsed = JSON.parse(response)
       console.log(parsed)
 
-      
+
       await Store.setStore({ fep: parsed });
       Bot.replyText("Done!");
     } else {

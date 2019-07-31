@@ -1,4 +1,4 @@
-import { Bot, command_prefix, batch_list } from "../../Bot/internal";
+import { Bot, command_prefix, batch_list } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 
 import Store from "../../Services/Store";
@@ -15,7 +15,7 @@ export const FEPList = Bot => {
       await FEPStoreCRUD.set_store(data);
 
       Bot.Features.StoreAdvance.backup_store("silent");
-      
+
       Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
     } else {
       Bot.replyText(
@@ -52,7 +52,7 @@ export const FEPList = Bot => {
       await FEPStoreCRUD.delete_store(data);
       Bot.Features.StoreAdvance.backup_store("silent");
       Bot.replyText("Done!");
-      
+
     } else {
       Bot.replyText(`${command_prefix}del <batch> <number>`);
     }
@@ -62,16 +62,16 @@ export const FEPList = Bot => {
     if (args.length === 1) {
       const data = {
         batch: args[0]? args[0] : undefined
-      };   
-      
+      };
+
       const store = await Store.getStore("fep");
-      
+
       if (store) {
         const selected_batch =
           args.length !== 1? Object.keys(store).sort() : [data.batch];
 
         if (selected_batch.every(item => Object.keys(store).includes(item))) {
-          
+
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
 
           selected_batch.forEach(batch => {
@@ -82,7 +82,7 @@ export const FEPList = Bot => {
               msg += `  ${i + 1}. ${store[batch][i][0]} - ${store[batch][i][1]} - ${store[batch][i][2]}\n`;
             }
             msg += `\n`;
-            
+
             console.log(msg.length)
           });
           Bot.replyText(msg)
