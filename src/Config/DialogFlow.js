@@ -1,5 +1,5 @@
 const default_agent = {
-  projectId: process.env.DIALOGFLOW_PROJECT_ID
+  projectId: process.env.DIALOGFLOW_PROJECT_ID,
   config: {
     credentials: {
       private_key: process.env.DIALOGFLOW_PRIVATE_KEY.replace(
