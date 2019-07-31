@@ -15,7 +15,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const init = async () => {
   await _nodePersist2.default.init();
-  await shared_props.init();
 };
 
 const setStore = async obj => {

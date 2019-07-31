@@ -31,14 +31,11 @@ const DialogFlow = exports.DialogFlow = Bot => {
   const sessionClient = new _dialogflow2.default.SessionsClient(_DialogFlow2.default);
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
-  const talk_check = responses => {
+  const get_parameter = responses => {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
-    if (displayName === "Feppi - talk" || displayName === "Feppi - silent") {
-      if (Object.keys(fields).includes("talk")) {
-        _internal.shared_props[Bot.getId().default]["status"] = fields.talk.stringValue === "true";
-      }
-    }
+    const { allRequiredParamsPresent } = responses[0].queryResult;
+    return { displayName, fields, allRequiredParamsPresent };
   };
 
   const get_query = msg => {
@@ -53,26 +50,38 @@ const DialogFlow = exports.DialogFlow = Bot => {
         }
       }
     };
-
     return query;
+  };
+
+  const talk_check = parameter => {
+    const { fields, displayName } = parameter;
+    if (displayName === "chat.talk" || displayName === "chat.silent") {
+      if (Object.keys(fields).includes("chat")) {
+        _internal.shared_props[Bot.getId().default]["status"] = fields.chat.stringValue === "true";
+      }
+    }
   };
 
   // Send request and log result
   const talk = async msg => {
     const query = get_query(msg);
     const responses = await sessionClient.detectIntent(query);
-    const { fulfillmentText } = responses[0].queryResult;
+    const parameter = get_parameter(responses);
+    const { queryResult } = responses[0];
+    const { fulfillmentText } = queryResult;
 
-    const status = _internal.shared_props[Bot.getId().default].status ? _internal.shared_props[Bot.getId().default].status : true;
+    const status = _internal.shared_props[Bot.getId().default].status === undefined ? false : _internal.shared_props[Bot.getId().default].status;
 
     if (status && fulfillmentText.length >= 1) {
       Bot.replyText(fulfillmentText);
     }
 
-    talk_check(responses);
-    console.log(_internal.shared_props);
-    console.log(_internal.shared_props[Bot.getId().default].status, status);
-    console.log("Detected intent", responses[0].queryResult.intent.displayName);
+    talk_check(parameter);
+
+    // console.log(responses[0].queryResult)
+    console.log("parameter", parameter);
+    console.log("shared_props", _internal.shared_props[Bot.getId().default].status, status);
+    console.log("Detected intent", responses[0].queryResult.displayName);
   };
 
   return {

@@ -5,7 +5,6 @@ import storage from "node-persist";
 
 const init = async () => {
   await storage.init()
-  await shared_props.init()
 }
 
 const setStore = async obj => {
