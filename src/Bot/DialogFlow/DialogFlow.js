@@ -4,12 +4,17 @@ import { default_agent } from "../../Config/DialogFlow";
 import { shared_props } from "../../Bot";
 
 export class DialogFlow {
-  constructor(Bot, projectId, config) {
+  constructor(Bot) {
     this.Bot = Bot;
+    this.get_parameter = this.get_parameter.bind(this);
+    this.get_query = this.get_query.bind(this);
+    this.chat_switch = this.chat_switch.bind(this);
+    this.chat = this.chat.bind(this);
 
     // selected agent
-    this.projectId = projectId || default_agent.projectId;
-    this.config = config || default_agent.config;
+    this.agent = default_agent;
+    this.projectId = this.agent.projectId;
+    this.config = this.agent.config;
 
     // A unique identifier for the given session
     this.sessionId = uuid.v4();
@@ -20,6 +25,8 @@ export class DialogFlow {
       this.projectId,
       this.sessionId
     );
+
+    this.temp_chat_switch = true;
   }
   get_parameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
@@ -43,40 +50,60 @@ export class DialogFlow {
     return query;
   }
 
-  chat_switch(parameter) {
+  chat_switch(parameter, chat_switch_callback, default_callback) {
     const props_id = this.Bot.getId().default;
     const { fields, displayName } = parameter;
     if (displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
         shared_props[props_id]["status"] = fields.chat.stringValue === "true";
+        return chat_switch_callback();
       }
     }
+    return default_callback();
   }
 
   // Send request and log result
   async chat(msg) {
-    const props_id = this.Bot.getId().default;
-    const query = this.get_query(msg);
-    const responses = await this.sessionClient.detectIntent(query);
-    const parameter = this.get_parameter(responses);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const query = this.get_query(msg);
+        const responses = await this.sessionClient.detectIntent(query);
+        const parameter = this.get_parameter(responses);
 
-    const { queryResult } = responses[0];
-    const { fulfillmentText } = queryResult;
+        const { queryResult } = responses[0];
+        const { fulfillmentText } = queryResult;
 
-    const status =
-      shared_props[props_id].status === undefined
-        ? false
-        : shared_props[props_id].status;
+        const status =
+          shared_props[this.Bot.getId().default].status === undefined
+            ? false
+            : shared_props[this.Bot.getId().default].status;
 
-    if (status && fulfillmentText.length >= 1) {
-      return { fulfillmentText, parameter };
-    }
+        const chat_switch_callback = () => {
+            return resolve({ fulfillmentText, parameter });
+        }; 
+        
+        const default_callback = () => {
+          if(status) {
+              return resolve({ fulfillmentText, parameter });
+          }
+        };
+      
+        if (fulfillmentText.length >= 1) {
+          this.chat_switch(parameter, chat_switch_callback, default_callback);
+        }
 
-    this.chat_switch(parameter);
+        
 
-    // console.log(responses[0].queryResult)
-    console.log("parameter", parameter);
-    console.log("shared_props", shared_props[props_id].status, status);
-    console.log("Detected intent", responses[0].queryResult.displayName);
+        console.log("parameter", parameter);
+        console.log(
+          "shared_props",
+          shared_props[this.Bot.getId().default].status,
+          status
+        );
+        console.log("Detected intent", responses[0].queryResult.displayName);
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
 }

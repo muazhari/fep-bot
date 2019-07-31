@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FEPList = undefined;
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 var _FEPStoreCRUD = require("../../Bot/Helper/FEPStoreCRUD");
 
@@ -32,7 +32,7 @@ const FEPList = exports.FEPList = Bot => {
 
       Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
     } else {
-      Bot.replyText(`${_internal.command_prefix}add <batch> <name> <campus> <room>`);
+      Bot.replyText(`${_Bot.command_prefix}add <batch> <name> <campus> <room>`);
     }
   };
 
@@ -49,7 +49,7 @@ const FEPList = exports.FEPList = Bot => {
       Bot.replyText("Done!");
       Bot.Features.StoreAdvance.backup_store("silent");
     } else {
-      Bot.replyText(`${_internal.command_prefix}upd <batch> <number> <name> <campus> <room>`);
+      Bot.replyText(`${_Bot.command_prefix}upd <batch> <number> <name> <campus> <room>`);
     }
   };
 
@@ -63,7 +63,7 @@ const FEPList = exports.FEPList = Bot => {
       Bot.Features.StoreAdvance.backup_store("silent");
       Bot.replyText("Done!");
     } else {
-      Bot.replyText(`${_internal.command_prefix}del <batch> <number>`);
+      Bot.replyText(`${_Bot.command_prefix}del <batch> <number>`);
     }
   };
 
@@ -84,7 +84,7 @@ const FEPList = exports.FEPList = Bot => {
 
           selected_batch.forEach(batch => {
             console.log(batch);
-            msg += `${batch.toUpperCase()}. ${_internal.batch_list[batch]}\n`;
+            msg += `${batch.toUpperCase()}. ${_Bot.batch_list[batch]}\n`;
 
             for (let i = 0; i < store[batch].length; i += 1) {
               msg += `  ${i + 1}. ${store[batch][i][0]} - ${store[batch][i][1]} - ${store[batch][i][2]}\n`;
@@ -97,7 +97,7 @@ const FEPList = exports.FEPList = Bot => {
         }
       }
     } else {
-      Bot.replyText(`${_internal.command_prefix}view <batch>`);
+      Bot.replyText(`${_Bot.command_prefix}view <batch>`);
     }
   };
 

@@ -1,7 +1,12 @@
-export const HandlerDialogFlow = Bot => {
-  const WorkerDF = new Bot.DialogFlow();
-  const responses = WorkerDF.chat(message.text);
+import { shared_props } from "./internal";
+
+export const HandlerDialogFlow = async Bot => {
+  const { message } = Bot.props.event
+  const { DialogFlow: DF } = Bot;
+  const responses = await DF.chat(message.text);
   const { fulfillmentText, parameter } = responses;
 
-  this.Bot.replyText(fulfillmentText);
+  console.log(responses)
+  Bot.replyText(fulfillmentText);
+  console.log('handlerdf', shared_props)
 };

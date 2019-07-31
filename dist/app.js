@@ -24,6 +24,10 @@ var _routes = require("./routes");
 
 var _routes2 = _interopRequireDefault(_routes);
 
+var _cloudinary = require("cloudinary");
+
+var _cloudinary2 = _interopRequireDefault(_cloudinary);
+
 var _botSdk = require("@line/bot-sdk");
 
 var line = _interopRequireWildcard(_botSdk);
@@ -39,6 +43,12 @@ var _Store2 = _interopRequireDefault(_Store);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_cloudinary2.default.config({
+  cloud_name: "fep-bot",
+  api_key: "fep-bot",
+  api_secret: "_R0PRhWo1KuScAycGwbmodqtsts"
+});
 
 _Store2.default.init();
 

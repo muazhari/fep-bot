@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import cp from "child_process";
-import { Bot, HandlerDialogFlow } from "./internal";
+import { Bot, HandlerDialogFlow, shared_props } from "./internal";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -166,6 +166,7 @@ const handleText = async Bot => {
     handleCommand(commandList, msgToCmdValidate);
   } else {
     HandlerDialogFlow(Bot);
+    console.log('handler', shared_props)
   }
 };
 

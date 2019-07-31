@@ -51,4 +51,16 @@ Object.keys(_DialogFlow).forEach(function (key) {
     }
   });
 });
+
+var _HandlerDialogFlow = require("./HandlerDialogFlow");
+
+Object.keys(_HandlerDialogFlow).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _HandlerDialogFlow[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map

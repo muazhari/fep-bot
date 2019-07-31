@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Access = undefined;
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 const Access = exports.Access = Bot => {
   const blacklist = () => {
@@ -18,16 +18,16 @@ const Access = exports.Access = Bot => {
     const validate = {};
 
     if (source.userId) {
-      validate['user'] = blocked_userIds.includes(source.userId);
+      validate["user"] = blocked_userIds.includes(source.userId);
     }
     if (source.groupId) {
-      validate['group'] = blocked_groupIds.includes(source.groupId);
+      validate["group"] = blocked_groupIds.includes(source.groupId);
     }
     if (source.roomId) {
-      validate['room'] = blocked_roomIds.includes(source.roomId);
+      validate["room"] = blocked_roomIds.includes(source.roomId);
     }
     if (source.type) {
-      validate['type'] = blocked_types.includes(source.type);
+      validate["type"] = blocked_types.includes(source.type);
     }
 
     // const validate = {validate_user, validate_group, validate_room, validate_type}
@@ -45,16 +45,16 @@ const Access = exports.Access = Bot => {
     const validate = {};
 
     if (source.userId) {
-      validate['user'] = allowed_userIds.includes(source.userId);
+      validate["user"] = allowed_userIds.includes(source.userId);
     }
     if (source.groupId) {
-      validate['group'] = allowed_groupIds.includes(source.groupId);
+      validate["group"] = allowed_groupIds.includes(source.groupId);
     }
     if (source.roomId) {
-      validate['room'] = allowed_roomIds.includes(source.roomId);
+      validate["room"] = allowed_roomIds.includes(source.roomId);
     }
     if (source.type) {
-      validate['type'] = allowed_types.includes(source.type);
+      validate["type"] = allowed_types.includes(source.type);
     }
 
     // const validate = {validate_user, validate_group, validate_room, validate_type}

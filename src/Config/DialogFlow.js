@@ -11,6 +11,6 @@ const default_agent = {
   }
 };
 
-export default {
+export {
     default_agent
 };

@@ -48,7 +48,11 @@ const commandValidate = chat => {
 };
 
 const handleCommand = (commandList, commandValidate) => {
-  const { prefix: content_prefix, command: content_command, args: content_args } = commandValidate;
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = commandValidate;
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
       commandList[content_command](content_args);
@@ -175,7 +179,8 @@ const handleText = async Bot => {
   if (msgToCmdValidate) {
     handleCommand(commandList, msgToCmdValidate);
   } else {
-    Bot.DialogFlow.talk(message.text);
+    (0, _internal.HandlerDialogFlow)(Bot);
+    console.log('handler', _internal.shared_props);
   }
 };
 

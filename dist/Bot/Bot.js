@@ -7,8 +7,7 @@ exports.Bot = exports.shared_props = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-// import DialogFlow from "./DialogFlow/DialogFlow"
-
+// import { default_agent } from "../Config/DialogFlow";
 
 var _Store = require("../Services/Store");
 
@@ -18,7 +17,9 @@ var _botSdk = require("@line/bot-sdk");
 
 var line = _interopRequireWildcard(_botSdk);
 
-var _internal = require("./internal");
+var _Features = require("./Features");
+
+var _DialogFlow = require("./DialogFlow");
 
 var _fsExtra = require("fs-extra");
 
@@ -47,7 +48,9 @@ class Bot {
   constructor(props) {
     this.getId = this.getId.bind(this);
 
-    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], { event: props.event });
+    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], {
+      event: props.event
+    });
     // this.shared_props = shared_props
     // console.log(shared_props)
     // only access by? user, group, room, default
@@ -59,15 +62,15 @@ class Bot {
 
     // Features creator
     this.Features = {
-      FEPList: (0, _internal.FEPList)(this),
-      StoreAdvance: (0, _internal.StoreAdvance)(this),
-      Basic: (0, _internal.Basic)(this),
-      Access: (0, _internal.Access)(this),
-      Template: (0, _internal.Template)(this)
+      FEPList: (0, _Features.FEPList)(this),
+      StoreAdvance: (0, _Features.StoreAdvance)(this),
+      Basic: (0, _Features.Basic)(this),
+      Access: (0, _Features.Access)(this),
+      Template: (0, _Features.Template)(this)
     };
 
     // DialogFlow assist
-    this.DialogFlow = (0, _internal.DialogFlow)(this);
+    this.DialogFlow = new _DialogFlow.DialogFlow(this);
   }
 
   async log() {
@@ -111,16 +114,16 @@ class Bot {
     const Id = {};
 
     if (source.groupId) {
-      Id['group'] = source.groupId;
-      Id['default'] = Id.group;
+      Id["group"] = source.groupId;
+      Id["default"] = Id.group;
     } else {
       if (source.roomId) {
-        Id['room'] = source.roomId;
-        Id['default'] = Id.room;
+        Id["room"] = source.roomId;
+        Id["default"] = Id.room;
       } else {
         if (source.userId) {
-          Id['user'] = source.userId;
-          Id['default'] = Id.user;
+          Id["user"] = source.userId;
+          Id["default"] = Id.user;
         }
       }
     }

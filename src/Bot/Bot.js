@@ -1,12 +1,13 @@
 import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
 import { FEPList, StoreAdvance, Basic, Access, Template } from "./Features";
-import DialogFlow from "./DialogFlow";
+import { DialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
 
-// import DialogFlow from "./DialogFlow/DialogFlow"
+// import { default_agent } from "../Config/DialogFlow";
+
 import config from "../Config/Line";
 
 // share worker props by groupId
@@ -39,7 +40,7 @@ export class Bot {
     };
 
     // DialogFlow assist
-    this.DialogFlow = DialogFlow(this);
+    this.DialogFlow = new DialogFlow(this);
   }
 
   async log() {

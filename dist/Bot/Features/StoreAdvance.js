@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.StoreAdvance = undefined;
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 var _FEPCleaner = require("../../Bot/Helper/FEPCleaner");
 
@@ -61,7 +61,7 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
       await _Store2.default.setStore({ fep: parsed });
       Bot.replyText("Done!");
     } else {
-      Bot.replyText(`${_internal.command_prefix}pre_store <url>`);
+      Bot.replyText(`${_Bot.command_prefix}pre_store <url>`);
     }
   };
 
