@@ -3,7 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Bot = undefined;
+exports.Bot = exports.shared_props = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+// import DialogFlow from "./DialogFlow/DialogFlow"
+
 
 var _Store = require("../Services/Store");
 
@@ -35,10 +40,21 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// share worker props by groupId
+const shared_props = exports.shared_props = {};
+
 class Bot {
-  // create LINE SDK client
   constructor(props) {
-    this.props = props;
+    this.getId = this.getId.bind(this);
+
+    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], { event: props.event });
+    // this.shared_props = shared_props
+    // console.log(shared_props)
+    // only access by? user, group, room, default
+    this.props = shared_props[this.getId(props.event.source).default];
+    // console.log(this.props)
+
+    // create LINE SDK client
     this.client = new line.Client(_Line2.default);
 
     // Features creator
@@ -81,6 +97,37 @@ class Bot {
     // }
   }
 
+  setProps(data, id) {
+    console.log(data);
+    if (!id) id = this.getId().default;
+
+    Object.keys(data).map(key => {
+      this.shared_props[id][key] = data[key];
+    });
+  }
+
+  getId(source) {
+    if (!source) source = this.props.event.source;
+    const Id = {};
+
+    if (source.groupId) {
+      Id['group'] = source.groupId;
+      Id['default'] = Id.group;
+    } else {
+      if (source.roomId) {
+        Id['room'] = source.roomId;
+        Id['default'] = Id.room;
+      } else {
+        if (source.userId) {
+          Id['user'] = source.userId;
+          Id['default'] = Id.user;
+        }
+      }
+    }
+
+    if (Id) return Id;
+  }
+
   replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
     return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
@@ -101,6 +148,4 @@ class Bot {
   }
 }
 exports.Bot = Bot;
-
-// import DialogFlow from "./DialogFlow/DialogFlow"
 //# sourceMappingURL=Bot.js.map

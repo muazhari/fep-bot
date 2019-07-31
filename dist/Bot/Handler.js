@@ -170,7 +170,6 @@ const handleText = async Bot => {
   };
 
   // The text query request.
-
   const chat_splitted = message.text.split(" ");
   const msgToCmdValidate = commandValidate(chat_splitted);
   if (msgToCmdValidate) {

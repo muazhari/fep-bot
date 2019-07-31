@@ -10,10 +10,12 @@ var _nodePersist2 = _interopRequireDefault(_nodePersist);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// const fepStore = storage.create({});
+// share worker props by groupId
+// const shared_props = storage.create({});
 
 const init = async () => {
   await _nodePersist2.default.init();
+  await shared_props.init();
 };
 
 const setStore = async obj => {
