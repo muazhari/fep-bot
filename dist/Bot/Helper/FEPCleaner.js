@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 var _axios = require("axios");
 

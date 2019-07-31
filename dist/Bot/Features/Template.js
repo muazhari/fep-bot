@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Template = undefined;
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 var _YoutubeDL = require("../../Bot/Helper/YoutubeDL");
 
@@ -25,7 +25,7 @@ const Template = exports.Template = Bot => {
   const { event } = Bot.props.event;
 
   const button = () => {
-    const buttonsImageURL = `${_internal.baseURL}/static/buttons/1040.jpg`;
+    const buttonsImageURL = `${_Bot.baseURL}/static/buttons/1040.jpg`;
     Bot.sendMessage({
       type: "template",
       altText: "This is a buttons template",
@@ -65,13 +65,16 @@ const Template = exports.Template = Bot => {
   };
 
   const bifest = async () => {
-    const backgroundImageURL = `${_internal.baseURL}/static/background`;
+    const backgroundImageURL = `${_Bot.baseURL}/static/background`;
 
-    const youtubeUrl = new _YoutubeDL2.default('https://www.youtube.com/watch?v=nikc3FeeVs8');
+    const youtubeUrl = new _YoutubeDL2.default("https://www.youtube.com/watch?v=nikc3FeeVs8");
     const options = {
       force: false
     };
-    const { url: videoURL, thumbnail: thumbnailURL } = await youtubeUrl.generateUrl('bifest', options);
+    const {
+      url: videoURL,
+      thumbnail: thumbnailURL
+    } = await youtubeUrl.generateUrl("bifest", options);
 
     return Bot.sendMessage({
       type: "imagemap",
@@ -85,7 +88,7 @@ const Template = exports.Template = Bot => {
       }],
       video: {
         // originalContentUrl: `${baseURL}/static/imagemap/bifest2019.mp4`,
-        previewImageUrl: `${_internal.baseURL}/static/imagemap/bifest2019_preview.jpg`,
+        previewImageUrl: `${_Bot.baseURL}/static/imagemap/bifest2019_preview.jpg`,
         originalContentUrl: videoURL,
         // previewImageUrl: thumbnailURL,
         area: {

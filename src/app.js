@@ -3,6 +3,13 @@ import path from "path";
 import logger from "morgan";
 import bodyParser from "body-parser";
 import routes from "./routes";
+import cloudinary from "cloudinary";
+
+cloudinary.config({
+  cloud_name: "fep-bot",
+  api_key: "fep-bot",
+  api_secret: "_R0PRhWo1KuScAycGwbmodqtsts"
+});
 
 import * as line from "@line/bot-sdk";
 

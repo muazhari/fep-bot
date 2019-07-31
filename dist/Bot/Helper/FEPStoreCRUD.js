@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 var _nodePersist = require("node-persist");
 
@@ -16,13 +16,9 @@ var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { getStore, setStore } from "../../internal";
-
-
 const set_store = async data => {
   const store = await _Store2.default.getStore("fep");
-  if (Object.keys(_internal.batch_list).includes(data.batch)) {
-
+  if (Object.keys(_Bot.batch_list).includes(data.batch)) {
     if (!Object.keys(store).includes(data.batch)) {
       store[data.batch] = [];
     }
@@ -35,7 +31,7 @@ const set_store = async data => {
 
 const update_store = async data => {
   const store = await _Store2.default.getStore("fep");
-  if (Object.keys(_internal.batch_list).includes(data.batch)) {
+  if (Object.keys(_Bot.batch_list).includes(data.batch)) {
     const selected_user_data = [data.name, data.campus, data.room];
     store[data.batch][parseInt(data.num, 10) - 1] = selected_user_data;
     await _Store2.default.setStore({ fep: store });

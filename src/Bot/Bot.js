@@ -1,18 +1,13 @@
 import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
-import {
-  FEPList,
-  StoreAdvance,
-  Basic,
-  Access,
-  Template,
-  DialogFlow
-} from "./internal";
+import { FEPList, StoreAdvance, Basic, Access, Template } from "./Features";
+import { DialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
 
-// import DialogFlow from "./DialogFlow/DialogFlow"
+// import { default_agent } from "../Config/DialogFlow";
+
 import config from "../Config/Line";
 
 // share worker props by groupId
@@ -22,7 +17,10 @@ export class Bot {
   constructor(props) {
     this.getId = this.getId.bind(this);
 
-    shared_props[this.getId(props.event.source).default] = {...shared_props[this.getId(props.event.source).default], event: props.event};
+    shared_props[this.getId(props.event.source).default] = {
+      ...shared_props[this.getId(props.event.source).default],
+      event: props.event
+    };
     // this.shared_props = shared_props
     // console.log(shared_props)
     // only access by? user, group, room, default
@@ -35,14 +33,14 @@ export class Bot {
     // Features creator
     this.Features = {
       FEPList: FEPList(this),
-      StoreAdvance:StoreAdvance(this),
+      StoreAdvance: StoreAdvance(this),
       Basic: Basic(this),
       Access: Access(this),
       Template: Template(this)
     };
 
     // DialogFlow assist
-    this.DialogFlow = DialogFlow(this);
+    this.DialogFlow = new DialogFlow(this);
   }
 
   async log() {
@@ -86,16 +84,16 @@ export class Bot {
     const Id = {};
 
     if (source.groupId) {
-      Id['group'] = source.groupId;
-      Id['default'] = Id.group;
+      Id["group"] = source.groupId;
+      Id["default"] = Id.group;
     } else {
       if (source.roomId) {
-        Id['room'] = source.roomId;
-        Id['default'] = Id.room;
+        Id["room"] = source.roomId;
+        Id["default"] = Id.room;
       } else {
         if (source.userId) {
-          Id['user'] = source.userId;
-          Id['default'] = Id.user;
+          Id["user"] = source.userId;
+          Id["default"] = Id.user;
         }
       }
     }
@@ -105,20 +103,29 @@ export class Bot {
 
   replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      texts.map(text => ({ type: "text", text }))
+    );
   }
 
   sendMessage(message) {
     message = Array.isArray(message) ? message : [message];
-    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => msg));
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      message.map(msg => msg)
+    );
   }
 
   downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
-      const writeable = fs.createWriteStream(downloadPath);
-      stream.pipe(writeable);
-      stream.on("end", () => resolve(downloadPath));
-      stream.on("error", reject);
-    }));
+    return this.client.getMessageContent(messageId).then(
+      stream =>
+        new Promise((resolve, reject) => {
+          const writeable = fs.createWriteStream(downloadPath);
+          stream.pipe(writeable);
+          stream.on("end", () => resolve(downloadPath));
+          stream.on("error", reject);
+        })
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Bot, StoreAdvance, command_prefix } from "../../Bot/internal";
+import { StoreAdvance, command_prefix } from "../../Bot";
 
 export const Basic = Bot => {
   const admin = args => {
@@ -7,7 +7,7 @@ export const Basic = Bot => {
       Bot.replyText("privilage: {}".format(Bot.props.event));
     }
   };
-  
+
   const say = args => {
     if (args.length >= 1) {
       const { source } = Bot.props.event;
@@ -17,7 +17,7 @@ export const Basic = Bot => {
       Bot.replyText(`${command_prefix}say <msg>`);
     }
   };
-  
+
 
   const greet = args => {
     const groupId = args[0] || Bot.props.event.source.groupId;

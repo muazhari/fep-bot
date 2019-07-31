@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import cp from "child_process";
-import { Bot } from "./internal";
+import { Bot, HandlerDialogFlow, shared_props } from "./internal";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -20,23 +20,27 @@ const commandValidate = chat => {
   const prefix = chat[0][0];
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
-  
+
   if (prefix === command_prefix) {
-    console.log({ prefix, command, args })
+    console.log({ prefix, command, args });
     return { prefix, command, args };
   } else {
-    return false
+    return false;
   }
 };
 
 const handleCommand = (commandList, commandValidate) => {
-  const { prefix: content_prefix, command: content_command, args: content_args } = commandValidate;
-    if (Object.keys(commandList).includes(content_command)) {
-      if (commandList[content_command].length >= 1) {
-        commandList[content_command](content_args);
-      } else {
-        commandList[content_command]();
-      }
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = commandValidate;
+  if (Object.keys(commandList).includes(content_command)) {
+    if (commandList[content_command].length >= 1) {
+      commandList[content_command](content_args);
+    } else {
+      commandList[content_command]();
+    }
   }
 };
 
@@ -52,7 +56,7 @@ const userQueue = Bot => {
   };
 
   const decrement = () => {
-     const { user: userId } = Bot.getId();
+    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -157,13 +161,13 @@ const handleText = async Bot => {
 
   // The text query request.
   const chat_splitted = message.text.split(" ");
-  const msgToCmdValidate = commandValidate(chat_splitted)
+  const msgToCmdValidate = commandValidate(chat_splitted);
   if (msgToCmdValidate) {
     handleCommand(commandList, msgToCmdValidate);
   } else {
-    Bot.DialogFlow.talk(message.text);
+    HandlerDialogFlow(Bot);
+    console.log('handler', shared_props)
   }
-  
 };
 
 const handleImage = async Bot => {

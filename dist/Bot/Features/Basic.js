@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Basic = undefined;
 
-var _internal = require("../../Bot/internal");
+var _Bot = require("../../Bot");
 
 const Basic = exports.Basic = Bot => {
   const admin = args => {
@@ -21,7 +21,7 @@ const Basic = exports.Basic = Bot => {
       const msg = [...args].join(' ');
       Bot.replyText(msg);
     } else {
-      Bot.replyText(`${_internal.command_prefix}say <msg>`);
+      Bot.replyText(`${_Bot.command_prefix}say <msg>`);
     }
   };
 
@@ -54,16 +54,16 @@ const Basic = exports.Basic = Bot => {
   const help = () => {
     const msg = `FEP Days & Rooms Commands
 1. add <batch> <name> <campus> <room>
-    ${_internal.command_prefix}add a kamu Kemanggisan 000
+    ${_Bot.command_prefix}add a kamu Kemanggisan 000
 
 2. upd <batch> <number> <name> <campus> <room>
-    ${_internal.command_prefix}upd a 1 kamu Kemanggisan 000
+    ${_Bot.command_prefix}upd a 1 kamu Kemanggisan 000
 
 3. del <batch> <number>
-    ${_internal.command_prefix}del a 1
+    ${_Bot.command_prefix}del a 1
 
 4. view <batch>
-    ${_internal.command_prefix}view a`;
+    ${_Bot.command_prefix}view a`;
 
     Bot.replyText(msg);
   };
