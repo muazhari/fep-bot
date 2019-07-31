@@ -1,4 +1,4 @@
-import { Bot, command_prefix, batch_list } from "../../Bot";
+import { command_prefix, batch_list } from "../../Bot";
 import FEPCleaner from "../../Bot/Helper/FEPCleaner";
 import Store from "../../Services/Store";
 import storage from "node-persist";

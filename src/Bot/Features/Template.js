@@ -1,4 +1,4 @@
-import { Bot, StoreAdvance, command_prefix, baseURL } from "../../Bot";
+import { StoreAdvance, command_prefix, baseURL } from "../../Bot";
 import YoutubeDL from "../../Bot/Helper/YoutubeDL";
 import ResponseCheck from "../../Bot/Helper/ResponseCheck";
 import Store from "../../Services/Store";

@@ -1,4 +1,4 @@
-import { Bot, command_prefix, batch_list } from "../../Bot";
+import { command_prefix, batch_list } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 
 import Store from "../../Services/Store";

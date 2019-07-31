@@ -1,4 +1,4 @@
-import { Bot, StoreAdvance, command_prefix } from "../../Bot";
+import { StoreAdvance, command_prefix } from "../../Bot";
 
 export const Basic = Bot => {
   const admin = args => {

@@ -1,4 +1,4 @@
-import { Bot, command_prefix } from "../../Bot";
+import { command_prefix } from "../../Bot";
 
 export const Access = Bot => {
   const blacklist = () => {
