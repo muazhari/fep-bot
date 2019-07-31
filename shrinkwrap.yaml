@@ -7,6 +7,7 @@ dependencies:
   babel-plugin-transform-object-rest-spread: 6.26.0
   babel-preset-env: 1.7.0
   body-parser: 1.19.0
+  cloudinary: 1.14.0
   dialogflow: 0.6.0
   express: 4.17.1
   fs-extra: 8.1.0
@@ -1879,6 +1880,15 @@ packages:
     dev: true
     resolution:
       integrity: sha512-4FG+RSG9DL7uEwRUZXZn3SS34DiDPfzP0VOiEwtUWlE+AR2EIg+hSyvrIgUUfhdgR/UkAeW2QHgeP+hWrXs7jQ==
+  /cloudinary/1.14.0:
+    dependencies:
+      lodash: 4.17.15
+      q: 1.5.1
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha512-auJY4aD1UGnQTD2iy6kuTA+FJsqyrr9svG12WYSPAO6oRGRf+16UFDDBNuRMm37wj8Tyn8LyiED0b+Jha36ORA==
   /co/4.6.0:
     dev: true
     engines:
@@ -5906,6 +5916,13 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+  /q/1.5.1:
+    dev: false
+    engines:
+      node: '>=0.6.0'
+      teleport: '>=0.2.0'
+    resolution:
+      integrity: sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
   /qs/6.5.2:
     engines:
       node: '>=0.6'
@@ -7469,6 +7486,7 @@ specifiers:
   babel-preset-env: ^1.7.0
   babel-register: ^6.26.0
   body-parser: ^1.18.2
+  cloudinary: ^1.14.0
   dialogflow: 0.6.0
   dotenv: ^7.0.0
   eslint: ^5.15.2
