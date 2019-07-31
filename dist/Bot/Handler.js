@@ -62,7 +62,7 @@ const userQueue = Bot => {
   const queue = {};
 
   const increment = () => {
-    const { userId } = Bot.props.event.source;
+    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -70,7 +70,7 @@ const userQueue = Bot => {
   };
 
   const decrement = () => {
-    const { userId } = Bot.props.event.source;
+    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -170,7 +170,6 @@ const handleText = async Bot => {
   };
 
   // The text query request.
-
   const chat_splitted = message.text.split(" ");
   const msgToCmdValidate = commandValidate(chat_splitted);
   if (msgToCmdValidate) {
@@ -210,11 +209,11 @@ const handleImage = async Bot => {
     //     previewImageUrl
     //   })}`
     // );
-    // Bot.client.replyMessage({
-    //   type: "image",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
+    Bot.sendMessage({
+      type: "image",
+      originalContentUrl,
+      previewImageUrl
+    });
   });
 };
 
@@ -240,7 +239,7 @@ const handleVideo = Bot => {
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    // Bot.client.replyMessage({
+    // Bot.sendMessage({
     //   type: "video",
     //   originalContentUrl,
     //   previewImageUrl
@@ -264,7 +263,7 @@ const handleAudio = Bot => {
   }
 
   return getContent.then(({ originalContentUrl }) => {
-    // Bot.client.replyMessage({
+    // Bot.sendMessage({
     //   type: "audio",
     //   originalContentUrl,
     //   duration: message.duration
@@ -274,7 +273,7 @@ const handleAudio = Bot => {
 
 const handleLocation = Bot => {
   const { message, replyToken } = Bot.props.event;
-  Bot.client.replyMessage({
+  Bot.sendMessage({
     type: "location",
     title: message.title,
     address: message.address,
@@ -285,7 +284,7 @@ const handleLocation = Bot => {
 
 const handleSticker = Bot => {
   const { message, replyToken } = Bot.props.event;
-  // Bot.client.replyMessage({
+  // Bot.sendMessage({
   //   type: "sticker",
   //   packageId: message.packageId,
   //   stickerId: message.stickerId

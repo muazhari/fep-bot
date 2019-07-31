@@ -1,6 +1,7 @@
 import storage from "node-persist";
 
-// const fepStore = storage.create({});
+// share worker props by groupId
+// const shared_props = storage.create({});
 
 const init = async () => {
   await storage.init()

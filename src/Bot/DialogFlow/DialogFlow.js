@@ -1,9 +1,10 @@
 import dialogflow from "dialogflow";
 import uuid from "uuid";
 import config from "../../Config/DialogFlow";
+import { shared_props } from "../../Bot/internal";
 
 export const DialogFlow = Bot => {
-  const { message } = Bot.props.event;
+  const { message, source } = Bot.props.event;
   const projectId = "newagent-nlaqvy";
   // A unique identifier for the given session
   const sessionId = uuid.v4();
@@ -12,23 +13,14 @@ export const DialogFlow = Bot => {
   const sessionClient = new dialogflow.SessionsClient(config);
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
+  const get_parameter = responses => {
+    const { fields } = responses[0].queryResult.parameters;
+    const { displayName } = responses[0].queryResult.intent;
+    const { allRequiredParamsPresent } = responses[0].queryResult
+    return { displayName, fields, allRequiredParamsPresent }
+  };
   
-  const phrases = {
-    talk: [
-    'feppi',
-    'mulai bicara'
-    ],
-    silent: [
-      'feppi selesai',
-      'berhenti bicara'
-    ]
-  }
-  
-  let intent_status = false
-  
-  // Send request and log result
-  const talk = async msg => {
-    if (phrases.talk.includes(msg.toLowerCase())) intent_status = true
+  const get_query = msg => {
     const query = {
       session: sessionPath,
       queryInput: {
@@ -40,14 +32,39 @@ export const DialogFlow = Bot => {
         }
       }
     };
-    const responses = await sessionClient.detectIntent(query);
-    const { fulfillmentText } = responses[0].queryResult;
-    console.log("Detected intent", fulfillmentText);
-    
-    if (intent_status && fulfillmentText.length >= 1) {
-      await Bot.replyText(fulfillmentText);
+    return query;
+  };
+  
+  const talk_check = parameter => {
+    const { fields, displayName } = parameter
+    if (displayName === "chat.talk" || displayName === "chat.silent") {
+      if (Object.keys(fields).includes("chat")) {
+        shared_props[Bot.getId().default]["status"] = fields.chat.stringValue === "true";
+      }
     }
-    if (phrases.silent.includes(msg.toLowerCase())) intent_status = false
+  }
+    
+
+  // Send request and log result
+  const talk = async msg => {
+    const query = get_query(msg);
+    const responses = await sessionClient.detectIntent(query);
+    const parameter = get_parameter(responses)
+    const { queryResult } = responses[0];
+    const { fulfillmentText }  = queryResult
+
+    const status = shared_props[Bot.getId().default].status === undefined? false : shared_props[Bot.getId().default].status;
+
+    if (status && fulfillmentText.length >= 1) {
+      Bot.replyText(fulfillmentText);
+    }
+    
+    talk_check(parameter);
+    
+    // console.log(responses[0].queryResult)
+    console.log("parameter", parameter)
+    console.log("shared_props", shared_props[Bot.getId().default].status, status);
+    console.log("Detected intent", responses[0].queryResult.displayName);
   };
 
   return {
