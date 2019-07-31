@@ -21,14 +21,14 @@ export class DialogFlow {
       this.sessionId
     );
   }
-  get_parameter = responses => {
+  get_parameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
     const { allRequiredParamsPresent } = responses[0].queryResult;
     return { displayName, fields, allRequiredParamsPresent };
-  };
+  }
 
-  get_query = msg => {
+  get_query(msg) {
     const query = {
       session: this.sessionPath,
       queryInput: {
@@ -41,9 +41,9 @@ export class DialogFlow {
       }
     };
     return query;
-  };
+  }
 
-  chat_switch = parameter => {
+  chat_switch(parameter) {
     const props_id = this.Bot.getId().default;
     const { fields, displayName } = parameter;
     if (displayName === "chat.talk" || displayName === "chat.silent") {
@@ -51,10 +51,10 @@ export class DialogFlow {
         shared_props[props_id]["status"] = fields.chat.stringValue === "true";
       }
     }
-  };
+  }
 
   // Send request and log result
-  chat = async msg => {
+  async chat(msg) {
     const props_id = this.Bot.getId().default;
     const query = this.get_query(msg);
     const responses = await this.sessionClient.detectIntent(query);
@@ -78,5 +78,5 @@ export class DialogFlow {
     console.log("parameter", parameter);
     console.log("shared_props", shared_props[props_id].status, status);
     console.log("Detected intent", responses[0].queryResult.displayName);
-  };
+  }
 }
