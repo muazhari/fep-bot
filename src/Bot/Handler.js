@@ -166,7 +166,6 @@ const handleText = async Bot => {
     handleCommand(commandList, msgToCmdValidate);
   } else {
     HandlerDialogFlow(Bot);
-    console.log('handler', shared_props)
   }
 };
 
@@ -209,13 +208,23 @@ const handleImage = async Bot => {
   }
 
   return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+    const { Twibbon } = Bot.Features;
     console.log({ originalContentUrl, previewImageUrl });
+    const { twibbonOriginalPath, twibbonPreviewUrl } = Twibbon(
+      downloadPath,
+      message.id
+    );
     // Bot.replyText(
     //   `transmitted img url: ${JSON.stringify({
     //     originalContentUrl,
     //     previewImageUrl
     //   })}`
     // );
+    Bot.sendMessage({
+      type: "image",
+      twibbonOriginalUrl,
+      twibbonPreviewUrl
+    });
     Bot.sendMessage({
       type: "image",
       originalContentUrl,

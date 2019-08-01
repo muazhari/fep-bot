@@ -52,7 +52,8 @@
     "photoeditorsdk-server": "^4.19.1",
     "uuid": "^3.3.2",
     "dialogflow": "0.6.0",
-    "cloudinary": "^1.14.0"
+    "cloudinary": "^1.14.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
