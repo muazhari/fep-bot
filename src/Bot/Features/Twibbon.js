@@ -15,7 +15,7 @@ const download = (uri, path) => {
 
       request(uri)
         .pipe(fs.createWriteStream(path))
-        .on("close", resolve())
+        .on("close", resolve(path))
         .on("error", reject);
     });
   });
@@ -92,20 +92,22 @@ export const Twibbon = Bot => {
             `${data.filename}-twibbon-preview.jpg`
           );
 
-          download(result_url, twibbonOriginalPath).then(() => {
-            cp.execSync(
-              `convert -resize 240x jpg:${twibbonOriginalPath} jpg:${twibbonPreviewPath}`
-            );
+          download(result_url, twibbonOriginalPath).then(
+            twibbonOriginalPath => {
+              cp.execSync(
+                `convert -resize 240x jpg:${twibbonOriginalPath} jpg:${twibbonPreviewPath}`
+              );
 
-            resolve({
-              twibbonOriginalUrl: `${baseURL}/twibbons/${path.basename(
-                twibbonOriginalPath
-              )}`,
-              twibbonPreviewUrl: `${baseURL}/twibbons/${path.basename(
-                twibbonPreviewPath
-              )}`
-            });
-          });
+              resolve({
+                twibbonOriginalUrl: `${baseURL}/twibbons/${path.basename(
+                  twibbonOriginalPath
+                )}`,
+                twibbonPreviewUrl: `${baseURL}/twibbons/${path.basename(
+                  twibbonPreviewPath
+                )}`
+              });
+            }
+          );
         };
 
         Bot.replyText(`Done!\n${uploads}`);
