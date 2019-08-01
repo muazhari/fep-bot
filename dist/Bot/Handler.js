@@ -210,12 +210,13 @@ const handleImage = async Bot => {
     const { Twibbon } = Bot.Features;
     console.log({ originalContentUrl, previewImageUrl });
 
-    Twibbon.make([path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      console.log({ twibbonOriginalUrl, twibbonPreviewUrl });
+    Twibbon.make([originalContentUrl, path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+      console.log(twibbonOriginalUrl, twibbonPreviewUrl);
+      Bot.replyText(`Done!`);
       Bot.sendMessage({
         type: "image",
-        twibbonOriginalUrl,
-        twibbonPreviewUrl
+        originalContentUrl: twibbonOriginalUrl,
+        previewImageUrl: twibbonPreviewUrl
       });
     });
 
