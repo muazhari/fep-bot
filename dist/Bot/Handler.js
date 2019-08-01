@@ -192,28 +192,31 @@ const handleImage = async Bot => {
     const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
     const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      console.log("premature_resolve", downloadPath);
-      _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-      return {
-        path: downloadPath,
-        originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
-        previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
-      };
-    }).catch(err => {
-      throw err;
-    });
+    getContent = () => {
+      return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        console.log("premature_resolve", downloadPath);
+        _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
+        return {
+          path: downloadPath,
+          originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
+          previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
+        };
+      }).catch(err => {
+        throw err;
+      });
+    };
   } else if (message.contentProvider.type === "external") {
-    getContent = Promise.resolve(message.contentProvider);
+    getContent = () => {
+      return Promise.resolve(message.contentProvider);
+    };
   }
 
-  return getContent.then(({ path, originalContentUrl, previewImageUrl }) => {
-    const { Twibbon } = Bot.Features;
-    console.log({ originalContentUrl, previewImageUrl });
+  // Twibbon switch
+  const twibSwitch = _internal.shared_props[Bot.getId().user].twibbon === undefined ? false : _internal.shared_props[Bot.getId().user].twibbon;
+  if (twibSwitch === true) {
+    return getContent().then(({ path, originalContentUrl, previewImageUrl }) => {
+      const { Twibbon } = Bot.Features;
 
-    // Twibbon switch
-    const twibSwitch = _internal.shared_props[Bot.getId().user].twibbon === undefined ? false : _internal.shared_props[Bot.getId().user].twibbon;
-    if (twibSwitch === true) {
       Twibbon.make([originalContentUrl, path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
         Bot.sendMessage({
           type: "image",
@@ -222,9 +225,9 @@ const handleImage = async Bot => {
         });
       });
 
-      _internal.shared_props[Bot.getId().user]['twibbon'] = false;
-    }
-  });
+      _internal.shared_props[Bot.getId().user]["twibbon"] = false;
+    });
+  }
 };
 
 const handleVideo = Bot => {

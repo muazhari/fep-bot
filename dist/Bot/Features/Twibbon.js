@@ -54,7 +54,6 @@ const Twibbon = exports.Twibbon = Bot => {
 
   const ready = () => {
     // ready-up switch
-    console.log(_Bot.shared_props[Bot.getId().user]);
     _Bot.shared_props[Bot.getId().user]['twibbon'] = true;
     Bot.replyText('Masukan gambar mu~');
   };

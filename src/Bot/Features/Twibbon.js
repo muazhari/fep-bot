@@ -27,7 +27,6 @@ export const Twibbon = Bot => {
   
   const ready = () => {
     // ready-up switch
-    console.log(shared_props[Bot.getId().user])
     shared_props[Bot.getId().user]['twibbon'] = true
     Bot.replyText('Masukan gambar mu~')
     
