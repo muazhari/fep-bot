@@ -5,15 +5,24 @@ import bodyParser from "body-parser";
 import routes from "./routes";
 import cloudinary from "cloudinary";
 
-cloudinary.config({
-  cloud_name: "fep-bot",
-  api_key: "fep-bot",
-  api_secret: "_R0PRhWo1KuScAycGwbmodqtsts"
-});
-
 import * as line from "@line/bot-sdk";
 
-import config from "./Config/Line";
+import line_config from "./Config/Line";
+import cloudinary_config from "./Config/Cloudinary";
+
+cloudinary.config(cloudinary_config);
+
+exports.uploads = file => {
+  return new Promise(resolve => {
+    cloudinary.uploader.upload(
+      file,
+      result => {
+        resolve({ url: result.url, id: result.public_id });
+      },
+      { resource_type: "auto" }
+    );
+  });
+};
 
 import Store from "./Services/Store";
 
@@ -43,7 +52,12 @@ app.use(
   express.static(path.join(__dirname, "../src/Bot/Assets/downloaded"))
 );
 
-app.use("/webhook", line.middleware(config));
+app.use(
+  "/twibbons",
+  express.static(path.join(__dirname, "../src/Bot/Assets/twibbons"))
+);
+
+app.use("/webhook", line.middleware(line_config));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

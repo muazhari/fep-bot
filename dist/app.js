@@ -36,6 +36,10 @@ var _Line = require("./Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
 
+var _Cloudinary = require("./Config/Cloudinary");
+
+var _Cloudinary2 = _interopRequireDefault(_Cloudinary);
+
 var _Store = require("./Services/Store");
 
 var _Store2 = _interopRequireDefault(_Store);
@@ -44,11 +48,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_cloudinary2.default.config({
-  cloud_name: "fep-bot",
-  api_key: "fep-bot",
-  api_secret: "_R0PRhWo1KuScAycGwbmodqtsts"
-});
+_cloudinary2.default.config(_Cloudinary2.default);
+
+exports.uploads = file => {
+  return new Promise(resolve => {
+    _cloudinary2.default.uploader.upload(file, result => {
+      resolve({ url: result.url, id: result.public_id });
+    }, { resource_type: "auto" });
+  });
+};
 
 _Store2.default.init();
 
@@ -67,6 +75,8 @@ app.use((0, _morgan2.default)("dev", {
 // serve static and downloaded files
 app.use("/static", _express2.default.static(_path2.default.join(__dirname, "../src/Bot/Assets/static")));
 app.use("/downloaded", _express2.default.static(_path2.default.join(__dirname, "../src/Bot/Assets/downloaded")));
+
+app.use("/twibbons", _express2.default.static(_path2.default.join(__dirname, "../src/Bot/Assets/twibbons")));
 
 app.use("/webhook", line.middleware(_Line2.default));
 

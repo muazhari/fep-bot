@@ -8,5 +8,4 @@ export const HandlerDialogFlow = async Bot => {
 
   console.log(responses)
   Bot.replyText(fulfillmentText);
-  console.log('handlerdf', shared_props)
 };
