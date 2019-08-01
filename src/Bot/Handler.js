@@ -77,11 +77,11 @@ export const Handler = event => {
   const Worker = new Bot({ event });
   // Worker.log()
 
-  const whitelist = Worker.Features.Access.whitelist();
-  console.log(whitelist);
-  const type = whitelist.user || whitelist.room ? event.type : null;
+  // const whitelist = Worker.Features.Access.whitelist();
+  // console.log(whitelist);
+  // const type = whitelist.user || whitelist.room ? event.type : null;
 
-  switch (type) {
+  switch (event.type) {
     case "message":
       const { message } = event;
       switch (message.type) {
