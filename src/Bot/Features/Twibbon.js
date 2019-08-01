@@ -106,8 +106,9 @@ export const Twibbon = Bot => {
             });
           });
         };
+
+        Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
       });
-      Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
     }
