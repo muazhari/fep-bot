@@ -4,6 +4,7 @@ import cloudinary from "cloudinary";
 import convert from "xml-js";
 import fs from "fs";
 import request from "request";
+import cp from "child_process";
 import path from "path";
 
 const download = (uri, path) => {
@@ -107,7 +108,7 @@ export const Twibbon = Bot => {
           });
         };
 
-        Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
+        Bot.replyText(`Done!\n${uploads}`);
       });
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
