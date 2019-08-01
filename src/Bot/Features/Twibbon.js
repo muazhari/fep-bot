@@ -5,9 +5,6 @@ import convert from "xml-js";
 import fs from "fs";
 import request from "request";
 import path from "path";
-import cp from "child_process";
-import Store from "../../Services/Store";
-
 const download = (uri, path) => {
   return new Promise((resolve, reject) => {
     request.head(uri, (err, res, body) => {
@@ -24,7 +21,6 @@ const download = (uri, path) => {
 
 export const Twibbon = Bot => {
   const uploads = {};
-
   const make = args => {
     if (args.length === 2) {
       const data = {
