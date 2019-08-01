@@ -137,6 +137,8 @@ export const Twibbon = Bot => {
             })
           };
         };
+
+        Bot.replyText(`Done!\n${uploads}`);
       });
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
