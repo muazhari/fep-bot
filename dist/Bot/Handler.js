@@ -153,7 +153,7 @@ const Handler = exports.Handler = event => {
 
 const handleText = async Bot => {
   const { message, replyToken, source } = Bot.props.event;
-  const { FEPList, StoreAdvance, Basic, Template } = Bot.Features;
+  const { FEPList, StoreAdvance, Basic, Template, Twibbon } = Bot.Features;
 
   const commandList = {
     add: FEPList.add,
@@ -170,7 +170,8 @@ const handleText = async Bot => {
     confirm: Template.confirm,
     bifest: Template.bifest,
     greet: Basic.greet,
-    say: Basic.say
+    say: Basic.say,
+    twibbon: Twibbon.ready
   };
 
   // The text query request.
@@ -210,28 +211,19 @@ const handleImage = async Bot => {
     const { Twibbon } = Bot.Features;
     console.log({ originalContentUrl, previewImageUrl });
 
-    Twibbon.make([originalContentUrl, path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      console.log(twibbonOriginalUrl, twibbonPreviewUrl);
-      Bot.replyText(`Done!`);
-      Bot.sendMessage({
-        type: "image",
-        originalContentUrl: twibbonOriginalUrl,
-        previewImageUrl: twibbonPreviewUrl
+    // Twibbon switch
+    const twibSwitch = _internal.shared_props[Bot.getId().user].twibbon === undefined ? false : _internal.shared_props[Bot.getId().user].twibbon;
+    if (twibSwitch === true) {
+      Twibbon.make([originalContentUrl, path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+        Bot.sendMessage({
+          type: "image",
+          originalContentUrl: twibbonOriginalUrl,
+          previewImageUrl: twibbonPreviewUrl
+        });
       });
-    });
 
-    // Bot.replyText(
-    //   `transmitted img url: ${JSON.stringify({
-    //     originalContentUrl,
-    //     previewImageUrl
-    //   })}`
-    // );
-
-    // Bot.sendMessage({
-    //   type: "image",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
+      _internal.shared_props[Bot.getId().user]['twibbon'] = false;
+    }
   });
 };
 

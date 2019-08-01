@@ -52,10 +52,17 @@ const Twibbon = exports.Twibbon = Bot => {
   const uploads = {};
   const twibbon_uploads = {};
 
+  const ready = () => {
+    // ready-up switch
+    console.log(_Bot.shared_props[Bot.getId().user]);
+    _Bot.shared_props[Bot.getId().user]['twibbon'] = true;
+    Bot.replyText('Masukan gambar mu~');
+  };
+
   const getResult = (public_id, filename, size) => {
     const result = _cloudinary2.default.url(public_id, {
       transformation: [{
-        gravity: "face",
+        gravity: "auto",
         aspect_ratio: "1:1",
         crop: "fill",
         format: "jpg",
@@ -153,7 +160,8 @@ const Twibbon = exports.Twibbon = Bot => {
   };
 
   return {
-    make
+    make,
+    ready
   };
 };
 //# sourceMappingURL=Twibbon.js.map

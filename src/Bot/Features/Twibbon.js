@@ -1,4 +1,4 @@
-import { command_prefix, batch_list, baseURL } from "../../Bot";
+import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import cloudinary from "cloudinary";
 import convert from "xml-js";
@@ -24,12 +24,20 @@ const download = (uri, path) => {
 export const Twibbon = Bot => {
   const uploads = {};
   const twibbon_uploads = {};
+  
+  const ready = () => {
+    // ready-up switch
+    console.log(shared_props[Bot.getId().user])
+    shared_props[Bot.getId().user]['twibbon'] = true
+    Bot.replyText('Masukan gambar mu~')
+    
+  }
 
   const getResult = (public_id, filename, size) => {
     const result = cloudinary.url(public_id, {
       transformation: [
         {
-          gravity: "face",
+          gravity: "auto",
           aspect_ratio: "1:1",
           crop: "fill",
           format: "jpg",
@@ -137,8 +145,6 @@ export const Twibbon = Bot => {
             })
           };
         };
-
-        Bot.replyText(`Done!\n${uploads}`);
       });
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
@@ -146,6 +152,7 @@ export const Twibbon = Bot => {
   };
 
   return {
-    make
+    make,
+    ready,
   };
 };
