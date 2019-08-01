@@ -192,6 +192,7 @@ const handleImage = async Bot => {
           `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
         );
         return {
+          path: downloadPath,
           originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
             downloadPath
           )}`,
@@ -207,29 +208,33 @@ const handleImage = async Bot => {
     getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+  return getContent.then(({ path, originalContentUrl, previewImageUrl }) => {
     const { Twibbon } = Bot.Features;
     console.log({ originalContentUrl, previewImageUrl });
-    const { twibbonOriginalPath, twibbonPreviewUrl } = Twibbon(
-      downloadPath,
-      message.id
+
+    Twibbon.make([path, message.id]).then(
+      ({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+        console.log({ twibbonOriginalUrl, twibbonPreviewUrl })
+        Bot.sendMessage({
+          type: "image",
+          twibbonOriginalUrl,
+          twibbonPreviewUrl
+        });
+      }
     );
+
     // Bot.replyText(
     //   `transmitted img url: ${JSON.stringify({
     //     originalContentUrl,
     //     previewImageUrl
     //   })}`
     // );
-    Bot.sendMessage({
-      type: "image",
-      twibbonOriginalUrl,
-      twibbonPreviewUrl
-    });
-    Bot.sendMessage({
-      type: "image",
-      originalContentUrl,
-      previewImageUrl
-    });
+
+    // Bot.sendMessage({
+    //   type: "image",
+    //   originalContentUrl,
+    //   previewImageUrl
+    // });
   });
 };
 

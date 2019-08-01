@@ -5,11 +5,9 @@ import convert from "xml-js";
 import fs from "fs";
 import request from "request";
 import path from "path";
-import Store from "../../Services/Store";
-
-const download = function(uri, path, callback) {
+const download = (uri, path) => {
   return new Promise((resolve, reject) => {
-    request.head(uri, function(err, res, body) {
+    request.head(uri, (err, res, body) => {
       console.log("content-type:", res.headers["content-type"]);
       console.log("content-length:", res.headers["content-length"]);
 
@@ -23,17 +21,19 @@ const download = function(uri, path, callback) {
 
 export const Twibbon = Bot => {
   const uploads = {};
-  const set = async args => {
-    if (args.length === 1) {
+  const make = args => {
+    if (args.length === 2) {
       const data = {
         path: args[0],
         filename: args[1]
       };
 
-      const result = new Promises((resolve, reject) => {
+      console.log(data);
+
+      return new Promise((resolve, reject) => {
         const upload_stream = cloudinary.uploader.upload_stream(
-          { tags: "person", public_id: "person1" },
-          function(err, image) {
+          { tags: "twibbon_bg", public_id: data.filename },
+          (err, image) => {
             console.log("** Stream Upload");
             if (err) {
               console.warn(err);
@@ -67,7 +67,7 @@ export const Twibbon = Bot => {
                 format: "jpg",
                 width: 1040,
                 height: 1040,
-                public_id: "twibbon_first"
+                public_id: `${data.filename}-twibbon`
               },
               {
                 overlay: "twibbon_cs.png",
@@ -106,8 +106,6 @@ export const Twibbon = Bot => {
           });
         };
       });
-
-      return result;
       Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
@@ -115,6 +113,6 @@ export const Twibbon = Bot => {
   };
 
   return {
-    twibbon
+    make
   };
 };

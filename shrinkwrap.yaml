@@ -18,6 +18,7 @@ dependencies:
   pug: 2.0.4
   rimraf: 2.6.3
   uuid: 3.3.2
+  xml-js: 1.6.11
   youtube-dl: 2.0.0
 devDependencies:
   babel-eslint: 10.0.2
@@ -7385,6 +7386,13 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-SWsswQnsqNus/i3HK2A8F8WHCtQ=
+  /xml-js/1.6.11:
+    dependencies:
+      sax: 1.2.4
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
   /xml-name-validator/3.0.0:
     dev: true
     resolution:
@@ -7505,4 +7513,5 @@ specifiers:
   rimraf: ^2.6.3
   supertest: ^4.0.2
   uuid: ^3.3.2
+  xml-js: ^1.6.11
   youtube-dl: ^2.0.0

@@ -180,7 +180,6 @@ const handleText = async Bot => {
     handleCommand(commandList, msgToCmdValidate);
   } else {
     (0, _internal.HandlerDialogFlow)(Bot);
-    console.log('handler', _internal.shared_props);
   }
 };
 
@@ -196,6 +195,7 @@ const handleImage = async Bot => {
       console.log("premature_resolve", downloadPath);
       _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
       return {
+        path: downloadPath,
         originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
         previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
       };
@@ -206,19 +206,31 @@ const handleImage = async Bot => {
     getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+  return getContent.then(({ path, originalContentUrl, previewImageUrl }) => {
+    const { Twibbon } = Bot.Features;
     console.log({ originalContentUrl, previewImageUrl });
+
+    Twibbon.make([path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+      console.log({ twibbonOriginalUrl, twibbonPreviewUrl });
+      Bot.sendMessage({
+        type: "image",
+        twibbonOriginalUrl,
+        twibbonPreviewUrl
+      });
+    });
+
     // Bot.replyText(
     //   `transmitted img url: ${JSON.stringify({
     //     originalContentUrl,
     //     previewImageUrl
     //   })}`
     // );
-    Bot.sendMessage({
-      type: "image",
-      originalContentUrl,
-      previewImageUrl
-    });
+
+    // Bot.sendMessage({
+    //   type: "image",
+    //   originalContentUrl,
+    //   previewImageUrl
+    // });
   });
 };
 

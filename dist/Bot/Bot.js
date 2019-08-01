@@ -66,7 +66,8 @@ class Bot {
       StoreAdvance: (0, _Features.StoreAdvance)(this),
       Basic: (0, _Features.Basic)(this),
       Access: (0, _Features.Access)(this),
-      Template: (0, _Features.Template)(this)
+      Template: (0, _Features.Template)(this),
+      Twibbon: (0, _Features.Twibbon)(this)
     };
 
     // DialogFlow assist

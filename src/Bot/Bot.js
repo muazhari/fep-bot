@@ -1,6 +1,6 @@
 import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
-import { FEPList, StoreAdvance, Basic, Access, Template } from "./Features";
+import { FEPList, StoreAdvance, Basic, Access, Template, Twibbon } from "./Features";
 import { DialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
@@ -36,7 +36,8 @@ export class Bot {
       StoreAdvance: StoreAdvance(this),
       Basic: Basic(this),
       Access: Access(this),
-      Template: Template(this)
+      Template: Template(this),
+      Twibbon: Twibbon(this)
     };
 
     // DialogFlow assist

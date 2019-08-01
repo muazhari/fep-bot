@@ -15,6 +15,5 @@ const HandlerDialogFlow = exports.HandlerDialogFlow = async Bot => {
 
   console.log(responses);
   Bot.replyText(fulfillmentText);
-  console.log('handlerdf', _internal.shared_props);
 };
 //# sourceMappingURL=HandlerDialogFlow.js.map

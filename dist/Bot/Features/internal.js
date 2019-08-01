@@ -63,4 +63,16 @@ Object.keys(_Template).forEach(function (key) {
     }
   });
 });
+
+var _Twibbon = require("./Twibbon");
+
+Object.keys(_Twibbon).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _Twibbon[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map
