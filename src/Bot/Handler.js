@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
 import { Bot, HandlerDialogFlow, shared_props } from "./internal";
@@ -194,7 +194,8 @@ const handleImage = async Bot => {
             `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
           );
           return {
-            path: downloadPath,
+            pathOri: downloadPath,
+            pathPrev: previewPath,
             originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
               downloadPath
             )}`,
@@ -220,10 +221,10 @@ const handleImage = async Bot => {
       : shared_props[Bot.getId().user].twibbon;
   if (twibSwitch === true) {
     return getContent().then(
-      ({ path, originalContentUrl, previewImageUrl }) => {
+      ({ pathOri, pathPrev, originalContentUrl, previewImageUrl }) => {
         const { Twibbon } = Bot.Features;
 
-        Twibbon.make([originalContentUrl, path, message.id]).then(
+        Twibbon.make([originalContentUrl, pathOri, message.id]).then(
           ({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
             Bot.sendMessage({
               type: "image",
@@ -233,6 +234,8 @@ const handleImage = async Bot => {
           }
         );
 
+        // fs.unlink(pathOri)
+        // fs.unlink(pathPrev)
         shared_props[Bot.getId().user]["twibbon"] = false;
       }
     );

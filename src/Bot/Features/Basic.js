@@ -53,7 +53,7 @@ export const Basic = Bot => {
   };
 
   const help = () => {
-    const msg1 = `FEP Days & Rooms Commands
+    const msg = `FEP Days & Rooms Commands
 1. add <batch> <name> <campus> <room>
     ${command_prefix}add a kamu Kemanggisan 000
 
@@ -65,12 +65,8 @@ export const Basic = Bot => {
 
 4. view <batch>
     ${command_prefix}view a`;
-    
-    const msg2 = `Twibbon otomatis? gunakan /twibbon
-masukan gambar dan jadi!
-`
 
-    Bot.replyText([msg2]);
+    Bot.replyText(msg);
   };
 
   return {

@@ -1,7 +1,6 @@
 import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import cloudinary from "cloudinary";
-import convert from "xml-js";
 import fs from "fs";
 import request from "request";
 import cp from "child_process";
@@ -46,8 +45,8 @@ export const Twibbon = Bot => {
           crop: "fill_pad",
           width: size,
           height: size,
-          y: -size*0.19,
-          x: size*0.48
+          y: Math.floor(-size*0.19),
+          x: Math.floor(size*0.048)
         },
         {
           overlay: "twibbon_cs.png",
