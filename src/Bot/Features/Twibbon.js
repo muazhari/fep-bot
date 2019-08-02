@@ -28,7 +28,7 @@ export const Twibbon = Bot => {
   const ready = () => {
     // ready-up switch
     shared_props[Bot.getId().user]['twibbon'] = true
-    Bot.replyText('Masukan gambar mu~')
+    Bot.replyText('Masukan gambar mu langsung disini~')
     
   }
 
@@ -37,12 +37,17 @@ export const Twibbon = Bot => {
       transformation: [
         {
           gravity: "auto",
-          aspect_ratio: "1:1",
           crop: "fill",
           format: "jpg",
+          public_id: `${filename}-twibbon`
+        },
+        {
+          gravity: "auto",
+          crop: "fill_pad",
           width: size,
           height: size,
-          public_id: `${filename}-twibbon`
+          y: -size*0.19,
+          x: size*0.48
         },
         {
           overlay: "twibbon_cs.png",
