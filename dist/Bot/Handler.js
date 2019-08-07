@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Handler = exports.command_prefix = exports.batch_list = exports.baseURL = undefined;
 
-var _fs = require("fs");
+var _fsExtra = require("fs-extra");
 
-var _fs2 = _interopRequireDefault(_fs);
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
 
 var _path = require("path");
 
@@ -95,11 +95,11 @@ const Handler = exports.Handler = event => {
   const Worker = new _internal.Bot({ event });
   // Worker.log()
 
-  const whitelist = Worker.Features.Access.whitelist();
-  console.log(whitelist);
-  const type = whitelist.user || whitelist.room ? event.type : null;
+  // const whitelist = Worker.Features.Access.whitelist();
+  // console.log(whitelist);
+  // const type = whitelist.user || whitelist.room ? event.type : null;
 
-  switch (type) {
+  switch (event.type) {
     case "message":
       const { message } = event;
       switch (message.type) {
@@ -153,7 +153,7 @@ const Handler = exports.Handler = event => {
 
 const handleText = async Bot => {
   const { message, replyToken, source } = Bot.props.event;
-  const { FEPList, StoreAdvance, Basic, Template } = Bot.Features;
+  const { FEPList, StoreAdvance, Basic, Template, Twibbon } = Bot.Features;
 
   const commandList = {
     add: FEPList.add,
@@ -170,7 +170,8 @@ const handleText = async Bot => {
     confirm: Template.confirm,
     bifest: Template.bifest,
     greet: Basic.greet,
-    say: Basic.say
+    say: Basic.say,
+    twibbon: Twibbon.ready
   };
 
   // The text query request.
@@ -191,47 +192,42 @@ const handleImage = async Bot => {
     const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
     const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      console.log("premature_resolve", downloadPath);
-      _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-      return {
-        path: downloadPath,
-        originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
-        previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
-      };
-    }).catch(err => {
-      throw err;
-    });
+    getContent = () => {
+      return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        console.log("premature_resolve", downloadPath);
+        _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
+        return {
+          pathOri: downloadPath,
+          pathPrev: previewPath,
+          originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
+          previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
+        };
+      }).catch(err => {
+        throw err;
+      });
+    };
   } else if (message.contentProvider.type === "external") {
-    getContent = Promise.resolve(message.contentProvider);
+    getContent = () => {
+      return Promise.resolve(message.contentProvider);
+    };
   }
 
-  return getContent.then(({ path, originalContentUrl, previewImageUrl }) => {
-    const { Twibbon } = Bot.Features;
-    console.log({ originalContentUrl, previewImageUrl });
+  // Twibbon switch
+  const twibSwitch = _internal.shared_props[Bot.getId().user].twibbon === undefined ? false : _internal.shared_props[Bot.getId().user].twibbon;
+  if (twibSwitch === true) {
+    return getContent().then(({ pathOri, pathPrev, originalContentUrl, previewImageUrl }) => {
+      const { Twibbon } = Bot.Features;
 
-    Twibbon.make([path, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      console.log({ twibbonOriginalUrl, twibbonPreviewUrl });
-      Bot.sendMessage({
-        type: "image",
-        twibbonOriginalUrl,
-        twibbonPreviewUrl
+      Twibbon.make([originalContentUrl, { pathOri, pathPrev }, message.id]).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+        Bot.sendMessage({
+          type: "image",
+          originalContentUrl: twibbonOriginalUrl,
+          previewImageUrl: twibbonPreviewUrl
+        });
       });
+      _internal.shared_props[Bot.getId().user]["twibbon"] = false;
     });
-
-    // Bot.replyText(
-    //   `transmitted img url: ${JSON.stringify({
-    //     originalContentUrl,
-    //     previewImageUrl
-    //   })}`
-    // );
-
-    // Bot.sendMessage({
-    //   type: "image",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
-  });
+  }
 };
 
 const handleVideo = Bot => {

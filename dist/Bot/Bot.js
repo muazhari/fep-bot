@@ -47,14 +47,12 @@ const shared_props = exports.shared_props = {};
 class Bot {
   constructor(props) {
     this.getId = this.getId.bind(this);
+    this.initProps = this.initProps.bind(this);
 
-    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], {
-      event: props.event
-    });
     // this.shared_props = shared_props
     // console.log(shared_props)
     // only access by? user, group, room, default
-    this.props = shared_props[this.getId(props.event.source).default];
+    this.props = this.initProps(props);
     // console.log(this.props)
 
     // create LINE SDK client
@@ -72,6 +70,18 @@ class Bot {
 
     // DialogFlow assist
     this.DialogFlow = new _DialogFlow.DialogFlow(this);
+  }
+
+  initProps(props) {
+    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], {
+      event: props.event
+    });
+
+    shared_props[this.getId(props.event.source).user] = _extends({}, shared_props[this.getId(props.event.source).user], {
+      event: props.event
+    });
+
+    return shared_props[this.getId(props.event.source).default];
   }
 
   async log() {
@@ -115,18 +125,25 @@ class Bot {
     const Id = {};
 
     if (source.groupId) {
-      Id["group"] = source.groupId;
-      Id["default"] = Id.group;
+      Id["default"] = source.groupId;
     } else {
       if (source.roomId) {
-        Id["room"] = source.roomId;
-        Id["default"] = Id.room;
+        Id["default"] = source.roomId;
       } else {
         if (source.userId) {
-          Id["user"] = source.userId;
-          Id["default"] = Id.user;
+          Id["default"] = source.userId;
         }
       }
+    }
+
+    if (source.groupId) {
+      Id["group"] = source.groupId;
+    }
+    if (source.roomId) {
+      Id["room"] = source.roomId;
+    }
+    if (source.userId) {
+      Id["user"] = source.userId;
     }
 
     if (Id) return Id;

@@ -1,7 +1,6 @@
-import { command_prefix, batch_list, baseURL } from "../../Bot";
+import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import cloudinary from "cloudinary";
-import convert from "xml-js";
 import fs from "fs";
 import request from "request";
 import cp from "child_process";
@@ -23,94 +22,135 @@ const download = (uri, path) => {
 
 export const Twibbon = Bot => {
   const uploads = {};
+  const twibbon_uploads = {};
+
+  const ready = () => {
+    // ready-up switch
+    shared_props[Bot.getId().user]["twibbon"] = true;
+    Bot.replyText("Masukan gambar mu langsung disini~");
+  };
+
+  const getResult = (public_id, filename, size) => {
+    const result = cloudinary.url(public_id, {
+      transformation: [
+        {
+          gravity: "auto",
+          crop: "fill",
+          format: "jpg",
+          aspect_ratio: "1:1",
+          public_id: `${filename}-twibbon`
+        },
+        {
+          gravity: "auto",
+          crop: "fill_pad",
+          width: size,
+          height: size,
+          y: Math.floor(-size * 0.2),
+          x: Math.floor(size * 0.045)
+        },
+        {
+          overlay: "twibbon_cs.png",
+          flags: "relative",
+          width: size,
+          height: size,
+          aspect_ratio: "1:1"
+        }
+      ]
+    });
+
+    return result;
+  };
+
+  const imgUpload = (url, filename) => {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload(url, { public_id: filename })
+        .then(image => {
+          console.log("** File Upload (Promise)");
+          console.log("* " + image.public_id);
+          console.log("* " + image.url);
+          resolve(image);
+        })
+        .catch(err => {
+          console.log("** File Upload (Promise)");
+          if (err) {
+            console.warn(err);
+            reject(err);
+          }
+        });
+    });
+  };
+
+  const waitForAllUploads = (id, image, queue, callback) => {
+    uploads[id] = image;
+    const ids = Object.keys(uploads);
+    if (ids.length === queue) {
+      console.log(
+        "**  uploaded all files (" + ids.join(",") + ") to cloudinary"
+      );
+      callback();
+    }
+  };
+
+  const waitForAllUploadsTwibbon = (id, image, queue, callback) => {
+    twibbon_uploads[id] = image;
+    const ids = Object.keys(twibbon_uploads);
+    if (ids.length === queue) {
+      console.log(
+        "**  uploaded all twibbon files (" + ids.join(",") + ") to cloudinary"
+      );
+      callback();
+    }
+  };
+
   const make = args => {
-    if (args.length === 2) {
+    if (args.length === 3) {
       const data = {
-        path: args[0],
-        filename: args[1]
+        url: args[0],
+        path: args[1],
+        filename: args[2]
       };
 
       console.log(data);
 
-      return new Promise((resolve, reject) => {
-        const upload_stream = cloudinary.uploader.upload_stream(
-          { tags: "twibbon_bg", public_id: data.filename },
-          (err, image) => {
-            console.log("** Stream Upload");
-            if (err) {
-              console.warn(err);
-              reject(err);
-            }
-            console.log("* " + image.public_id);
-            console.log("* " + image.url);
-            waitForAllUploads("twibbon_bg", err, image);
-          }
-        );
-        const file_reader = fs.createReadStream(data.path).pipe(upload_stream);
+      return new Promise(async (resolve, reject) => {
+        imgUpload(data.url, data.filename).then(image => {
+          waitForAllUploads("twibbon_bg", image, 1, performTransformations);
+        });
 
-        const waitForAllUploads = (id, err, image) => {
-          uploads[id] = image;
-          const ids = Object.keys(uploads);
-          if (ids.length === 1) {
-            console.log(
-              "**  uploaded all files (" + ids.join(",") + ") to cloudinary"
-            );
-            performTransformations();
-          }
-        };
-
+        const twibbon_ori_name = `${data.filename}-twibbon`;
         const performTransformations = () => {
-          const result_url = cloudinary.url(uploads.twibbon_bg.public_id, {
-            transformation: [
-              {
-                gravity: "auto",
-                aspect_ratio: "1:1",
-                crop: "fill",
-                format: "jpg",
-                width: 1040,
-                height: 1040,
-                public_id: `${data.filename}-twibbon`
-              },
-              {
-                overlay: "twibbon_cs.png",
-                flags: "relative",
-                width: 1040,
-                height: 1040,
-                aspect_ratio: "1:1"
-              }
-            ]
+          const result_url = getResult(
+            uploads.twibbon_bg.public_id,
+            twibbon_ori_name,
+            1040
+          );
+
+          const twibbon_preview_name = `${data.filename}-twibbon-preview`;
+          const result_preview_url = getResult(
+            uploads.twibbon_bg.public_id,
+            twibbon_preview_name,
+            240
+          );
+
+          imgUpload(result_url, twibbon_ori_name).then(image => {
+            waitForAllUploadsTwibbon("original", image, 2, performResolve);
           });
 
-          const twibbonOriginalPath = path.join(
-            __dirname,
-            "../../src/Bot/Assets/twibbon",
-            `${data.filename}-twibbon.jpg`
-          );
-          const twibbonPreviewPath = path.join(
-            __dirname,
-            "../../src/Bot/Assets/twibbon",
-            `${data.filename}-twibbon-preview.jpg`
-          );
+          imgUpload(result_preview_url, twibbon_preview_name).then(image => {
+            waitForAllUploadsTwibbon("preview", image, 2, performResolve);
+          });
 
-          download(result_url, twibbonOriginalPath).then(
-            twibbonOriginalPath => {
-              cp.execSync(
-                `convert -resize 240x jpg:${twibbonOriginalPath} jpg:${twibbonPreviewPath}`
-              );
+          const performResolve = () => {
+            resolve({
+              twibbonOriginalUrl: `${twibbon_uploads.original.secure_url}`,
+              twibbonPreviewUrl: `${twibbon_uploads.preview.secure_url}`
+            });
 
-              resolve({
-                twibbonOriginalUrl: `${baseURL}/twibbons/${path.basename(
-                  twibbonOriginalPath
-                )}`,
-                twibbonPreviewUrl: `${baseURL}/twibbons/${path.basename(
-                  twibbonPreviewPath
-                )}`
-              });
-            }
-          );
+            fs.unlinkSync(data.path.pathOri);
+            fs.unlinkSync(data.path.pathPrev);
+          };
         };
-
-        Bot.replyText(`Done!\n${uploads}`);
       });
     } else {
       Bot.replyText(`${command_prefix}twibbon <image>`);
@@ -118,6 +158,7 @@ export const Twibbon = Bot => {
   };
 
   return {
-    make
+    make,
+    ready
   };
 };
