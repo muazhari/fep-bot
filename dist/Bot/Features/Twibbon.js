@@ -50,8 +50,8 @@ const Twibbon = exports.Twibbon = Bot => {
 
   const ready = () => {
     // ready-up switch
-    _Bot.shared_props[Bot.getId().user]['twibbon'] = true;
-    Bot.replyText('Masukan gambar mu langsung disini~');
+    _Bot.shared_props[Bot.getId().user]["twibbon"] = true;
+    Bot.replyText("Masukan gambar mu langsung disini~");
   };
 
   const getResult = (public_id, filename, size) => {
@@ -60,14 +60,15 @@ const Twibbon = exports.Twibbon = Bot => {
         gravity: "auto",
         crop: "fill",
         format: "jpg",
+        aspect_ratio: "1:1",
         public_id: `${filename}-twibbon`
       }, {
         gravity: "auto",
         crop: "fill_pad",
         width: size,
         height: size,
-        y: Math.floor(-size * 0.19),
-        x: Math.floor(size * 0.048)
+        y: Math.floor(-size * 0.2),
+        x: Math.floor(size * 0.045)
       }, {
         overlay: "twibbon_cs.png",
         flags: "relative",
@@ -150,6 +151,9 @@ const Twibbon = exports.Twibbon = Bot => {
               twibbonOriginalUrl: `${twibbon_uploads.original.secure_url}`,
               twibbonPreviewUrl: `${twibbon_uploads.preview.secure_url}`
             });
+
+            _fs2.default.unlinkSync(data.path.pathOri);
+            _fs2.default.unlinkSync(data.path.pathPrev);
           };
         };
       });

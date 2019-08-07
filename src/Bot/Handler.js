@@ -224,7 +224,7 @@ const handleImage = async Bot => {
       ({ pathOri, pathPrev, originalContentUrl, previewImageUrl }) => {
         const { Twibbon } = Bot.Features;
 
-        Twibbon.make([originalContentUrl, pathOri, message.id]).then(
+        Twibbon.make([originalContentUrl, { pathOri, pathPrev }, message.id]).then(
           ({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
             Bot.sendMessage({
               type: "image",
@@ -233,9 +233,6 @@ const handleImage = async Bot => {
             });
           }
         );
-
-        // fs.unlink(pathOri)
-        // fs.unlink(pathPrev)
         shared_props[Bot.getId().user]["twibbon"] = false;
       }
     );

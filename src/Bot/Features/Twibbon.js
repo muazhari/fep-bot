@@ -23,13 +23,12 @@ const download = (uri, path) => {
 export const Twibbon = Bot => {
   const uploads = {};
   const twibbon_uploads = {};
-  
+
   const ready = () => {
     // ready-up switch
-    shared_props[Bot.getId().user]['twibbon'] = true
-    Bot.replyText('Masukan gambar mu langsung disini~')
-    
-  }
+    shared_props[Bot.getId().user]["twibbon"] = true;
+    Bot.replyText("Masukan gambar mu langsung disini~");
+  };
 
   const getResult = (public_id, filename, size) => {
     const result = cloudinary.url(public_id, {
@@ -38,6 +37,7 @@ export const Twibbon = Bot => {
           gravity: "auto",
           crop: "fill",
           format: "jpg",
+          aspect_ratio: "1:1",
           public_id: `${filename}-twibbon`
         },
         {
@@ -45,8 +45,8 @@ export const Twibbon = Bot => {
           crop: "fill_pad",
           width: size,
           height: size,
-          y: Math.floor(-size*0.19),
-          x: Math.floor(size*0.048)
+          y: Math.floor(-size * 0.2),
+          x: Math.floor(size * 0.045)
         },
         {
           overlay: "twibbon_cs.png",
@@ -145,7 +145,10 @@ export const Twibbon = Bot => {
             resolve({
               twibbonOriginalUrl: `${twibbon_uploads.original.secure_url}`,
               twibbonPreviewUrl: `${twibbon_uploads.preview.secure_url}`
-            })
+            });
+
+            fs.unlinkSync(data.path.pathOri);
+            fs.unlinkSync(data.path.pathPrev);
           };
         };
       });
@@ -156,6 +159,6 @@ export const Twibbon = Bot => {
 
   return {
     make,
-    ready,
+    ready
   };
 };
