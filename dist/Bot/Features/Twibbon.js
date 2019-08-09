@@ -1,7 +1,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.Twibbon = undefined;
 
@@ -36,238 +36,366 @@ var _path2 = _interopRequireDefault(_path);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function objectsHaveSameKeys(...objects) {
-  const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), []);
-  const union = new Set(allKeys);
-  return objects.every(object => union.size === Object.keys(object).length);
+    const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), []);
+    const union = new Set(allKeys);
+    return objects.every(object => union.size === Object.keys(object).length);
 }
 
 const Twibbon = exports.Twibbon = Bot => {
-  const uploads = {};
+    const uploads = {};
 
-  const twibbon_list = {
-    twibbon_cs: {
-      name: "Computer Science",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
-      transform: (filename, size) => {
-        return {
-          transformation: [{
-            gravity: "auto",
-            crop: "fill",
-            format: "jpg",
-            aspect_ratio: "1:1",
-            public_id: `${filename}-twibbon`
-          }, {
-            gravity: "auto",
-            crop: "fill_pad",
-            width: size,
-            height: size,
-            y: Math.floor(-size * 0.2),
-            x: Math.floor(size * 0.045)
-          }, {
-            overlay: "twibbon_cs.png",
-            flags: "relative",
-            width: size,
-            height: size,
-            aspect_ratio: "1:1"
-          }]
-        };
-      }
-    },
+    const twibbon_list = {
+        twibbon_cs: {
+            category: "socs",
+            name: "Computer Science",
+            url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
+            transform: (filename, size) => {
+                return {
+                    transformation: [{
+                        gravity: "auto",
+                        crop: "fill",
+                        format: "jpg",
+                        aspect_ratio: "1:1",
+                        public_id: `${filename}-twibbon`
+                    }, {
+                        gravity: "auto",
+                        crop: "fill_pad",
+                        width: size,
+                        height: size,
+                        y: Math.floor(-size * 0.2),
+                        x: Math.floor(size * 0.045)
+                    }, {
+                        overlay: "twibbon_cs.png",
+                        flags: "relative",
+                        width: size,
+                        height: size,
+                        aspect_ratio: "1:1"
+                    }]
+                };
+            }
+        },
 
-    twibbon_tfi: {
-      name: "Teach For Indonesia",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
-      transform: (filename, size) => {
-        return {
-          transformation: [{
-            gravity: "auto",
-            crop: "fill",
-            format: "jpg",
-            aspect_ratio: "1:1",
-            public_id: `${filename}-twibbon`
-          }, {
-            gravity: "auto",
-            crop: "fill_pad",
-            width: size,
-            height: size,
-            y: Math.floor(-size * 0.2),
-            x: Math.floor(size * 0.045)
-          }, {
-            overlay: "twibbon_tfi.png",
-            flags: "relative",
-            width: size,
-            height: size,
-            aspect_ratio: "1:1"
-          }]
-        };
-      }
-    }
+        twibbon_tfi: {
+            category: "tfi",
+            name: "Teach For Indonesia",
+            url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
+            transform: (filename, size) => {
+                return {
+                    transformation: [{
+                        gravity: "auto",
+                        crop: "fill",
+                        format: "jpg",
+                        // aspect_ratio: "1:1",
+                        width: size + Math.floor(-size * 0.045),
+                        height: size + Math.floor(size * 0.2),
+                        x: Math.floor(size * 0.045),
+                        y: Math.floor(-size * 0.2),
+                        public_id: `${filename}-twibbon`
 
-  };
+                    }, {
+                        gravity: "auto",
+                        crop: "fill",
+                        width: size,
+                        height: size
+                    }, {
+                        overlay: "twibbon_tfi.png",
+                        flags: "relative",
+                        width: size,
+                        height: size,
+                        aspect_ratio: "1:1"
+                    }]
+                };
+            }
+        },
 
-  const ready = () => {
-    // ready-up switch
-    _Bot.shared_props[Bot.getId().user]["twibbon"] = {
-      status: true,
-      source: {
-        id: Bot.getId().default
-      }
+        twibbon_binus1: {
+            category: "binus",
+            name: "Binus 1",
+            url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbon_binus1.png",
+            transform: (filename, size) => {
+                return {
+                    transformation: [{
+                        gravity: "auto",
+                        crop: "fill",
+                        format: "jpg",
+                        // aspect_ratio: "1:1",
+                        width: size - Math.floor(size * 0.2),
+                        height: size - Math.floor(size * 0.2),
+                        public_id: `${filename}-twibbon`
+                    }, {
+                        overlay: "twibbon_binus1.png",
+                        flags: "relative",
+                        width: size,
+                        height: size,
+                        aspect_ratio: "1:1"
+                    }]
+                };
+            }
+        },
+
+        twibbon_binus2: {
+            category: "binus",
+            name: "Binus 2",
+            url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbon_binus2.png",
+            transform: (filename, size) => {
+                return {
+                    transformation: [{
+                        gravity: "auto",
+                        crop: "fill",
+                        format: "jpg",
+                        // aspect_ratio: "1:1",
+                        width: size + Math.floor(-size * 0.045),
+                        height: size + Math.floor(size * 0.2),
+                        x: Math.floor(size * 0.045),
+                        y: Math.floor(-size * 0.2),
+                        public_id: `${filename}-twibbon`
+
+                    }, {
+                        gravity: "auto",
+                        crop: "fill",
+                        width: size,
+                        height: size
+                    }, {
+                        overlay: "twibbon_binus2.png",
+                        flags: "relative",
+                        width: size,
+                        height: size,
+                        aspect_ratio: "1:1"
+                    }]
+                };
+            }
+        },
+
+        twibbon_binus3: {
+            category: "binus",
+            name: "Binus 3",
+            url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbon_binus3.png",
+            transform: (filename, size) => {
+                return {
+                    transformation: [{
+                        gravity: "auto",
+                        crop: "fill",
+                        format: "jpg",
+                        // aspect_ratio: "1:1",
+                        width: size + Math.floor(-size * 0.045),
+                        height: size + Math.floor(size * 0.2),
+                        x: Math.floor(size * 0.045),
+                        y: Math.floor(-size * 0.2),
+                        public_id: `${filename}-twibbon`
+
+                    }, {
+                        gravity: "auto",
+                        crop: "fill",
+                        width: size,
+                        height: size
+                    }, {
+                        overlay: "twibbon_binus3.png",
+                        flags: "relative",
+                        width: size,
+                        height: size,
+                        aspect_ratio: "1:1"
+                    }]
+                };
+            }
+        }
+
     };
 
-    display_list();
-  };
+    const ready = args => {
+        if (args.length <= 1) {
+            const data = {
+                category: args[0]
 
-  const listen = async data => {
-    const { user } = Bot.getId();
-    if (data.twibbon) {
-      const { id, type } = data.twibbon;
-      _Bot.shared_props[user].twibbon = _extends({}, _Bot.shared_props[user].twibbon, {
-        id: id,
-        type: type,
-        status: true
-      });
-      const profile = await Bot.profile();
-      Bot.replyText(`Hai ${profile.displayName}, Masukan gambar mu disini~`);
-    }
-  };
+                // ready-up switch
+            };_Bot.shared_props[Bot.getId().user]["twibbon"] = {
+                status: true,
+                source: {
+                    id: Bot.getId().default
+                }
+            };
 
-  const display_list = () => {
-    const twibbon_contents = Object.keys(twibbon_list).map(id => {
-      const { url, name } = twibbon_list[id];
-      return {
-        "thumbnailImageUrl": url,
-        "imageBackgroundColor": "#FFFFFF",
-        "text": `${name}`,
-        "actions": [{
-          "type": "postback",
-          "label": "Select",
-          "data": `{"twibbon":{"id":"${id}","type":"auto"}}`
-        }]
-      };
-    });
-
-    Bot.sendMessage({
-      "type": "template",
-      "altText": "Twibbon list",
-      "template": {
-        "type": "carousel",
-        "columns": twibbon_contents,
-        "imageAspectRatio": "square",
-        "imageSize": "cover"
-      }
-    });
-  };
-
-  const getResult = (twibbon_id, public_id, filename, size) => {
-    const result = _cloudinary2.default.url(public_id, twibbon_list[twibbon_id].transform(filename, size));
-    return result;
-  };
-
-  const imgUpload = (url, filename) => {
-    return new Promise((resolve, reject) => {
-      _cloudinary2.default.uploader.upload(url, { public_id: filename }).then(image => {
-        console.log("** File Upload (Promise)");
-        console.log("* " + image.public_id);
-        console.log("* " + image.url);
-        resolve(image);
-      }).catch(err => {
-        console.log("** File Upload (Promise)");
-        if (err) {
-          console.warn(err);
-          reject(err);
+            display_list(data.category || "all");
+        } else {
+            Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
         }
-      });
-    });
-  };
+    };
 
-  const waitForAllUploads = (type, queue, imageObject, callback) => {
-    uploads[type] = _extends({}, uploads[type], imageObject);
-    const ids = Object.keys(uploads[type]);
-    if (ids.length === queue) {
-      console.log("**  uploaded all raw files (" + ids.join(",") + ") to cloudinary");
-      callback();
-    }
-  };
+    const listen = async data => {
+        const { user } = Bot.getId();
 
-  const generate = data => {
-    return new Promise(async (resolve, reject) => {
-      imgUpload(data.url, data.filename).then(image => {
-        waitForAllUploads("raw", 1, {
-          twibbon_bg: image
-        }, performTransformations);
-      });
+        const userSwitch = _Bot.shared_props[user].twibbon.status === undefined ? false : true;
 
-      const performTransformations = () => {
-        const twibbon_ori_name = `${data.filename}-twibbon`;
-        const result_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_ori_name, 1040);
+        if (data.twibbon && userSwitch) {
+            const { id, type } = data.twibbon;
+            _Bot.shared_props[user].twibbon = _extends({}, _Bot.shared_props[user].twibbon, {
+                id: id,
+                type: type,
+                status: true
+            });
+            const profile = await Bot.profile();
+            Bot.replyText(`Hai ${profile.displayName}, masukan gambar mu disini~`);
+        }
+    };
 
-        const twibbon_preview_name = `${data.filename}-twibbon-preview`;
-        const result_preview_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_preview_name, 240);
+    const display_list = category => {
+        let selected = [];
+        if (category === "all") {
+            selected = Object.keys(twibbon_list).map(twibbon_id => {
+                return twibbon_id;
+            });
+        } else {
+            selected = Object.keys(twibbon_list).map(twibbon_id => {
+                if (twibbon_list[twibbon_id].category === category) {
+                    return twibbon_id;
+                }
+            });
+        }
 
-        imgUpload(result_url, twibbon_ori_name).then(image => {
-          waitForAllUploads("twibbon", 2, {
-            original: image
-          }, performResolve);
+        const pure_selected = selected.filter(item => {
+            return typeof item === 'string';
         });
 
-        imgUpload(result_preview_url, twibbon_preview_name).then(image => {
-          waitForAllUploads("twibbon", 2, {
-            preview: image
-          }, performResolve);
+        if (pure_selected.length === 0) {
+            Bot.replyText(`Tidak ada kategori, lihat di ${_Bot.command_prefix}twibbon`);
+        }
+
+        const twibbon_contents = pure_selected.map(id => {
+
+            const { url, name } = twibbon_list[id];
+            return {
+                "thumbnailImageUrl": url,
+                "imageBackgroundColor": "#FFFFFF",
+                "text": `${name}`,
+                "actions": [{
+                    "type": "postback",
+                    "label": "Select",
+                    "data": `{"twibbon":{"id":"${id}","type":"auto"}}`
+                }]
+            };
         });
 
-        const performResolve = () => {
-          resolve({ twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`, twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}` });
+        Bot.sendMessage({
+            "type": "template",
+            "altText": "Twibbon list",
+            "template": {
+                "type": "carousel",
+                "columns": twibbon_contents,
+                "imageAspectRatio": "square",
+                "imageSize": "cover"
+            }
+        });
+    };
 
-          _fsExtra2.default.unlinkSync(data.originalPath);
-          _fsExtra2.default.unlinkSync(data.previewPath);
-        };
-      };
-    });
-  };
+    const getResult = (twibbon_id, public_id, filename, size) => {
+        const result = _cloudinary2.default.url(public_id, twibbon_list[twibbon_id].transform(filename, size));
+        return result;
+    };
 
-  const make = args => {
-    if (args.length === 4) {
-      const data = {
-        url: args[0],
-        originalPath: args[1],
-        previewPath: args[2],
-        twibbonSetting: args[3],
-        filename: Bot.props.event.message.id
-      };
+    const imgUpload = (url, filename) => {
+        return new Promise((resolve, reject) => {
+            _cloudinary2.default.uploader.upload(url, { public_id: filename }).then(image => {
+                console.log("** File Upload (Promise)");
+                console.log("* " + image.public_id);
+                console.log("* " + image.url);
+                resolve(image);
+            }).catch(err => {
+                console.log("** File Upload (Promise)");
+                if (err) {
+                    console.warn(err);
+                    reject(err);
+                }
+            });
+        });
+    };
 
-      generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-        Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
-      });
+    const waitForAllUploads = (type, queue, imageObject, callback) => {
+        uploads[type] = _extends({}, uploads[type], imageObject);
+        const ids = Object.keys(uploads[type]);
+        if (ids.length === queue) {
+            console.log("**  uploaded all raw files (" + ids.join(",") + ") to cloudinary");
+            callback();
+        }
+    };
 
-      //switch back
-      _Bot.shared_props[Bot.getId().user].twibbon.status = false;
-    } else {
-      Bot.replyText(`${_Bot.command_prefix}twibbon <image>`);
-    }
-  };
+    const generate = data => {
+        return new Promise(async (resolve, reject) => {
+            imgUpload(data.url, data.filename).then(image => {
+                waitForAllUploads("raw", 1, {
+                    twibbon_bg: image
+                }, performTransformations);
+            });
 
-  const insert = getContent => {
-    const { user } = Bot.getId();
+            const performTransformations = () => {
+                const twibbon_ori_name = `${data.filename}-twibbon`;
+                const result_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_ori_name, 1040);
 
-    const userSwitch = _Bot.shared_props[user].twibbon.status === undefined ? false : _Bot.shared_props[user].twibbon.status;
+                const twibbon_preview_name = `${data.filename}-twibbon-preview`;
+                const result_preview_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_preview_name, 240);
 
-    const userInSameCommunal = _Bot.shared_props[user].twibbon.source.id === Bot.getId().default;
+                imgUpload(result_url, twibbon_ori_name).then(image => {
+                    waitForAllUploads("twibbon", 2, {
+                        original: image
+                    }, performResolve);
+                });
 
-    const twibbon_id_chosen = _Bot.shared_props[user].twibbon.id !== undefined;
+                imgUpload(result_preview_url, twibbon_preview_name).then(image => {
+                    waitForAllUploads("twibbon", 2, {
+                        preview: image
+                    }, performResolve);
+                });
 
-    if (userSwitch && userInSameCommunal && twibbon_id_chosen) {
-      const twibbonSetting = {
-        id: _Bot.shared_props[user].twibbon.id,
-        type: _Bot.shared_props[user].twibbon.type
-      };
+                const performResolve = () => {
+                    resolve({ twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`, twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}` });
 
-      getContent().then(({ originalPath, previewPath, originalContentUrl, previewImageUrl }) => {
-        make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
-      });
-    }
-  };
+                    _fsExtra2.default.unlinkSync(data.originalPath);
+                    _fsExtra2.default.unlinkSync(data.previewPath);
+                };
+            };
+        });
+    };
 
-  return { ready, insert, listen };
+    const make = args => {
+        if (args.length === 4) {
+            const data = {
+                url: args[0],
+                originalPath: args[1],
+                previewPath: args[2],
+                twibbonSetting: args[3],
+                filename: Bot.props.event.message.id
+            };
+
+            generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+                Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
+            });
+
+            //switch back
+            _Bot.shared_props[Bot.getId().user].twibbon.status = false;
+        } else {
+            Bot.replyText(`${_Bot.command_prefix}twibbon <image>`);
+        }
+    };
+
+    const insert = getContent => {
+        const { user } = Bot.getId();
+
+        const userSwitch = _Bot.shared_props[user].twibbon.status === undefined ? false : _Bot.shared_props[user].twibbon.status;
+
+        const userInSameCommunal = _Bot.shared_props[user].twibbon.source.id === Bot.getId().default;
+
+        const twibbon_id_chosen = _Bot.shared_props[user].twibbon.id !== undefined;
+
+        if (userSwitch && userInSameCommunal && twibbon_id_chosen) {
+            const twibbonSetting = {
+                id: _Bot.shared_props[user].twibbon.id,
+                type: _Bot.shared_props[user].twibbon.type
+            };
+
+            getContent().then(({ originalPath, previewPath, originalContentUrl, previewImageUrl }) => {
+                make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
+            });
+        }
+    };
+
+    return { ready, insert, listen };
 };
 //# sourceMappingURL=Twibbon.js.map
