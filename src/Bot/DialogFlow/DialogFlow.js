@@ -27,6 +27,8 @@ export class DialogFlow {
     );
 
     this.temp_chat_switch = true;
+    
+    this.propsId = this.Bot.getId().default
   }
   get_parameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
@@ -51,11 +53,10 @@ export class DialogFlow {
   }
 
   chat_switch(parameter, chat_switch_callback, default_callback) {
-    const props_id = this.Bot.getId().default;
     const { fields, displayName } = parameter;
     if (displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[props_id]["status"] = fields.chat.stringValue === "true";
+        shared_props[this.propsId]["status"] = fields.chat.stringValue === "true";
         return chat_switch_callback();
       }
     }
@@ -65,7 +66,7 @@ export class DialogFlow {
   // Send request and log result
   async chat(msg) {
     return new Promise(async (resolve, reject) => {
-      try {
+      try {      
         const query = this.get_query(msg);
         const responses = await this.sessionClient.detectIntent(query);
         const parameter = this.get_parameter(responses);
@@ -73,10 +74,12 @@ export class DialogFlow {
         const { queryResult } = responses[0];
         const { fulfillmentText } = queryResult;
 
+        
+        
         const status =
-          shared_props[this.Bot.getId().default].status === undefined
+          shared_props[this.propsId].status === undefined
             ? false
-            : shared_props[this.Bot.getId().default].status;
+            : shared_props[this.propsId].status;
 
         const chat_switch_callback = () => {
             return resolve({ fulfillmentText, parameter });
@@ -97,7 +100,7 @@ export class DialogFlow {
         console.log("parameter", parameter);
         console.log(
           "shared_props",
-          shared_props[this.Bot.getId().default].status,
+          shared_props[this.propsId].status,
           status
         );
         console.log("Detected intent", responses[0].queryResult.displayName);

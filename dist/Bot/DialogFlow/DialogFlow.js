@@ -40,6 +40,8 @@ class DialogFlow {
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
     this.temp_chat_switch = true;
+
+    this.propsId = this.Bot.getId().default;
   }
   get_parameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
@@ -64,11 +66,10 @@ class DialogFlow {
   }
 
   chat_switch(parameter, chat_switch_callback, default_callback) {
-    const props_id = this.Bot.getId().default;
     const { fields, displayName } = parameter;
     if (displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
-        _Bot.shared_props[props_id]["status"] = fields.chat.stringValue === "true";
+        _Bot.shared_props[this.propsId]["status"] = fields.chat.stringValue === "true";
         return chat_switch_callback();
       }
     }
@@ -86,7 +87,7 @@ class DialogFlow {
         const { queryResult } = responses[0];
         const { fulfillmentText } = queryResult;
 
-        const status = _Bot.shared_props[this.Bot.getId().default].status === undefined ? false : _Bot.shared_props[this.Bot.getId().default].status;
+        const status = _Bot.shared_props[this.propsId].status === undefined ? false : _Bot.shared_props[this.propsId].status;
 
         const chat_switch_callback = () => {
           return resolve({ fulfillmentText, parameter });
@@ -103,7 +104,7 @@ class DialogFlow {
         }
 
         console.log("parameter", parameter);
-        console.log("shared_props", _Bot.shared_props[this.Bot.getId().default].status, status);
+        console.log("shared_props", _Bot.shared_props[this.propsId].status, status);
         console.log("Detected intent", responses[0].queryResult.displayName);
       } catch (err) {
         reject(err);
