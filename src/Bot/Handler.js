@@ -35,6 +35,7 @@ const handleCommand = (commandList, commandValidate) => {
     command: content_command,
     args: content_args
   } = commandValidate;
+  
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
       commandList[content_command](content_args);
@@ -42,6 +43,7 @@ const handleCommand = (commandList, commandValidate) => {
       commandList[content_command]();
     }
   }
+  
 };
 
 const userQueue = Bot => {
@@ -127,7 +129,13 @@ export const Handler = event => {
       if (data === "DATE" || data === "TIME" || data === "DATETIME") {
         data += `(${JSON.stringify(event.postback.params)})`;
       }
-      return Worker.replyText(`Got postback: ${data}`);
+      
+      const objectData = JSON.parse(data)
+      
+      const { Twibbon } = Worker.Features
+      Twibbon.listen(objectData)
+      
+      break;
 
     case "beacon":
       return Worker.replyText(`Got beacon: ${event.beacon.hwid}`);
@@ -137,7 +145,7 @@ export const Handler = event => {
   }
 };
 
-const handleText = async Bot => {
+const handleText = Bot => {
   const { message, replyToken, source } = Bot.props.event;
   const { FEPList, StoreAdvance, Basic, Template, Twibbon } = Bot.Features;
 
@@ -170,7 +178,7 @@ const handleText = async Bot => {
   }
 };
 
-const handleImage = async Bot => {
+const handleImage = Bot => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
 
@@ -194,8 +202,8 @@ const handleImage = async Bot => {
             `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
           );
           return {
-            pathOri: downloadPath,
-            pathPrev: previewPath,
+            originalPath: downloadPath,
+            previewPath: previewPath,
             originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
               downloadPath
             )}`,
@@ -215,28 +223,9 @@ const handleImage = async Bot => {
   }
 
   // Twibbon switch
-  const twibSwitch =
-    shared_props[Bot.getId().user].twibbon === undefined
-      ? false
-      : shared_props[Bot.getId().user].twibbon;
-  if (twibSwitch === true) {
-    return getContent().then(
-      ({ pathOri, pathPrev, originalContentUrl, previewImageUrl }) => {
-        const { Twibbon } = Bot.Features;
-
-        Twibbon.make([originalContentUrl, { pathOri, pathPrev }, message.id]).then(
-          ({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-            Bot.sendMessage({
-              type: "image",
-              originalContentUrl: twibbonOriginalUrl,
-              previewImageUrl: twibbonPreviewUrl
-            });
-          }
-        );
-        shared_props[Bot.getId().user]["twibbon"] = false;
-      }
-    );
-  }
+  const { Twibbon } = Bot.Features;
+  Twibbon.insert(getContent)
+  
 };
 
 const handleVideo = Bot => {

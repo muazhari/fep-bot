@@ -33,6 +33,10 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
+var _uuid = require("uuid");
+
+var _uuid2 = _interopRequireDefault(_uuid);
+
 var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
@@ -43,6 +47,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // share worker props by groupId
 const shared_props = exports.shared_props = {};
+// export const listener_stack = {
+//   postback: {}
+// };
+
+
+// class listener {
+//   constructor(Bot){
+//     this.Bot = Bot
+//     this.event = this.Bot.props.event
+//   }
+
+//   push(callback){
+//     listener_stack[this.Bot.getId().user] = callback
+//   }
+
+//   postback(stringObject, callback) {
+//     const data = JSON.parse(stringObject)
+//     return callback(listener_stack.postback[uuid.v4])
+//   }  
+// }
 
 class Bot {
   constructor(props) {
@@ -70,18 +94,27 @@ class Bot {
 
     // DialogFlow assist
     this.DialogFlow = new _DialogFlow.DialogFlow(this);
+
+    // Events listen assist
+    // this.listener = new listener(this)
   }
 
   initProps(props) {
-    shared_props[this.getId(props.event.source).default] = _extends({}, shared_props[this.getId(props.event.source).default], {
-      event: props.event
+    const SourceIds = this.getId(props.event.source);
+
+    Object.keys(SourceIds).map(type => {
+      shared_props[SourceIds[type]] = _extends({}, shared_props[SourceIds[type]], {
+        event: props.event
+      });
     });
 
-    shared_props[this.getId(props.event.source).user] = _extends({}, shared_props[this.getId(props.event.source).user], {
-      event: props.event
-    });
+    return shared_props[SourceIds.default];
+  }
 
-    return shared_props[this.getId(props.event.source).default];
+  profile() {
+    return new Promise((resolve, reject) => {
+      this.client.getProfile(this.getId().user).then(resolve).catch(reject);
+    });
   }
 
   async log() {
@@ -122,31 +155,31 @@ class Bot {
 
   getId(source) {
     if (!source) source = this.props.event.source;
-    const Id = {};
+    const type = {};
 
     if (source.groupId) {
-      Id["default"] = source.groupId;
+      type["default"] = source.groupId;
     } else {
       if (source.roomId) {
-        Id["default"] = source.roomId;
+        type["default"] = source.roomId;
       } else {
         if (source.userId) {
-          Id["default"] = source.userId;
+          type["default"] = source.userId;
         }
       }
     }
 
     if (source.groupId) {
-      Id["group"] = source.groupId;
+      type["group"] = source.groupId;
     }
     if (source.roomId) {
-      Id["room"] = source.roomId;
+      type["room"] = source.roomId;
     }
     if (source.userId) {
-      Id["user"] = source.userId;
+      type["user"] = source.userId;
     }
 
-    if (Id) return Id;
+    if (type) return type;
   }
 
   replyText(texts) {
