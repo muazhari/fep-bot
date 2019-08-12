@@ -44,6 +44,25 @@ function objectsHaveSameKeys(...objects) {
 const Twibbon = exports.Twibbon = Bot => {
     const uploads = {};
 
+    const manual_transform = (twibbon_overlay, filename, size) => {
+        return {
+            transformation: [{
+                crop: "fit",
+                width: size,
+                height: size,
+                format: "jpg",
+                public_id: `${filename}-twibbon`
+
+            }, {
+                overlay: twibbon_overlay,
+                flags: "relative",
+                width: size,
+                height: size,
+                aspect_ratio: "1:1"
+            }]
+        };
+    };
+
     const twibbon_list = {
         twibbon_cs: {
             category: "socs",
@@ -51,26 +70,43 @@ const Twibbon = exports.Twibbon = Bot => {
             url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
             transform: (filename, size) => {
                 return {
-                    transformation: [{
-                        gravity: "auto",
-                        crop: "fill",
-                        format: "jpg",
-                        aspect_ratio: "1:1",
-                        public_id: `${filename}-twibbon`
-                    }, {
-                        gravity: "auto",
-                        crop: "fill_pad",
-                        width: size,
-                        height: size,
-                        y: Math.floor(-size * 0.2),
-                        x: Math.floor(size * 0.045)
-                    }, {
-                        overlay: "twibbon_cs.png",
-                        flags: "relative",
-                        width: size,
-                        height: size,
-                        aspect_ratio: "1:1"
-                    }]
+                    auto: {
+                        transformation: [{
+                            gravity: "auto",
+                            crop: "fill",
+                            format: "jpg",
+                            aspect_ratio: "1:1",
+                            public_id: `${filename}-twibbon`
+                        }, {
+                            gravity: "auto",
+                            crop: "fill_pad",
+                            width: size,
+                            height: size,
+                            y: Math.floor(-size * 0.2),
+                            x: Math.floor(size * 0.045)
+                        }, {
+                            overlay: "twibbon_cs.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    },
+                    manual: {
+                        transformation: [{
+                            crop: "fit",
+                            format: "jpg",
+                            width: size,
+                            height: size,
+                            public_id: `${filename}-twibbon`
+                        }, {
+                            overlay: "twibbon_cs.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    }
                 };
             }
         },
@@ -81,29 +117,48 @@ const Twibbon = exports.Twibbon = Bot => {
             url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
             transform: (filename, size) => {
                 return {
-                    transformation: [{
-                        gravity: "auto",
-                        crop: "fill",
-                        format: "jpg",
-                        // aspect_ratio: "1:1",
-                        width: size + Math.floor(-size * 0.045),
-                        height: size + Math.floor(size * 0.2),
-                        x: Math.floor(size * 0.045),
-                        y: Math.floor(-size * 0.2),
-                        public_id: `${filename}-twibbon`
+                    auto: {
+                        transformation: [{
+                            gravity: "auto",
+                            crop: "fill",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size + Math.floor(-size * 0.045),
+                            height: size + Math.floor(size * 0.2),
+                            x: Math.floor(size * 0.045),
+                            y: Math.floor(-size * 0.2),
+                            public_id: `${filename}-twibbon`
 
-                    }, {
-                        gravity: "auto",
-                        crop: "fill",
-                        width: size,
-                        height: size
-                    }, {
-                        overlay: "twibbon_tfi.png",
-                        flags: "relative",
-                        width: size,
-                        height: size,
-                        aspect_ratio: "1:1"
-                    }]
+                        }, {
+                            gravity: "auto",
+                            crop: "fill",
+                            width: size,
+                            height: size
+                        }, {
+                            overlay: "twibbon_tfi.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    },
+                    manual: {
+                        transformation: [{
+                            crop: "fit",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size,
+                            height: size,
+                            public_id: `${filename}-twibbon`
+
+                        }, {
+                            overlay: "twibbon_tfi.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    }
                 };
             }
         },
@@ -114,21 +169,39 @@ const Twibbon = exports.Twibbon = Bot => {
             url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbon_binus1.png",
             transform: (filename, size) => {
                 return {
-                    transformation: [{
-                        gravity: "auto",
-                        crop: "fill",
-                        format: "jpg",
-                        // aspect_ratio: "1:1",
-                        width: size - Math.floor(size * 0.2),
-                        height: size - Math.floor(size * 0.2),
-                        public_id: `${filename}-twibbon`
-                    }, {
-                        overlay: "twibbon_binus1.png",
-                        flags: "relative",
-                        width: size,
-                        height: size,
-                        aspect_ratio: "1:1"
-                    }]
+                    auto: {
+                        transformation: [{
+                            gravity: "auto",
+                            crop: "fill",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.2),
+                            height: size - Math.floor(size * 0.2),
+                            public_id: `${filename}-twibbon`
+                        }, {
+                            overlay: "twibbon_binus1.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    },
+                    manual: {
+                        transformation: [{
+                            crop: "fit",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.2125),
+                            height: size - Math.floor(size * 0.2),
+                            public_id: `${filename}-twibbon`
+                        }, {
+                            overlay: "twibbon_binus1.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    }
                 };
             }
         },
@@ -139,29 +212,41 @@ const Twibbon = exports.Twibbon = Bot => {
             url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbon_binus2.png",
             transform: (filename, size) => {
                 return {
-                    transformation: [{
-                        gravity: "auto",
-                        crop: "fill",
-                        format: "jpg",
-                        // aspect_ratio: "1:1",
-                        width: size + Math.floor(-size * 0.045),
-                        height: size + Math.floor(size * 0.2),
-                        x: Math.floor(size * 0.045),
-                        y: Math.floor(-size * 0.2),
-                        public_id: `${filename}-twibbon`
+                    auto: {
+                        transformation: [{
+                            gravity: "auto",
+                            crop: "fill",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.225),
+                            height: size - Math.floor(size * 0.225),
+                            public_id: `${filename}-twibbon`
 
-                    }, {
-                        gravity: "auto",
-                        crop: "fill",
-                        width: size,
-                        height: size
-                    }, {
-                        overlay: "twibbon_binus2.png",
-                        flags: "relative",
-                        width: size,
-                        height: size,
-                        aspect_ratio: "1:1"
-                    }]
+                        }, {
+                            overlay: "twibbon_binus2.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    },
+                    manual: {
+                        transformation: [{
+                            crop: "fit",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.225),
+                            height: size - Math.floor(size * 0.225),
+                            public_id: `${filename}-twibbon`
+
+                        }, {
+                            overlay: "twibbon_binus2.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    }
                 };
             }
         },
@@ -172,29 +257,41 @@ const Twibbon = exports.Twibbon = Bot => {
             url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbon_binus3.png",
             transform: (filename, size) => {
                 return {
-                    transformation: [{
-                        gravity: "auto",
-                        crop: "fill",
-                        format: "jpg",
-                        // aspect_ratio: "1:1",
-                        width: size + Math.floor(-size * 0.045),
-                        height: size + Math.floor(size * 0.2),
-                        x: Math.floor(size * 0.045),
-                        y: Math.floor(-size * 0.2),
-                        public_id: `${filename}-twibbon`
+                    auto: {
+                        transformation: [{
+                            gravity: "auto",
+                            crop: "fill",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.225),
+                            height: size - Math.floor(size * 0.225),
+                            public_id: `${filename}-twibbon`
 
-                    }, {
-                        gravity: "auto",
-                        crop: "fill",
-                        width: size,
-                        height: size
-                    }, {
-                        overlay: "twibbon_binus3.png",
-                        flags: "relative",
-                        width: size,
-                        height: size,
-                        aspect_ratio: "1:1"
-                    }]
+                        }, {
+                            overlay: "twibbon_binus3.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    },
+                    manual: {
+                        transformation: [{
+                            crop: "fit",
+                            format: "jpg",
+                            // aspect_ratio: "1:1",
+                            width: size - Math.floor(size * 0.225),
+                            height: size - Math.floor(size * 0.225),
+                            public_id: `${filename}-twibbon`
+
+                        }, {
+                            overlay: "twibbon_binus3.png",
+                            flags: "relative",
+                            width: size,
+                            height: size,
+                            aspect_ratio: "1:1"
+                        }]
+                    }
                 };
             }
         }
@@ -237,7 +334,11 @@ const Twibbon = exports.Twibbon = Bot => {
             };
 
             Bot.profile().then(res => {
-                Bot.replyText(`Hai ${res.displayName}, masukan gambar mu disini~`);
+                const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
+                if (type === "manual") {
+                    messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
+                }
+                Bot.replyText(messages);
             });
         }
     };
@@ -273,8 +374,12 @@ const Twibbon = exports.Twibbon = Bot => {
                 "text": `${name}`,
                 "actions": [{
                     "type": "postback",
-                    "label": "Select",
+                    "label": "Auto-AI Mode",
                     "data": `{"twibbon":{"id":"${id}","type":"auto"}}`
+                }, {
+                    "type": "postback",
+                    "label": "Manual Mode",
+                    "data": `{"twibbon":{"id":"${id}","type":"manual"}}`
                 }]
             };
         });
@@ -291,8 +396,8 @@ const Twibbon = exports.Twibbon = Bot => {
         });
     };
 
-    const getResult = (twibbon_id, public_id, filename, size) => {
-        const result = _cloudinary2.default.url(public_id, twibbon_list[twibbon_id].transform(filename, size));
+    const getResult = (twibbon_setting, public_id, filename, size) => {
+        const result = _cloudinary2.default.url(public_id, twibbon_list[twibbon_setting.id].transform(filename, size)[twibbon_setting.type]);
         return result;
     };
 
@@ -332,10 +437,10 @@ const Twibbon = exports.Twibbon = Bot => {
 
             const performTransformations = () => {
                 const twibbon_ori_name = `${data.filename}-twibbon`;
-                const result_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_ori_name, 1040);
+                const result_url = getResult(data.twibbonSetting, uploads.raw.twibbon_bg.public_id, twibbon_ori_name, 1040);
 
                 const twibbon_preview_name = `${data.filename}-twibbon-preview`;
-                const result_preview_url = getResult(data.twibbonSetting.id, uploads.raw.twibbon_bg.public_id, twibbon_preview_name, 240);
+                const result_preview_url = getResult(data.twibbonSetting, uploads.raw.twibbon_bg.public_id, twibbon_preview_name, 240);
 
                 imgUpload(result_url, twibbon_ori_name).then(image => {
                     waitForAllUploads("twibbon", 2, {
