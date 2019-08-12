@@ -203,23 +203,26 @@ export const Twibbon = Bot => {
 
     };
 
-    const listen = async (data) => {
+    const listen = (data) => {
         const {user} = Bot.getId()
 
-        const userSwitch = shared_props[user].twibbon.status === undefined
-            ? false
-            : true;
-
-        if (data.twibbon && userSwitch) {
+        if (data.twibbon) {
             const {id, type} = data.twibbon
-            shared_props[user].twibbon = {
-                ...shared_props[user].twibbon,
+            
+            // ready-up switch
+            shared_props[user]["twibbon"] = {
                 id: id,
                 type: type,
-                status: true
+                status: true,
+                source: {
+                    id: Bot.getId().default
+                }
             }
-            const profile = await Bot.profile()
-            Bot.replyText(`Hai ${profile.displayName}, masukan gambar mu disini~`)
+          
+            Bot.profile().then(res => {
+              Bot.replyText(`Hai ${res.displayName}, masukan gambar mu disini~`)
+            })
+            
         }
     }
 
@@ -310,7 +313,7 @@ export const Twibbon = Bot => {
     };
 
     const generate = (data) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             imgUpload(data.url, data.filename).then(image => {
                 waitForAllUploads("raw", 1, {
                     twibbon_bg: image
