@@ -8,17 +8,17 @@ exports.Basic = undefined;
 var _Bot = require("../../Bot");
 
 const Basic = exports.Basic = Bot => {
-  const admin = args => {
+  const admin = () => {
     const { source } = Bot.props.event;
-    if (Bot.Features.Access.whitelist_check(source.userId)) {
-      Bot.replyText("privilage: {}".format(Bot.props.event));
+    if (Bot.Features.Access.whitelist().user) {
+      Bot.replyText(`Privilage: ${JSON.stringify(Bot.props.event)}`);
     }
   };
 
   const say = args => {
     if (args.length >= 1) {
       const { source } = Bot.props.event;
-      const msg = [...args].join(' ');
+      const msg = [...args].join(" ");
       Bot.replyText(msg);
     } else {
       Bot.replyText(`${_Bot.command_prefix}say <msg>`);
@@ -44,8 +44,9 @@ const Basic = exports.Basic = Bot => {
 
     if (arg || source.userId) {
       const userId = arg[0] || source.userId;
-      console.log(userId);
-      Bot.client.getProfile(userId).then(profile => Bot.replyText([`Display name: ${profile.displayName}`, `Status message: ${profile.statusMessage}`]));
+      Bot.client.getProfile(userId).then(profile => Bot.replyText([`Display name: ${profile.displayName}`, `Status message: ${profile.statusMessage}`])).catch(err => {
+        Bot.replyText("Invalid ID");
+      });
     } else {
       Bot.replyText("Bot can't use profile API without user ID");
     }
@@ -69,15 +70,9 @@ const Basic = exports.Basic = Bot => {
 masukan gambar dan jadi!
 `;
 
-    Bot.replyText([msg2]);
+    // Bot.replyText([msg2]);
   };
 
-  return {
-    admin,
-    help,
-    profile,
-    greet,
-    say
-  };
+  return { admin, help, profile, greet, say };
 };
 //# sourceMappingURL=Basic.js.map

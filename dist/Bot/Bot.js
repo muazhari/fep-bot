@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9,35 +9,35 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 // import { default_agent } from "../Config/DialogFlow";
 
-var _Store = require("../Services/Store");
+var _Store = require('../Services/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _botSdk = require("@line/bot-sdk");
+var _botSdk = require('@line/bot-sdk');
 
 var line = _interopRequireWildcard(_botSdk);
 
-var _Features = require("./Features");
+var _Features = require('./Features');
 
-var _DialogFlow = require("./DialogFlow");
+var _DialogFlow = require('./DialogFlow');
 
-var _fsExtra = require("fs-extra");
+var _fsExtra = require('fs-extra');
 
 var _fsExtra2 = _interopRequireDefault(_fsExtra);
 
-var _mkdirp = require("mkdirp");
+var _mkdirp = require('mkdirp');
 
 var _mkdirp2 = _interopRequireDefault(_mkdirp);
 
-var _path = require("path");
+var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var _uuid = require("uuid");
+var _uuid = require('uuid');
 
 var _uuid2 = _interopRequireDefault(_uuid);
 
-var _Line = require("../Config/Line");
+var _Line = require('../Config/Line');
 
 var _Line2 = _interopRequireDefault(_Line);
 
@@ -50,7 +50,6 @@ const shared_props = exports.shared_props = {};
 // export const listener_stack = {
 //   postback: {}
 // };
-
 
 // class listener {
 //   constructor(Bot){
@@ -65,7 +64,7 @@ const shared_props = exports.shared_props = {};
 //   postback(stringObject, callback) {
 //     const data = JSON.parse(stringObject)
 //     return callback(listener_stack.postback[uuid.v4])
-//   }  
+//   }
 // }
 
 class Bot {
@@ -75,7 +74,7 @@ class Bot {
 
     // this.shared_props = shared_props
     // console.log(shared_props)
-    // only access by? user, group, room, default
+    // only access by? user, group, room, origin
     this.props = this.initProps(props);
     // console.log(this.props)
 
@@ -89,11 +88,11 @@ class Bot {
       Basic: (0, _Features.Basic)(this),
       Access: (0, _Features.Access)(this),
       Template: (0, _Features.Template)(this),
-      Twibbon: (0, _Features.Twibbon)(this)
-    };
+      Twibbon: (0, _Features.Twibbon)(this),
+      Courses: (0, _Features.Courses)(this)
 
-    // DialogFlow assist
-    this.DialogFlow = new _DialogFlow.DialogFlow(this);
+      // DialogFlow assist
+    };this.DialogFlow = new _DialogFlow.DialogFlow(this);
 
     // Events listen assist
     // this.listener = new listener(this)
@@ -108,7 +107,7 @@ class Bot {
       });
     });
 
-    return shared_props[SourceIds.default];
+    return shared_props[SourceIds.origin];
   }
 
   profile() {
@@ -117,36 +116,37 @@ class Bot {
     });
   }
 
-  async log() {
-    let log_chat = await _Store2.default.getStore("log_chat");
-    if (!log_chat || Object.keys(log_chat).length === 0) {
-      log_chat = {
-        groups: {},
-        users: {}
-      };
-    }
+  log() {
+    _Store2.default.getStore('log_chat').then(log_chat => {
+      if (!log_chat || Object.keys(log_chat).length === 0) {
+        log_chat = {
+          groups: {},
+          users: {}
+        };
+      }
 
-    // switch (this.props.event.source.type) {
-    // case 'user':
-    //     const { userId } = this.props.event.source
-    //     if (!log_chat['users'][userId]) {
-    //       log_chat['users'][userId] = []
-    //     }
-    //     log_chat['user'][userId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // case 'group':
-    //     const { groupId } = this.props.event.source
-    //     if (!log_chat['groups'][groupId]) {
-    //       log_chat['groups'][groupId] = []
-    //     }
-    //     log_chat['groups'][groupId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // }
+      // switch (this.props.event.source.type) {
+      // case 'user':
+      //     const { userId } = this.props.event.source
+      //     if (!log_chat['users'][userId]) {
+      //       log_chat['users'][userId] = []
+      //     }
+      //     log_chat['user'][userId].push(this.props.event)
+      //     return await Store.setStore({ log_chat: log_chat })
+      // case 'group':
+      //     const { groupId } = this.props.event.source
+      //     if (!log_chat['groups'][groupId]) {
+      //       log_chat['groups'][groupId] = []
+      //     }
+      //     log_chat['groups'][groupId].push(this.props.event)
+      //     return await Store.setStore({ log_chat: log_chat })
+      // }
+    });
   }
 
   setProps(data, id) {
     console.log(data);
-    if (!id) id = this.getId().default;
+    if (!id) id = this.getId().origin;
 
     Object.keys(data).map(key => {
       this.shared_props[id][key] = data[key];
@@ -158,25 +158,25 @@ class Bot {
     const type = {};
 
     if (source.groupId) {
-      type["default"] = source.groupId;
+      type['origin'] = source.groupId;
     } else {
       if (source.roomId) {
-        type["default"] = source.roomId;
+        type['origin'] = source.roomId;
       } else {
         if (source.userId) {
-          type["default"] = source.userId;
+          type['origin'] = source.userId;
         }
       }
     }
 
     if (source.groupId) {
-      type["group"] = source.groupId;
+      type['group'] = source.groupId;
     }
     if (source.roomId) {
-      type["room"] = source.roomId;
+      type['room'] = source.roomId;
     }
     if (source.userId) {
-      type["user"] = source.userId;
+      type['user'] = source.userId;
     }
 
     if (type) return type;
@@ -184,7 +184,7 @@ class Bot {
 
   replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: 'text', text })));
   }
 
   sendMessage(message) {
@@ -196,8 +196,8 @@ class Bot {
     return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
       const writeable = _fsExtra2.default.createWriteStream(downloadPath);
       stream.pipe(writeable);
-      stream.on("end", () => resolve(downloadPath));
-      stream.on("error", reject);
+      stream.on('end', () => resolve(downloadPath));
+      stream.on('error', reject);
     }));
   }
 }

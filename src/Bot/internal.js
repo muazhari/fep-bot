@@ -1,5 +1,5 @@
 export * from "./Bot";
-export * from "./Handler";
+export * from "./handlerBot";
 export * from "./Features";
 export * from "./DialogFlow";
-export * from "./HandlerDialogFlow";
+export * from "./handlerDialogFlow";

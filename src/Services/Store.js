@@ -4,31 +4,25 @@ import storage from "node-persist";
 // const shared_props = storage.create({});
 
 const init = async () => {
-  await storage.init()
-}
+  await storage.init();
+};
 
 const setStore = async obj => {
- Object.keys(obj).map(async key => {
-    await storage.setItem(key, obj[key])
-  })
-}
+  Object.keys(obj).map(async key => {
+    await storage.setItem(key, obj[key]);
+  });
+};
 
 const getStore = async storeName => {
-  return await storage.getItem(storeName)
-}
+  return await storage.getItem(storeName);
+};
 
 const remStore = async storeName => {
-  await storage.removeItem(storeName)
-}
+  await storage.removeItem(storeName);
+};
 
 const updStore = async (storeName, value) => {
-  await storage.updateItem(storeName, value)
-}
+  await storage.updateItem(storeName, value);
+};
 
-export default {
-  init,
-  setStore,
-  getStore,
-  remStore,
-  updStore,
-}
+export default {init, setStore, getStore, remStore, updStore};

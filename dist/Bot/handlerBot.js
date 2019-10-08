@@ -1,23 +1,23 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Handler = exports.command_prefix = exports.batch_list = exports.baseURL = undefined;
+exports.handlerBot = exports.command_prefix = exports.batch_list = exports.baseURL = undefined;
 
-var _fsExtra = require("fs-extra");
+var _fsExtra = require('fs-extra');
 
 var _fsExtra2 = _interopRequireDefault(_fsExtra);
 
-var _path = require("path");
+var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var _child_process = require("child_process");
+var _child_process = require('child_process');
 
 var _child_process2 = _interopRequireDefault(_child_process);
 
-var _internal = require("./internal");
+var _internal = require('./internal');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25,14 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const baseURL = exports.baseURL = process.env.BASE_URL;
 
 const batch_list = exports.batch_list = {
-  a: "22 - 27 JULI 2019",
-  b: "29 JULI - 3 AGUSTUS 2019",
-  c: "5 - 10 AGUSTUS 2019",
-  d: "19 - 24 AGUSTUS 2019",
-  e: "26 - 03 SEPTEMBER 2019"
+  a: '22 - 27 JULI 2019',
+  b: '29 JULI - 3 AGUSTUS 2019',
+  c: '5 - 10 AGUSTUS 2019',
+  d: '19 - 24 AGUSTUS 2019',
+  e: '26 - 03 SEPTEMBER 2019'
 };
 
-const command_prefix = exports.command_prefix = "/";
+const command_prefix = exports.command_prefix = '/';
 
 const commandValidate = chat => {
   const prefix = chat[0][0];
@@ -84,13 +84,10 @@ const userQueue = Bot => {
     }
   };
 
-  return {
-    increment,
-    decrement
-  };
+  return { increment, decrement };
 };
 
-const Handler = exports.Handler = event => {
+const handlerBot = exports.handlerBot = event => {
   console.log(event);
 
   const Worker = new _internal.Bot({ event });
@@ -101,45 +98,45 @@ const Handler = exports.Handler = event => {
   // const type = whitelist.user || whitelist.room ? event.type : null;
 
   switch (event.type) {
-    case "message":
+    case 'message':
       const { message } = event;
       switch (message.type) {
-        case "text":
+        case 'text':
           return handleText(Worker);
-        case "image":
+        case 'image':
           return handleImage(Worker);
-        case "video":
+        case 'video':
           return handleVideo(Worker);
-        case "audio":
+        case 'audio':
           return handleAudio(Worker);
-        case "location":
+        case 'location':
           return handleLocation(Worker);
-        case "sticker":
+        case 'sticker':
           return handleSticker(Worker);
         default:
           throw new Error(`Unknown message: ${JSON.stringify(message)}`);
       }
 
-    case "memberJoined":
+    case 'memberJoined':
       return Worker.client.getProfile(event.joined.members[0].userId).then(profile => {
         Worker.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
       });
 
-    case "follow":
-      return Worker.replyText("Got followed event");
+    case 'follow':
+      return Worker.replyText('Got followed event');
 
-    case "unfollow":
+    case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
-    case "join":
+    case 'join':
       return Worker.replyText(`Joined ${event.source.type}`);
 
-    case "leave":
+    case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
 
-    case "postback":
+    case 'postback':
       let { data } = event.postback;
-      if (data === "DATE" || data === "TIME" || data === "DATETIME") {
+      if (data === 'DATE' || data === 'TIME' || data === 'DATETIME') {
         data += `(${JSON.stringify(event.postback.params)})`;
       }
 
@@ -150,7 +147,7 @@ const Handler = exports.Handler = event => {
 
       break;
 
-    case "beacon":
+    case 'beacon':
       return Worker.replyText(`Got beacon: ${event.beacon.hwid}`);
 
     default:
@@ -160,7 +157,14 @@ const Handler = exports.Handler = event => {
 
 const handleText = Bot => {
   const { message, replyToken, source } = Bot.props.event;
-  const { FEPList, StoreAdvance, Basic, Template, Twibbon } = Bot.Features;
+  const {
+    FEPList,
+    StoreAdvance,
+    Basic,
+    Template,
+    Twibbon,
+    Courses
+  } = Bot.Features;
 
   const commandList = {
     add: FEPList.add,
@@ -170,7 +174,7 @@ const handleText = Bot => {
     rstore: StoreAdvance.reset_store,
     pstore: StoreAdvance.pre_store,
     bstore: StoreAdvance.backup_store,
-    "]]": Basic.admin,
+    ']]': Basic.admin,
     help: Basic.help,
     button: Template.button,
     profile: Basic.profile,
@@ -178,16 +182,17 @@ const handleText = Bot => {
     bifest: Template.bifest,
     greet: Basic.greet,
     say: Basic.say,
-    twibbon: Twibbon.ready
-  };
+    twibbon: Twibbon.ready,
+    algo: Courses.algo
 
-  // The text query request.
-  const chat_splitted = message.text.split(" ");
+    // The text query request.
+  };const chat_splitted = message.text.split(' ');
   const msgToCmdValidate = commandValidate(chat_splitted);
   if (msgToCmdValidate) {
     handleCommand(commandList, msgToCmdValidate);
   } else {
-    (0, _internal.HandlerDialogFlow)(Bot);
+    // hidden error, need fix
+    (0, _internal.handlerDialogFlow)(Bot);
   }
 };
 
@@ -195,13 +200,13 @@ const handleImage = Bot => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
 
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+  if (message.contentProvider.type === 'line') {
+    const downloadPath = _path2.default.join(__dirname, '../../src/Bot/Assets/downloaded/images', `${message.id}.jpg`);
+    const previewPath = _path2.default.join(__dirname, '../../src/Bot/Assets/downloaded/images', `${message.id}-preview.jpg`);
 
     getContent = () => {
       return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-        console.log("premature_resolve", downloadPath);
+        console.log('premature_resolve', downloadPath);
         _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
         return {
           originalPath: downloadPath,
@@ -213,7 +218,7 @@ const handleImage = Bot => {
         throw err;
       });
     };
-  } else if (message.contentProvider.type === "external") {
+  } else if (message.contentProvider.type === 'external') {
     getContent = () => {
       return Promise.resolve(message.contentProvider);
     };
@@ -227,9 +232,9 @@ const handleImage = Bot => {
 const handleVideo = Bot => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
-    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
+  if (message.contentProvider.type === 'line') {
+    const downloadPath = _path2.default.join(__dirname, '../../src/Bot/Assets/downloaded/videos', `${message.id}.mp4`);
+    const previewPath = _path2.default.join(__dirname, '../../src/Bot/Assets/downloaded/videos', `${message.id}-preview.jpg`);
 
     getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
       // FFmpeg and ImageMagick is needed here to run 'convert'
@@ -241,7 +246,7 @@ const handleVideo = Bot => {
         previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
       };
     });
-  } else if (message.contentProvider.type === "external") {
+  } else if (message.contentProvider.type === 'external') {
     getContent = Promise.resolve(message.contentProvider);
   }
 
@@ -257,8 +262,8 @@ const handleVideo = Bot => {
 const handleAudio = Bot => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
+  if (message.contentProvider.type === 'line') {
+    const downloadPath = _path2.default.join(__dirname, '../../src/Bot/Assets/downloaded/audios', `${message.id}.m4a`);
 
     getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
       return {
@@ -281,7 +286,7 @@ const handleAudio = Bot => {
 const handleLocation = Bot => {
   const { message, replyToken } = Bot.props.event;
   Bot.sendMessage({
-    type: "location",
+    type: 'location',
     title: message.title,
     address: message.address,
     latitude: message.latitude,
@@ -297,4 +302,4 @@ const handleSticker = Bot => {
   //   stickerId: message.stickerId
   // });
 };
-//# sourceMappingURL=Handler.js.map
+//# sourceMappingURL=handlerBot.js.map
