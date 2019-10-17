@@ -42,12 +42,24 @@ const Template = exports.Template = Bot => {
           label: "View detail",
           uri: "http://example.com/page/123"
         },
-        actions: [{ label: "Go to line.me", type: "uri", uri: "https://line.me" }, { label: "Say hello1", type: "postback", data: "hello こんにちは" }, {
+        actions: [{
+          label: "Go to line.me",
+          type: "uri",
+          uri: "https://line.me"
+        }, {
+          label: "Say hello1",
+          type: "postback",
+          data: "hello こんにちは"
+        }, {
           label: "言 hello2",
           type: "postback",
           data: "hello こんにちは",
           text: "hello こんにちは"
-        }, { label: "Say message", type: "message", text: "Rice=米" }]
+        }, {
+          label: "Say message",
+          type: "message",
+          text: "Rice=米"
+        }]
       }
     });
   };
@@ -59,56 +71,65 @@ const Template = exports.Template = Bot => {
       template: {
         type: "confirm",
         text: "Do it?",
-        actions: [{ label: "Yes", type: "message", text: "Yes!" }, { label: "No", type: "message", text: "No!" }]
+        actions: [{
+          label: "Yes",
+          type: "message",
+          text: "Yes!"
+        }, {
+          label: "No",
+          type: "message",
+          text: "No!"
+        }]
       }
     });
   };
 
-  const bifest = async () => {
+  const bifest = () => {
     const backgroundImageURL = `${_Bot.baseURL}/static/background`;
 
     const youtubeUrl = new _YoutubeDL2.default("https://www.youtube.com/watch?v=nikc3FeeVs8");
     const options = {
       force: false
     };
-    const {
-      url: videoURL,
-      thumbnail: thumbnailURL
-    } = await youtubeUrl.generateUrl("bifest", options);
-
-    return Bot.sendMessage({
-      type: "imagemap",
-      baseUrl: backgroundImageURL,
-      altText: "Bifest 2019",
-      baseSize: { width: 1040, height: 600 },
-      actions: [{
-        area: { x: 0, y: 0, width: 1040, height: 600 },
-        type: "uri",
-        linkUri: "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/"
-      }],
-      video: {
-        // originalContentUrl: `${baseURL}/static/imagemap/bifest2019.mp4`,
-        previewImageUrl: `${_Bot.baseURL}/static/imagemap/bifest2019_preview.jpg`,
-        originalContentUrl: videoURL,
-        // previewImageUrl: thumbnailURL,
-        area: {
-          x: 156,
-          y: 126,
-          width: 738,
-          height: 371
+    youtubeUrl.generateUrl("bifest", options).then(({ url: videoURL, thumbnail: thumbnailURL }) => {
+      Bot.sendMessage({
+        type: "imagemap",
+        baseUrl: backgroundImageURL,
+        altText: "Bifest 2019",
+        baseSize: {
+          width: 1040,
+          height: 600
         },
-        externalLink: {
-          linkUri: "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/",
-          label: "Lebih lengkap"
+        actions: [{
+          area: {
+            x: 0,
+            y: 0,
+            width: 1040,
+            height: 600
+          },
+          type: "uri",
+          linkUri: "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/"
+        }],
+        video: {
+          // originalContentUrl: `${baseURL}/static/imagemap/bifest2019.mp4`,
+          previewImageUrl: `${_Bot.baseURL}/static/imagemap/bifest2019_preview.jpg`,
+          originalContentUrl: videoURL,
+          // previewImageUrl: thumbnailURL,
+          area: {
+            x: 156,
+            y: 126,
+            width: 738,
+            height: 371
+          },
+          externalLink: {
+            linkUri: "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/",
+            label: "Lebih lengkap"
+          }
         }
-      }
+      });
     });
   };
 
-  return {
-    button,
-    confirm,
-    bifest
-  };
+  return { button, confirm, bifest };
 };
 //# sourceMappingURL=Template.js.map

@@ -31,39 +31,50 @@ class YoutubeDL {
     const options = [];
 
     return new Promise((resolve, reject) => {
-      _youtubeDl2.default.getInfo(this.url, options, async (err, info) => {
+      _youtubeDl2.default.getInfo(this.url, options, (err, info) => {
         if (err) {
           reject(err);
           throw err;
-        };
+        }
         return resolve(info);
       });
     });
   }
 
-  async generateUrl(urlName, options) {
-    let url_cache = await _Store2.default.getStore('url_cache');
-
-    if (url_cache[urlName] && options.force === false) {
-      const url_status = await _ResponseCheck2.default.status(url_cache[urlName].url);
-
-      if (url_status !== 200) {
-        const { url, thumbnail } = await this.getInfo();
-        url_cache['bifest'] = { url, thumbnail };
-        await _Store2.default.setStore({ url_cache: url_cache });
-        return { url, thumbnail };
-      } else {
-        return url_cache[urlName];
-      }
-    } else {
-      url_cache = {};
-      const { url, thumbnail } = await this.getInfo();
-      url_cache['bifest'] = { url, thumbnail };
-      await _Store2.default.setStore({ url_cache: url_cache });
-      return { url, thumbnail };
-    }
+  generateUrl(urlName, options) {
+    return new Promise((resolve, reject) => {
+      _Store2.default.getStore("url_cache").then(url_cache => {
+        if (url_cache[urlName] && options.force === false) {
+          _ResponseCheck2.default.status(url_cache[urlName].url).then(url_status => {
+            if (url_status !== 200) {
+              this.getInfo().then(({ url, thumbnail }) => {
+                url_cache[urlName] = {
+                  url,
+                  thumbnail
+                };
+                _Store2.default.setStore({ url_cache: url_cache }).then(() => {
+                  resolve({ url, thumbnail });
+                });
+              }).catch(reject);
+            } else {
+              resolve(url_cache[urlName]);
+            }
+          });
+        } else {
+          url_cache = {};
+          this.getInfo().then(({ url, thumbnail }) => {
+            url_cache[urlName] = {
+              url,
+              thumbnail
+            };
+            _Store2.default.setStore({ url_cache: url_cache }).then(() => {
+              resolve(url_cache[urlName]);
+            });
+          }).catch(reject);
+        }
+      });
+    });
   }
-
 }
 exports.default = YoutubeDL;
 //# sourceMappingURL=YoutubeDL.js.map

@@ -35,11 +35,5 @@ const updStore = async (storeName, value) => {
   await _nodePersist2.default.updateItem(storeName, value);
 };
 
-exports.default = {
-  init,
-  setStore,
-  getStore,
-  remStore,
-  updStore
-};
+exports.default = { init, setStore, getStore, remStore, updStore };
 //# sourceMappingURL=Store.js.map

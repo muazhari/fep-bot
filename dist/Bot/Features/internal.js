@@ -75,4 +75,16 @@ Object.keys(_Twibbon).forEach(function (key) {
     }
   });
 });
+
+var _Courses = require("./Courses");
+
+Object.keys(_Courses).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _Courses[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map

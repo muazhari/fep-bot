@@ -2,7 +2,7 @@ import { Router } from 'express';
 import axios from 'axios'
 import * as line from '@line/bot-sdk';
 
-import { Handler } from './Bot'
+import { handlerBot } from './Bot'
 
 const routes = Router();
 
@@ -25,7 +25,7 @@ routes.post('/webhook', (req, res) => {
   
   //handle events separately
   Promise.all(req.body.events.map(event => {
-    Handler(event)
+    handlerBot(event)
   }))
     .then(result => res.json(result))
     .catch(err => {

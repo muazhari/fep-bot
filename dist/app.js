@@ -84,7 +84,7 @@ app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use(_express2.default.static(_path2.default.join(__dirname, "../public")));
 
-// // Routes
+//  Routes
 app.use("/", _routes2.default);
 
 app.use((err, req, res, next) => {
@@ -108,9 +108,7 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
-  res.status(err.status || 500).render("error", {
-    message: err.message
-  });
+  res.status(err.status || 500).render("error", { message: err.message });
 });
 
 exports.default = app;

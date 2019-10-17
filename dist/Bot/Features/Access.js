@@ -62,9 +62,6 @@ const Access = exports.Access = Bot => {
     return validate;
   };
 
-  return {
-    blacklist,
-    whitelist
-  };
+  return { blacklist, whitelist };
 };
 //# sourceMappingURL=Access.js.map

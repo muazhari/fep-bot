@@ -16,14 +16,14 @@ Object.keys(_Bot).forEach(function (key) {
   });
 });
 
-var _Handler = require("./Handler");
+var _handlerBot = require("./handlerBot");
 
-Object.keys(_Handler).forEach(function (key) {
+Object.keys(_handlerBot).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
-      return _Handler[key];
+      return _handlerBot[key];
     }
   });
 });
@@ -52,14 +52,14 @@ Object.keys(_DialogFlow).forEach(function (key) {
   });
 });
 
-var _HandlerDialogFlow = require("./HandlerDialogFlow");
+var _handlerDialogFlow = require("./handlerDialogFlow");
 
-Object.keys(_HandlerDialogFlow).forEach(function (key) {
+Object.keys(_handlerDialogFlow).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
-      return _HandlerDialogFlow[key];
+      return _handlerDialogFlow[key];
     }
   });
 });
