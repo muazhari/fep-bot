@@ -23,8 +23,6 @@ export class DialogFlow {
     this.sessionClient = new dialogflow.SessionsClient(this.config);
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
-    this.temp_chat_switch = true;
-
     this.propsId = this.Bot.getId().origin;
   }
   get_parameter(responses) {
@@ -51,12 +49,13 @@ export class DialogFlow {
 
   chat_switch(parameter, chatCallback) {
     const {fields, displayName} = parameter;
-    if (shared_props[this.propsId].dialogFlow.talking || displayName === "chat.talk") {
+    if (shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId]["dialogFlow"]["talking"] = JSON.parse(fields.chat.stringValue);
+        shared_props[this.propsId]["dialogFlow"]["isTalking"] = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
+    shared_props[this.propsId]["dialogFlow"]["isTalking"] = 
   }
 
   // Send request and log result
@@ -78,9 +77,10 @@ export class DialogFlow {
           if (fulfillmentText.length >= 1) {
             this.chat_switch(parameter, chatCallback);
           }
-
+  
+          
+          console.log("isTalking", shared_props[this.propsId].dialogFlow.isTalking);
           console.log("parameter", JSON.stringify(parameter));
-          console.log("shared_props", shared_props[this.propsId].status, status);
           console.log("Detected intent", responses[0].queryResult.displayName);
         });
       } catch (err) {

@@ -2,9 +2,9 @@ import {shared_props} from "./internal";
 
 export const handlerDialogFlow = Bot => {
   const {message} = Bot.props.event;
-  const {DialogFlow: DF} = Bot;
+  const df = Bot.DialogFlow;
 
-  DF.chat().then(responses => {
+  df.chat().then(responses => {
     const {fulfillmentText, parameter} = responses;
 
     console.log(responses);
