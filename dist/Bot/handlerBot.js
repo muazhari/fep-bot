@@ -197,7 +197,7 @@ class handlerBot {
       handleCommand(this.Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
-      (0, _internal.handlerDialogFlow)(this.Bot);
+      handlerDialogFlow(this.Bot);
     }
   }
 

@@ -2,6 +2,7 @@ import dialogflow from "dialogflow";
 import uuid from "uuid";
 import { default_agent } from "../../Config/DialogFlow";
 import { shared_props } from "../../Bot";
+import { handlerDialogFlow } from "./internal";
 
 export class dialogFlow {
   constructor(Bot) {
@@ -23,7 +24,8 @@ export class dialogFlow {
       this.projectId,
       this.sessionId
     );
-
+    
+    this.handler = new handlerDialogFlow(this);
   }
   
   initDialogFlowProps(){

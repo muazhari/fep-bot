@@ -17,6 +17,8 @@ var _DialogFlow = require("../../Config/DialogFlow");
 
 var _Bot = require("../../Bot");
 
+var _internal = require("./internal");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class dialogFlow {
@@ -36,6 +38,8 @@ class dialogFlow {
     // Create a new session
     this.sessionClient = new _dialogflow2.default.SessionsClient(this.config);
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
+
+    this.handler = new _internal.handlerDialogFlow(this);
   }
 
   initDialogFlowProps() {

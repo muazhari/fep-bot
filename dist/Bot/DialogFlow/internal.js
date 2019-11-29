@@ -15,4 +15,16 @@ Object.keys(_dialogFlow).forEach(function (key) {
     }
   });
 });
+
+var _handlerDialogFlow = require("./handlerDialogFlow");
+
+Object.keys(_handlerDialogFlow).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _handlerDialogFlow[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map

@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
-import { handlerDialogFlow, shared_props } from "./internal";
+import { shared_props } from "./internal";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;

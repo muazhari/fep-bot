@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.handlerDialogFlow = undefined;
 
-var _internal = require("./internal");
+var _Bot = require("../../Bot");
 
 const handlerDialogFlow = exports.handlerDialogFlow = Bot => {
   const { message } = Bot.props.event;
