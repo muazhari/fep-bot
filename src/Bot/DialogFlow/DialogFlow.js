@@ -83,7 +83,7 @@ export class DialogFlow {
             this.chat_switch(parameter, chatCallback);
           }
 
-          console.log("parameter", parameter);
+          console.log("parameter", JSON.stringify(parameter));
           console.log("shared_props", shared_props[this.propsId].status, status);
           console.log("Detected intent", responses[0].queryResult.displayName);
         });
