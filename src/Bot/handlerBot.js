@@ -183,7 +183,7 @@ export class handlerBot {
       handleCommand(this.Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
-      handlerDialogFlow(this.Bot);
+      this.Bot.DialogFlow.listen();
     }
   }
 

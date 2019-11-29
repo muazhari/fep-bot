@@ -4,15 +4,13 @@ import { default_agent } from "../../Config/DialogFlow";
 import { shared_props } from "../../Bot";
 import { handlerDialogFlow } from "./internal";
 
-export class dialogFlow {
-  constructor(Bot) {
-    this.Bot = Bot;
-    this.propsId = this.Bot.getId().origin;
-    this.initDialogFlowProps();
+export dialogFlow = (Bot) => {
+    const propsId = Bot.getId().origin;
+    const initDialogFlowProps();
 
     // selected agent
-    this.agent = default_agent;
-    this.projectId = this.agent.projectId;
+    const agent = default_agent;
+    const projectId = this.agent.projectId;
     this.config = this.agent.config;
 
     // A unique identifier for the given session
@@ -25,7 +23,7 @@ export class dialogFlow {
       this.sessionId
     );
     
-    this.handler = new handlerDialogFlow(this);
+    // this.handler = new handlerDialogFlow(Bot);
   }
   
   initDialogFlowProps(){
@@ -72,7 +70,7 @@ export class dialogFlow {
   }
 
   // Send request and log result
-  chat() {
+  listen() {
     return new Promise((resolve, reject) => {
       try {
         const { message } = this.Bot.props.event;
@@ -84,6 +82,7 @@ export class dialogFlow {
           const { fulfillmentText } = queryResult;
 
           const chatCallback = () => {
+            new handlerDialogFlow(this.Bot);
             return resolve({ fulfillmentText, parameter });
           };
 
