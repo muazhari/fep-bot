@@ -25,7 +25,7 @@ routes.post("/webhook", (req, res) => {
   //handle events separately
   Promise.all(
     req.body.events.map(event => {
-      new Bot(event);
+      new Bot({ event });
     })
   )
     .then(result => res.json(result))
