@@ -65,15 +65,14 @@ class DialogFlow {
     return query;
   }
 
-  chat_switch(parameter, chat_switch_callback, default_callback) {
+  chat_switch(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (displayName === "chat.talk" || displayName === "chat.silent") {
+    if (_Bot.shared_props[this.propsId]["status"] === true || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        _Bot.shared_props[this.propsId]["status"] = fields.chat.stringValue === "true";
-        return chat_switch_callback();
+        _Bot.shared_props[this.propsId]["status"] = JSON.parse(fields.chat.stringValue);
       }
+      return chatCallback();
     }
-    return default_callback();
   }
 
   // Send request and log result
@@ -90,18 +89,12 @@ class DialogFlow {
 
           const status = _Bot.shared_props[this.propsId].status === undefined ? false : _Bot.shared_props[this.propsId].status;
 
-          const chat_switch_callback = () => {
+          const chatCallback = () => {
             return resolve({ fulfillmentText, parameter });
           };
 
-          const default_callback = () => {
-            if (status) {
-              return resolve({ fulfillmentText, parameter });
-            }
-          };
-
           if (fulfillmentText.length >= 1) {
-            this.chat_switch(parameter, chat_switch_callback, default_callback);
+            this.chat_switch(parameter, chatCallback);
           }
 
           console.log("parameter", parameter);
