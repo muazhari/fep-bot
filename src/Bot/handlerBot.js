@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
-import { Bot, handlerDialogFlow, shared_props } from "./internal";
+import { handlerDialogFlow, shared_props } from "./internal";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -25,7 +25,7 @@ const destructCommand = chat => {
   return { prefix, command, args };
 };
 
-const handleCommand = command => {
+const handleCommand = (features, command) => {
   const {
     FEPList,
     StoreAdvance,
@@ -34,7 +34,7 @@ const handleCommand = command => {
     Twibbon,
     Courses,
     PosetLattice
-  } = Bot.Features;
+  } = features;
 
   const commandList = {
     add: FEPList.add,
@@ -72,11 +72,10 @@ const handleCommand = command => {
   }
 };
 
-const userQueue = () => {
+const userQueue = (userId) => {
   const queue = {};
 
   const increment = () => {
-    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -84,7 +83,6 @@ const userQueue = () => {
   };
 
   const decrement = () => {
-    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -103,7 +101,7 @@ export class handlerBot {
   }
   
   eventListener(event) {
-    
+    console.log(event);
   // hidden error, need fix
   // const Worker = new Bot({ event });
   // Worker.log()
@@ -181,7 +179,7 @@ export class handlerBot {
     const splittedChat = message.text.split(" ");
     const isTextCommand = splittedChat[0][0] == command_prefix;
     if (isTextCommand) {
-      handleCommand(splittedChat);
+      handleCommand(this.Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
       handlerDialogFlow(this.Bot);
@@ -305,7 +303,7 @@ export class handlerBot {
     }
 
     return getContent.then(({ originalContentUrl }) => {
-      // Bot.sendMessage({
+      // this.Bot.sendMessage({
       //   type: "audio",
       //   originalContentUrl,
       //   duration: message.duration
@@ -314,8 +312,8 @@ export class handlerBot {
   }
 
   handleLocation() {
-    const { message, replyToken } = Bot.props.event;
-    Bot.sendMessage({
+    const { message, replyToken } = this.Bot.props.event;
+    this.Bot.sendMessage({
       type: "location",
       title: message.title,
       address: message.address,
@@ -325,8 +323,8 @@ export class handlerBot {
   }
 
   handleSticker() {
-    const { message, replyToken } = Bot.props.event;
-    // Bot.sendMessage({
+    const { message, replyToken } = this.Bot.props.event;
+    // this.Bot.sendMessage({
     //   type: "sticker",
     //   packageId: message.packageId,
     //   stickerId: message.stickerId

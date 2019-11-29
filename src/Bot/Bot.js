@@ -69,6 +69,7 @@ export class Bot {
 
     // Events listen assist
     // this.listener = new listener(this)
+    console.log("Bot instanced");
     new handlerBot(this);
   }
 
