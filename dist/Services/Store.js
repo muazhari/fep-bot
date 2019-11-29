@@ -17,9 +17,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // share worker props by groupId
 // const shared_props = storage.create({});
 
-const logStorage = async () => {
-   return _nodePersist2.default.create({
-      dir: _path2.default.join(__dirname, "../src/Logs"),
+const init = async () => {
+   await _nodePersist2.default.init({
+      dir: _path2.default.join(__dirname, "../../src/Logs"),
 
       stringify: JSON.stringify,
 
@@ -38,11 +38,6 @@ const logStorage = async () => {
       forgiveParseErrors: false
 
    });
-};
-
-const init = async () => {
-   await _nodePersist2.default.init();
-   await logStorage().init();
 };
 
 const setStore = async obj => {

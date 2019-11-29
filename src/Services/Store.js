@@ -4,9 +4,9 @@ import path from "path";
 // share worker props by groupId
 // const shared_props = storage.create({});
 
-const logStorage = async () =>{
-  return storage.create({
-    dir: path.join(__dirname, "../src/Logs"),
+const init = async () => {
+  await storage.init({
+    dir: path.join(__dirname, "../../src/Logs"),
  
     stringify: JSON.stringify,
  
@@ -25,11 +25,6 @@ const logStorage = async () =>{
     forgiveParseErrors: false
  
 });
-}
-
-const init = async () => {
-  await storage.init();
-  await logStorage().init();
 };
 
 const setStore = async obj => {
