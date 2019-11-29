@@ -18,7 +18,7 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import handlerBot from "./handlerBot";
+// import handlerBot from "./handlerBot";
 
 // share worker props by groupId
 export const shared_props = {};
@@ -44,148 +44,148 @@ export const shared_props = {};
 
 export class Bot {
   constructor(props) {
-    // console.log(shared_props)
-    // only access by? user, group, room, origin
-    this.props = this.initProps(props);
-    // console.log(this.props)
+//     // console.log(shared_props)
+//     // only access by? user, group, room, origin
+//     this.props = this.initProps(props);
+//     // console.log(this.props)
 
-    // create LINE SDK client
-    this.client = new line.Client(config);
+//     // create LINE SDK client
+//     this.client = new line.Client(config);
 
-    // Features creator
-    this.Features = {
-      FEPList: FEPList(this),
-      StoreAdvance: StoreAdvance(this),
-      Basic: Basic(this),
-      Access: Access(this),
-      Template: Template(this),
-      Twibbon: Twibbon(this),
-      Courses: Courses(this),
-      PosetLattice: PosetLattice(this)
-    };
+//     // Features creator
+//     this.Features = {
+//       FEPList: FEPList(this),
+//       StoreAdvance: StoreAdvance(this),
+//       Basic: Basic(this),
+//       Access: Access(this),
+//       Template: Template(this),
+//       Twibbon: Twibbon(this),
+//       Courses: Courses(this),
+//       PosetLattice: PosetLattice(this)
+//     };
 
-    // DialogFlow assist
-    this.DialogFlow = new DialogFlow(this);
+//     // DialogFlow assist
+//     this.DialogFlow = new DialogFlow(this);
 
     // Events listen assist
     // this.listener = new listener(this)
     console.log("Bot instanced");
-    new handlerBot(this);
+    // new handlerBot(this);
   }
 
-  initProps(props) {
-    const sourceIds = this.getId(props.event.source);
+//   initProps(props) {
+//     const sourceIds = this.getId(props.event.source);
 
-    Object.keys(sourceIds).map(type => {
-      shared_props[sourceIds[type]] = {
-        ...shared_props[sourceIds[type]],
-        event: props.event
-      };
-    });
+//     Object.keys(sourceIds).map(type => {
+//       shared_props[sourceIds[type]] = {
+//         ...shared_props[sourceIds[type]],
+//         event: props.event
+//       };
+//     });
 
-    return shared_props[sourceIds.origin];
-  }
+//     return shared_props[sourceIds.origin];
+//   }
 
-  profile() {
-    return new Promise((resolve, reject) => {
-      this.client
-        .getProfile(this.getId().user)
-        .then(resolve)
-        .catch(reject);
-    });
-  }
+//   profile() {
+//     return new Promise((resolve, reject) => {
+//       this.client
+//         .getProfile(this.getId().user)
+//         .then(resolve)
+//         .catch(reject);
+//     });
+//   }
 
-  log() {
-    Store.getStore("log_chat").then(log_chat => {
-      if (!log_chat || Object.keys(log_chat).length === 0) {
-        log_chat = {
-          groups: {},
-          users: {}
-        };
-      }
+//   log() {
+//     Store.getStore("log_chat").then(log_chat => {
+//       if (!log_chat || Object.keys(log_chat).length === 0) {
+//         log_chat = {
+//           groups: {},
+//           users: {}
+//         };
+//       }
 
-      // switch (this.props.event.source.type) {
-      // case 'user':
-      //     const { userId } = this.props.event.source
-      //     if (!log_chat['users'][userId]) {
-      //       log_chat['users'][userId] = []
-      //     }
-      //     log_chat['user'][userId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // case 'group':
-      //     const { groupId } = this.props.event.source
-      //     if (!log_chat['groups'][groupId]) {
-      //       log_chat['groups'][groupId] = []
-      //     }
-      //     log_chat['groups'][groupId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // }
-    });
-  }
+//       // switch (this.props.event.source.type) {
+//       // case 'user':
+//       //     const { userId } = this.props.event.source
+//       //     if (!log_chat['users'][userId]) {
+//       //       log_chat['users'][userId] = []
+//       //     }
+//       //     log_chat['user'][userId].push(this.props.event)
+//       //     return await Store.setStore({ log_chat: log_chat })
+//       // case 'group':
+//       //     const { groupId } = this.props.event.source
+//       //     if (!log_chat['groups'][groupId]) {
+//       //       log_chat['groups'][groupId] = []
+//       //     }
+//       //     log_chat['groups'][groupId].push(this.props.event)
+//       //     return await Store.setStore({ log_chat: log_chat })
+//       // }
+//     });
+//   }
 
-  setProps(data, id) {
-    console.log(data);
-    if (!id) id = this.getId().origin;
+//   setProps(data, id) {
+//     console.log(data);
+//     if (!id) id = this.getId().origin;
 
-    Object.keys(data).map(key => {
-      this.shared_props[id][key] = data[key];
-    });
-  }
+//     Object.keys(data).map(key => {
+//       this.shared_props[id][key] = data[key];
+//     });
+//   }
 
-  getId(source) {
-    if (!source) source = this.props.event.source;
-    const type = {};
+//   getId(source) {
+//     if (!source) source = this.props.event.source;
+//     const type = {};
 
-    if (source.groupId) {
-      type["origin"] = source.groupId;
-    } else {
-      if (source.roomId) {
-        type["origin"] = source.roomId;
-      } else {
-        if (source.userId) {
-          type["origin"] = source.userId;
-        }
-      }
-    }
+//     if (source.groupId) {
+//       type["origin"] = source.groupId;
+//     } else {
+//       if (source.roomId) {
+//         type["origin"] = source.roomId;
+//       } else {
+//         if (source.userId) {
+//           type["origin"] = source.userId;
+//         }
+//       }
+//     }
 
-    if (source.groupId) {
-      type["group"] = source.groupId;
-    }
-    if (source.roomId) {
-      type["room"] = source.roomId;
-    }
-    if (source.userId) {
-      type["user"] = source.userId;
-    }
+//     if (source.groupId) {
+//       type["group"] = source.groupId;
+//     }
+//     if (source.roomId) {
+//       type["room"] = source.roomId;
+//     }
+//     if (source.userId) {
+//       type["user"] = source.userId;
+//     }
 
-    if (type) return type;
-  }
+//     if (type) return type;
+//   }
 
-  replyText(texts) {
-    texts = Array.isArray(texts) ? texts : [texts];
-    return this.client.replyMessage(
-      this.props.event.replyToken,
-      texts.map(text => ({ type: "text", text }))
-    );
-  }
+//   replyText(texts) {
+//     texts = Array.isArray(texts) ? texts : [texts];
+//     return this.client.replyMessage(
+//       this.props.event.replyToken,
+//       texts.map(text => ({ type: "text", text }))
+//     );
+//   }
 
-  sendMessage(message) {
-    message = Array.isArray(message) ? message : [message];
-    return this.client.replyMessage(
-      this.props.event.replyToken,
-      message.map(msg => msg)
-    );
-  }
+//   sendMessage(message) {
+//     message = Array.isArray(message) ? message : [message];
+//     return this.client.replyMessage(
+//       this.props.event.replyToken,
+//       message.map(msg => msg)
+//     );
+//   }
 
-  downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(
-      stream =>
-        new Promise((resolve, reject) => {
-          const writeable = fs.createWriteStream(downloadPath);
-          stream.pipe(writeable);
-          stream.on("end", () => resolve(downloadPath));
-          stream.on("error", reject);
-        })
-    );
-  }
+//   downloadContent(messageId, downloadPath) {
+//     return this.client.getMessageContent(messageId).then(
+//       stream =>
+//         new Promise((resolve, reject) => {
+//           const writeable = fs.createWriteStream(downloadPath);
+//           stream.pipe(writeable);
+//           stream.on("end", () => resolve(downloadPath));
+//           stream.on("error", reject);
+//         })
+//     );
+//   }
 }
