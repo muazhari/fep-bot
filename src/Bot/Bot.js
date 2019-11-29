@@ -95,9 +95,11 @@ export class Bot {
     });
   }
 
-  async log () {
-    await Store.setStore({ [this.Bot.props.event.timestamp]: this.Bot.props });
-    console.log("[LOG] Props logged", this.Bot.props.event.timestamp);
+  log() {
+    new Promise(async (resolve, reject) => {
+      await Store.setStore({ [this.props.event.timestamp]: this.props });
+      console.log("[LOG] Props logged", this.props.event.timestamp);
+    });
 
     // switch (this.props.event.source.type) {
     // case 'user':
