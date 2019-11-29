@@ -22,10 +22,10 @@ const destructCommand = chat => {
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
   console.log({ prefix, command, args });
-  return { prefix, command, args }
+  return { prefix, command, args };
 };
 
-const handleCommand = (command) => {
+const handleCommand = command => {
   const {
     FEPList,
     StoreAdvance,
@@ -56,8 +56,7 @@ const handleCommand = (command) => {
     algo: Courses.algo,
     pl: PosetLattice.generate
   };
-  
-  
+
   const {
     prefix: content_prefix,
     command: content_command,
@@ -98,10 +97,13 @@ const userQueue = () => {
 };
 
 export class handlerBot {
-  constructor(Bot){
+  constructor(Bot) {
+    this.Bot = Bot;
     this.eventListener(Bot.props.event);
   }
   
+  eventListener(event) {
+    
   // hidden error, need fix
   // const Worker = new Bot({ event });
   // Worker.log()
@@ -109,225 +111,225 @@ export class handlerBot {
   // const whitelist = Worker.Features.Access.whitelist();
   // console.log(whitelist);
   // const type = whitelist.user || whitelist.room ? event.type : null;
+    
+    switch (event.type) {
+      case "message":
+        const { message } = event;
+        switch (message.type) {
+          case "text":
+            return this.handleText();
+          case "image":
+            return this.handleImage();
+          case "video":
+            return this.handleVideo();
+          case "audio":
+            return this.handleAudio();
+          case "location":
+            return this.handleLocation();
+          case "sticker":
+            return this.handleSticker();
+          default:
+            throw new Error(`Unknown message: ${JSON.stringify(message)}`);
+        }
 
-  eventListener(event)
-  switch (event.type) {
-    case "message":
-      const { message } = event;
-      switch (message.type) {
-        case "text":
-          return handleText();
-        case "image":
-          return handleImage();
-        case "video":
-          return handleVideo();
-        case "audio":
-          return handleAudio();
-        case "location":
-          return handleLocation();
-        case "sticker":
-          return handleSticker();
-        default:
-          throw new Error(`Unknown message: ${JSON.stringify(message)}`);
-      }
+      case "memberJoined":
+        return Worker.client
+          .getProfile(event.joined.members[0].userId)
+          .then(profile => {
+            Worker.replyText(
+              `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
+            );
+          });
 
-    case "memberJoined":
-      return Worker.client
-        .getProfile(event.joined.members[0].userId)
-        .then(profile => {
-          Worker.replyText(
-            `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
-          );
-        });
+      case "follow":
+        return Worker.replyText("Got followed event");
 
-    case "follow":
-      return Worker.replyText("Got followed event");
+      case "unfollow":
+        return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
-    case "unfollow":
-      return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
+      case "join":
+        return Worker.replyText(`Joined ${event.source.type}`);
 
-    case "join":
-      return Worker.replyText(`Joined ${event.source.type}`);
+      case "leave":
+        return console.log(`Left: ${JSON.stringify(event)}`);
 
-    case "leave":
-      return console.log(`Left: ${JSON.stringify(event)}`);
+      case "postback":
+        let { data } = event.postback;
+        if (data === "DATE" || data === "TIME" || data === "DATETIME") {
+          data += `(${JSON.stringify(event.postback.params)})`;
+        }
 
-    case "postback":
-      let { data } = event.postback;
-      if (data === "DATE" || data === "TIME" || data === "DATETIME") {
-        data += `(${JSON.stringify(event.postback.params)})`;
-      }
+        const objectData = JSON.parse(data);
 
-      const objectData = JSON.parse(data);
+        const { Twibbon } = Worker.Features;
+        Twibbon.listen(objectData);
 
-      const { Twibbon } = Worker.Features;
-      Twibbon.listen(objectData);
+        break;
 
-      break;
+      case "beacon":
+        return Worker.replyText(`Got beacon: ${event.beacon}`);
 
-    case "beacon":
-      return Worker.replyText(`Got beacon: ${event.beacon}`);
-
-    default:
-      throw new Error(`Unknown event: ${JSON.stringify(event)}`);
+      default:
+        throw new Error(`Unknown event: ${JSON.stringify(event)}`);
+    }
   }
-};
 
-const handleText = () => {
-  const { message, replyToken, source } = Bot.props.event;
+  handleText() {
+    const { message, replyToken, source } = this.Bot.props.event;
 
-  // The text query request.
-  const splittedChat = message.text.split(" ");
-  const isTextCommand = splittedChat[0][0] == command_prefix;
-  if (isTextCommand) {
-    handleCommand(splittedChat);
-  } else {
-    // hidden error, need fix
-    handlerDialogFlow(Bot);
+    // The text query request.
+    const splittedChat = message.text.split(" ");
+    const isTextCommand = splittedChat[0][0] == command_prefix;
+    if (isTextCommand) {
+      handleCommand(splittedChat);
+    } else {
+      // hidden error, need fix
+      handlerDialogFlow(this.Bot);
+    }
   }
-};
 
-const handleImage = () => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
+  handleImage() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
 
-  if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/images",
-      `${message.id}.jpg`
-    );
-    const previewPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/images",
-      `${message.id}-preview.jpg`
-    );
+    if (message.contentProvider.type === "line") {
+      const downloadPath = path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/images",
+        `${message.id}.jpg`
+      );
+      const previewPath = path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/images",
+        `${message.id}-preview.jpg`
+      );
 
-    getContent = () => {
-      return Bot.downloadContent(message.id, downloadPath)
-        .then(downloadPath => {
-          console.log("premature_resolve", downloadPath);
-          cp.execSync(
-            `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
-          );
+      getContent = () => {
+        return this.Bot.downloadContent(message.id, downloadPath)
+          .then(downloadPath => {
+            console.log("premature_resolve", downloadPath);
+            cp.execSync(
+              `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
+            );
+            return {
+              originalPath: downloadPath,
+              previewPath: previewPath,
+              originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
+                downloadPath
+              )}`,
+              previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
+                previewPath
+              )}`
+            };
+          })
+          .catch(err => {
+            throw err;
+          });
+      };
+    } else if (message.contentProvider.type === "external") {
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
+    }
+
+    // Twibbon switch
+    const { Twibbon } = this.Bot.Features;
+    Twibbon.insert(getContent);
+  }
+
+  handleVideo() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
+    if (message.contentProvider.type === "line") {
+      const downloadPath = path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/videos",
+        `${message.id}.mp4`
+      );
+      const previewPath = path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/videos",
+        `${message.id}-preview.jpg`
+      );
+
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
+        downloadPath => {
+          // FFmpeg and ImageMagick is needed here to run 'convert'
+          // Please consider about security and performance by yourself
+          cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+
           return {
-            originalPath: downloadPath,
-            previewPath: previewPath,
-            originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
+            originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(
               downloadPath
             )}`,
-            previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
+            previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(
               previewPath
             )}`
           };
-        })
-        .catch(err => {
-          throw err;
-        });
-    };
-  } else if (message.contentProvider.type === "external") {
-    getContent = () => {
-      return Promise.resolve(message.contentProvider);
-    };
+        }
+      );
+    } else if (message.contentProvider.type === "external") {
+      getContent = Promise.resolve(message.contentProvider);
+    }
+
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+      // this.Bot.sendMessage({
+      //   type: "video",
+      //   originalContentUrl,
+      //   previewImageUrl
+      // });
+    });
   }
 
-  // Twibbon switch
-  const { Twibbon } = Bot.Features;
-  Twibbon.insert(getContent);
-};
+  handleAudio() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
+    if (message.contentProvider.type === "line") {
+      const downloadPath = path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/audios",
+        `${message.id}.m4a`
+      );
 
-const handleVideo = () => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/videos",
-      `${message.id}.mp4`
-    );
-    const previewPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/videos",
-      `${message.id}-preview.jpg`
-    );
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
+        downloadPath => {
+          return {
+            originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
+              downloadPath
+            )}`
+          };
+        }
+      );
+    } else {
+      getContent = Promise.resolve(message.contentProvider);
+    }
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(
-      downloadPath => {
-        // FFmpeg and ImageMagick is needed here to run 'convert'
-        // Please consider about security and performance by yourself
-        cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
-
-        return {
-          originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(
-            downloadPath
-          )}`,
-          previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(
-            previewPath
-          )}`
-        };
-      }
-    );
-  } else if (message.contentProvider.type === "external") {
-    getContent = Promise.resolve(message.contentProvider);
+    return getContent.then(({ originalContentUrl }) => {
+      // Bot.sendMessage({
+      //   type: "audio",
+      //   originalContentUrl,
+      //   duration: message.duration
+      // });
+    });
   }
 
-  return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+  handleLocation() {
+    const { message, replyToken } = Bot.props.event;
+    Bot.sendMessage({
+      type: "location",
+      title: message.title,
+      address: message.address,
+      latitude: message.latitude,
+      longitude: message.longitude
+    });
+  }
+
+  handleSticker() {
+    const { message, replyToken } = Bot.props.event;
     // Bot.sendMessage({
-    //   type: "video",
-    //   originalContentUrl,
-    //   previewImageUrl
+    //   type: "sticker",
+    //   packageId: message.packageId,
+    //   stickerId: message.stickerId
     // });
-  });
-};
-
-const handleAudio = () => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/audios",
-      `${message.id}.m4a`
-    );
-
-    getContent = Bot.downloadContent(message.id, downloadPath).then(
-      downloadPath => {
-        return {
-          originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
-            downloadPath
-          )}`
-        };
-      }
-    );
-  } else {
-    getContent = Promise.resolve(message.contentProvider);
   }
-
-  return getContent.then(({ originalContentUrl }) => {
-    // Bot.sendMessage({
-    //   type: "audio",
-    //   originalContentUrl,
-    //   duration: message.duration
-    // });
-  });
-};
-
-const handleLocation = () => {
-  const { message, replyToken } = Bot.props.event;
-  Bot.sendMessage({
-    type: "location",
-    title: message.title,
-    address: message.address,
-    latitude: message.latitude,
-    longitude: message.longitude
-  });
-};
-
-const handleSticker = () => {
-  const { message, replyToken } = Bot.props.event;
-  // Bot.sendMessage({
-  //   type: "sticker",
-  //   packageId: message.packageId,
-  //   stickerId: message.stickerId
-  // });
-};
+}
