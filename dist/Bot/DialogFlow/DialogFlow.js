@@ -37,6 +37,7 @@ class DialogFlow {
 
     this.propsId = this.Bot.getId().origin;
   }
+
   getParameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
@@ -86,9 +87,9 @@ class DialogFlow {
             return resolve({ fulfillmentText, parameter });
           };
 
-          if (fulfillmentText.length >= 1) {
-            this.chatGate(parameter, chatCallback);
-          }
+          // if (fulfillmentText.length >= 1) {
+          this.chatGate(parameter, chatCallback);
+          // }
 
           console.log("isTalking", _Bot.shared_props[this.propsId].dialogFlow.isTalking);
           console.log("parameter", JSON.stringify(parameter));
