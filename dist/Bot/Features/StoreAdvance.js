@@ -19,10 +19,6 @@ var _nodePersist = require("node-persist");
 
 var _nodePersist2 = _interopRequireDefault(_nodePersist);
 
-var _autoBind = require("auto-bind");
-
-var _autoBind2 = _interopRequireDefault(_autoBind);
-
 var _axios = require("axios");
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -30,7 +26,6 @@ var _axios2 = _interopRequireDefault(_axios);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
-
 
 const StoreAdvance = exports.StoreAdvance = Bot => {
   const reset_store = async args => {

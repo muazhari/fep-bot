@@ -50,7 +50,11 @@ const PosetLattice = exports.PosetLattice = Bot => {
         console.log(result);
         _child_process2.default.execSync(`convert -resize 240x jpg:${data.filePath} jpg:${data.filePathPreview}`);
 
-        Bot.sendMessage({ type: "image", originalContentUrl: data.filePath, previewImageUrl: data.filePathPreview });
+        Bot.sendMessage({
+          type: "image",
+          originalContentUrl: data.filePath,
+          previewImageUrl: data.filePathPreview
+        });
 
         Bot.replyText(result);
 

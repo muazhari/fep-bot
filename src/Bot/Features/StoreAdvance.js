@@ -2,16 +2,12 @@ import { command_prefix, batch_list } from "../../Bot";
 import FEPCleaner from "../../Bot/Helper/FEPCleaner";
 import Store from "../../Services/Store";
 import storage from "node-persist";
-import autoBind from "auto-bind";
-
 
 import axios from "axios";
 
-
 // const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
 
-
-export const StoreAdvance = Bot  => {
+export const StoreAdvance = Bot => {
   const reset_store = async args => {
     if (args.length === 1) {
       await Store.setStore({ [args[0]]: {} });
@@ -25,18 +21,17 @@ export const StoreAdvance = Bot  => {
         url: args[0]
       };
 
-//       const response = await axios({
-//         method: "get",
-//         url: data.url,
-//         // responseType: "text"
-//       });
+      //       const response = await axios({
+      //         method: "get",
+      //         url: data.url,
+      //         // responseType: "text"
+      //       });
 
-//       console.log(typeof response.data);
+      //       console.log(typeof response.data);
 
-      const response = await FEPCleaner.run(data.url)
-      const parsed = JSON.parse(response)
-      console.log(parsed)
-
+      const response = await FEPCleaner.run(data.url);
+      const parsed = JSON.parse(response);
+      console.log(parsed);
 
       await Store.setStore({ fep: parsed });
       Bot.replyText("Done!");

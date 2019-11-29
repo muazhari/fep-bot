@@ -1,20 +1,20 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _express = require('express');
+var _express = require("express");
 
-var _axios = require('axios');
+var _axios = require("axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _botSdk = require('@line/bot-sdk');
+var _botSdk = require("@line/bot-sdk");
 
 var line = _interopRequireWildcard(_botSdk);
 
-var _Bot = require('./Bot');
+var _Bot = require("./Bot");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -28,7 +28,7 @@ const routes = (0, _express.Router)();
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
-routes.post('/webhook', (req, res) => {
+routes.post("/webhook", (req, res) => {
   if (req.body.destination) {
     console.log("Destination User ID: ", req.body.destination);
   }
@@ -40,7 +40,7 @@ routes.post('/webhook', (req, res) => {
 
   //handle events separately
   Promise.all(req.body.events.map(event => {
-    (0, _Bot.handlerBot)(event);
+    new _Bot.Bot({ event });
   })).then(result => res.json(result)).catch(err => {
     console.log(err);
     res.status(500).end();
@@ -51,8 +51,8 @@ routes.post('/webhook', (req, res) => {
 /**
  * GET home page
  */
-routes.get('/', (req, res) => {
-  res.render('index', { title: 'fep-bot splash web yeah!' });
+routes.get("/", (req, res) => {
+  res.render("index", { title: "fep-bot splash web yeah!" });
 });
 
 /**
@@ -64,10 +64,10 @@ routes.get('/', (req, res) => {
  * create different/better error handlers depending on
  * your use case.
  */
-routes.get('/list', (req, res, next) => {
+routes.get("/list", (req, res, next) => {
   const { title } = req.query;
 
-  if (title == null || title === '') {
+  if (title == null || title === "") {
     // You probably want to set the response HTTP status to 400 Bad Request
     // or 422 Unprocessable Entity instead of the default 500 of
     // the global error handler (e.g check out https://github.com/kbariotis/throw.js).
@@ -76,7 +76,7 @@ routes.get('/list', (req, res, next) => {
     return;
   }
 
-  res.render('index', { title });
+  res.render("index", { title });
 });
 
 exports.default = routes;

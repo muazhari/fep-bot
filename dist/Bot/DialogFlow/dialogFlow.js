@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DialogFlow = undefined;
+exports.dialogFlow = undefined;
 
 var _dialogflow = require("dialogflow");
 
@@ -17,15 +17,15 @@ var _DialogFlow = require("../../Config/DialogFlow");
 
 var _Bot = require("../../Bot");
 
+var _internal = require("./internal");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-class DialogFlow {
+class dialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
-    this.get_parameter = this.get_parameter.bind(this);
-    this.get_query = this.get_query.bind(this);
-    this.chat_switch = this.chat_switch.bind(this);
-    this.chat = this.chat.bind(this);
+    this.propsId = Bot.getId().origin;
+    this.initDialogFlowProps();
 
     // selected agent
     this.agent = _DialogFlow.default_agent;
@@ -39,18 +39,23 @@ class DialogFlow {
     this.sessionClient = new _dialogflow2.default.SessionsClient(this.config);
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
-    this.temp_chat_switch = true;
-
-    this.propsId = this.Bot.getId().origin;
+    // handler = handlerDialogFlow(Bot);
   }
-  get_parameter(responses) {
+
+  initDialogFlowProps() {
+    if (_Bot.shared_props[this.propsId]["dialogFlow"] === undefined) {
+      _Bot.shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    }
+  }
+
+  getParameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
     const { allRequiredParamsPresent } = responses[0].queryResult;
     return { displayName, fields, allRequiredParamsPresent };
   }
 
-  get_query(msg) {
+  getQuery(msg) {
     const query = {
       session: this.sessionPath,
       queryInput: {
@@ -65,48 +70,42 @@ class DialogFlow {
     return query;
   }
 
-  chat_switch(parameter, chat_switch_callback, default_callback) {
+  chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (displayName === "chat.talk" || displayName === "chat.silent") {
+    if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        _Bot.shared_props[this.propsId]["status"] = fields.chat.stringValue === "true";
-        return chat_switch_callback();
+        _Bot.shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
+      return chatCallback();
     }
-    return default_callback();
   }
 
   // Send request and log result
-  chat() {
+  listen() {
     return new Promise((resolve, reject) => {
       try {
         const { message } = this.Bot.props.event;
-        const query = this.get_query(message.text);
+        const query = this.getQuery(message.text);
         this.sessionClient.detectIntent(query).then(responses => {
-          const parameter = this.get_parameter(responses);
+          const parameter = this.getParameter(responses);
 
           const { queryResult } = responses[0];
           const { fulfillmentText } = queryResult;
 
-          const status = _Bot.shared_props[this.propsId].status === undefined ? false : _Bot.shared_props[this.propsId].status;
-
-          const chat_switch_callback = () => {
-            return resolve({ fulfillmentText, parameter });
+          const chatCallback = () => {
+            const cleanResponses = { fulfillmentText, parameter };
+            new _internal.handlerDialogFlow(this.Bot, cleanResponses);
+            return resolve();
           };
 
-          const default_callback = () => {
-            if (status) {
-              return resolve({ fulfillmentText, parameter });
-            }
-          };
+          // if (fulfillmentText.length >= 1) {
+          this.chatGate(parameter, chatCallback);
+          // }
 
-          if (fulfillmentText.length >= 1) {
-            this.chat_switch(parameter, chat_switch_callback, default_callback);
-          }
-
-          console.log("parameter", parameter);
-          console.log("shared_props", _Bot.shared_props[this.propsId].status, status);
+          console.log("isTalking", _Bot.shared_props[this.propsId].dialogFlow.isTalking);
+          console.log("parameter", JSON.stringify(parameter));
           console.log("Detected intent", responses[0].queryResult.displayName);
+          console.log(JSON.stringify(responses));
         });
       } catch (err) {
         reject(err);
@@ -114,5 +113,5 @@ class DialogFlow {
     });
   }
 }
-exports.DialogFlow = DialogFlow;
-//# sourceMappingURL=DialogFlow.js.map
+exports.dialogFlow = dialogFlow;
+//# sourceMappingURL=dialogFlow.js.map
