@@ -53,7 +53,7 @@ export class DialogFlow {
     const {fields, displayName} = parameter;
     if (displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId]["status"] = fields.chat.stringValue === "true";
+        shared_props[this.propsId]["status"] = JSON.parse(fields.chat.stringValue);
         return chat_switch_callback();
       }
     }
