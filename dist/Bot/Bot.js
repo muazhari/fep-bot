@@ -99,15 +99,16 @@ class Bot {
   }
 
   initProps(props) {
-    const SourceIds = this.getId(props.event.source);
+    const sourceIds = this.getId(props.event.source);
 
-    Object.keys(SourceIds).map(type => {
-      shared_props[SourceIds[type]] = _extends({}, shared_props[SourceIds[type]], {
-        event: props.event
+    Object.keys(sourceIds).map(type => {
+      shared_props[sourceIds[type]] = _extends({}, shared_props[sourceIds[type]], {
+        event: props.event,
+        dialogFlow: _extends({}, shared_props[sourceIds[type]].dialogFlow)
       });
     });
 
-    return shared_props[SourceIds.origin];
+    return shared_props[sourceIds.origin];
   }
 
   profile() {
