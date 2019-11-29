@@ -94,6 +94,7 @@ class Bot {
 
     // Events listen assist
     this.handler = new _internal.handlerBot(this);
+    this.log();
     console.log("Bot instanced");
   }
 
@@ -115,32 +116,26 @@ class Bot {
     });
   }
 
-  log() {
-    _Store2.default.getStore("chatLog").then(log_chat => {
-      if (!log_chat || Object.keys(log_chat).length === 0) {
-        log_chat = {
-          groups: {},
-          users: {}
-        };
-      }
+  async log() {
+    await _Store2.default.setStore({ [this.Bot.props.event.timestamp]: this.Bot.props });
+    console.log("[LOG] Props logged", this.Bot.props.event.timestamp);
 
-      // switch (this.props.event.source.type) {
-      // case 'user':
-      //     const { userId } = this.props.event.source
-      //     if (!log_chat['users'][userId]) {
-      //       log_chat['users'][userId] = []
-      //     }
-      //     log_chat['user'][userId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // case 'group':
-      //     const { groupId } = this.props.event.source
-      //     if (!log_chat['groups'][groupId]) {
-      //       log_chat['groups'][groupId] = []
-      //     }
-      //     log_chat['groups'][groupId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // }
-    });
+    // switch (this.props.event.source.type) {
+    // case 'user':
+    //     const { userId } = this.props.event.source
+    //     if (!log_chat['users'][userId]) {
+    //       log_chat['users'][userId] = []
+    //     }
+    //     log_chat['user'][userId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // case 'group':
+    //     const { groupId } = this.props.event.source
+    //     if (!log_chat['groups'][groupId]) {
+    //       log_chat['groups'][groupId] = []
+    //     }
+    //     log_chat['groups'][groupId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // }
   }
 
   setProps(data, id) {
