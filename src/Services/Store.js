@@ -1,11 +1,12 @@
 import storage from "node-persist";
+import path from "path";
 
 // share worker props by groupId
 // const shared_props = storage.create({});
 
-const initLogStoreage = async () =>{
-  await storage.create({
-    dir: 'relative/path/to/persist',
+const logStorage = async () =>{
+  return storage.create({
+    dir: path.join(__dirname, "../src/Logs"),
  
     stringify: JSON.stringify,
  
@@ -13,7 +14,7 @@ const initLogStoreage = async () =>{
  
     encoding: 'utf8',
  
-    logging: false,  // can also be custom logging function
+    logging: true,  // can also be custom logging function
  
     ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS or a valid Javascript Date object
  
@@ -28,7 +29,7 @@ const initLogStoreage = async () =>{
 
 const init = async () => {
   await storage.init();
-  await initLogStorage();
+  await logStorage().init();
 };
 
 const setStore = async obj => {

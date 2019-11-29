@@ -1,21 +1,25 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
    value: true
 });
 
-var _nodePersist = require('node-persist');
+var _nodePersist = require("node-persist");
 
 var _nodePersist2 = _interopRequireDefault(_nodePersist);
+
+var _path = require("path");
+
+var _path2 = _interopRequireDefault(_path);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // share worker props by groupId
 // const shared_props = storage.create({});
 
-const initLogStoreage = async () => {
-   await _nodePersist2.default.create({
-      dir: 'relative/path/to/persist',
+const logStorage = async () => {
+   return _nodePersist2.default.create({
+      dir: _path2.default.join(__dirname, "../src/Logs"),
 
       stringify: JSON.stringify,
 
@@ -23,7 +27,7 @@ const initLogStoreage = async () => {
 
       encoding: 'utf8',
 
-      logging: false, // can also be custom logging function
+      logging: true, // can also be custom logging function
 
       ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS or a valid Javascript Date object
 
@@ -38,7 +42,7 @@ const initLogStoreage = async () => {
 
 const init = async () => {
    await _nodePersist2.default.init();
-   await initLogStorage();
+   await logStorage().init();
 };
 
 const setStore = async obj => {
