@@ -1,36 +1,50 @@
-import dialogflow from "dialogflow";
-import uuid from "uuid";
-import { default_agent } from "../../Config/DialogFlow";
-import { shared_props } from "../../Bot";
-import { handlerDialogFlow } from "./internal";
+"use strict";
 
-export class dialogFlow {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.dialogFlow = undefined;
+
+var _dialogflow = require("dialogflow");
+
+var _dialogflow2 = _interopRequireDefault(_dialogflow);
+
+var _uuid = require("uuid");
+
+var _uuid2 = _interopRequireDefault(_uuid);
+
+var _DialogFlow = require("../../Config/DialogFlow");
+
+var _Bot = require("../../Bot");
+
+var _internal = require("./internal");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class dialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
     this.propsId = Bot.getId().origin;
     this.initDialogFlowProps();
 
     // selected agent
-    this.agent = default_agent;
+    this.agent = _DialogFlow.default_agent;
     this.projectId = this.agent.projectId;
     this.config = this.agent.config;
 
     // A unique identifier for the given session
-    this.sessionId = uuid.v4();
+    this.sessionId = _uuid2.default.v4();
 
     // Create a new session
-    this.sessionClient = new dialogflow.SessionsClient(this.config);
-    this.sessionPath = this.sessionClient.sessionPath(
-      this.projectId,
-      this.sessionId
-    );
+    this.sessionClient = new _dialogflow2.default.SessionsClient(this.config);
+    this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
     // handler = handlerDialogFlow(Bot);
   }
 
   initDialogFlowProps() {
-    if (shared_props[this.propsId]["dialogFlow"] === undefined) {
-      shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    if (_Bot.shared_props[this.propsId]["dialogFlow"] === undefined) {
+      _Bot.shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
     }
   }
 
@@ -58,14 +72,9 @@ export class dialogFlow {
 
   chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (
-      shared_props[this.propsId].dialogFlow.isTalking ||
-      displayName === "chat.talk"
-    ) {
+    if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(
-          fields.chat.stringValue
-        );
+        _Bot.shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
@@ -85,7 +94,7 @@ export class dialogFlow {
 
           const chatCallback = () => {
             const cleanResponses = { fulfillmentText, parameter };
-            new handlerDialogFlow(this.Bot, cleanResponses);
+            new _internal.handlerDialogFlow(this.Bot, cleanResponses);
             return resolve();
           };
 
@@ -93,10 +102,7 @@ export class dialogFlow {
           this.chatGate(parameter, chatCallback);
           // }
 
-          console.log(
-            "isTalking",
-            shared_props[this.propsId].dialogFlow.isTalking
-          );
+          console.log("isTalking", _Bot.shared_props[this.propsId].dialogFlow.isTalking);
           console.log("parameter", JSON.stringify(parameter));
           console.log("Detected intent", responses[0].queryResult.displayName);
           console.log(JSON.stringify(responses));
@@ -107,3 +113,5 @@ export class dialogFlow {
     });
   }
 }
+exports.dialogFlow = dialogFlow;
+//# sourceMappingURL=dialogFlow.js.map

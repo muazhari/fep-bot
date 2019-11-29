@@ -1,6 +1,13 @@
-import { shared_props } from "../../Bot";
+"use strict";
 
-export class handlerDialogFlow {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handlerDialogFlow = undefined;
+
+var _Bot = require("../../Bot");
+
+class handlerDialogFlow {
   constructor(Bot, response) {
     this.Bot = Bot;
     this.response = response;
@@ -16,3 +23,5 @@ export class handlerDialogFlow {
     }
   }
 }
+exports.handlerDialogFlow = handlerDialogFlow;
+//# sourceMappingURL=handlerDialogFlow.js.map

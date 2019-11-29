@@ -1,12 +1,30 @@
-import fs from "fs-extra";
-import path from "path";
-import cp from "child_process";
-import { shared_props } from "./internal";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handlerBot = exports.command_prefix = exports.batch_list = exports.baseURL = undefined;
+
+var _fsExtra = require("fs-extra");
+
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
+
+var _path = require("path");
+
+var _path2 = _interopRequireDefault(_path);
+
+var _child_process = require("child_process");
+
+var _child_process2 = _interopRequireDefault(_child_process);
+
+var _internal = require("./internal");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // base URL for webhook server
-export const baseURL = process.env.BASE_URL;
+const baseURL = exports.baseURL = process.env.BASE_URL;
 
-export const batch_list = {
+const batch_list = exports.batch_list = {
   a: "22 - 27 JULI 2019",
   b: "29 JULI - 3 AGUSTUS 2019",
   c: "5 - 10 AGUSTUS 2019",
@@ -14,7 +32,7 @@ export const batch_list = {
   e: "26 - 03 SEPTEMBER 2019"
 };
 
-export const command_prefix = "/";
+const command_prefix = exports.command_prefix = "/";
 
 const destructCommand = chat => {
   const prefix = chat[0][0];
@@ -94,7 +112,7 @@ const userQueue = userId => {
   return { increment, decrement };
 };
 
-export class handlerBot {
+class handlerBot {
   constructor(Bot) {
     this.Bot = Bot;
     this.features = Bot.Features;
@@ -132,13 +150,9 @@ export class handlerBot {
         }
 
       case "memberJoined":
-        return this.Bot.client
-          .getProfile(event.joined.members[0].userId)
-          .then(profile => {
-            this.Bot.replyText(
-              `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
-            );
-          });
+        return this.Bot.client.getProfile(event.joined.members[0].userId).then(profile => {
+          this.Bot.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
+        });
 
       case "follow":
         return this.Bot.replyText("Got followed event");
@@ -192,38 +206,22 @@ export class handlerBot {
     let getContent;
 
     if (message.contentProvider.type === "line") {
-      const downloadPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/images",
-        `${message.id}.jpg`
-      );
-      const previewPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/images",
-        `${message.id}-preview.jpg`
-      );
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
+      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
 
       getContent = () => {
-        return this.Bot.downloadContent(message.id, downloadPath)
-          .then(downloadPath => {
-            console.log("premature_resolve", downloadPath);
-            cp.execSync(
-              `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
-            );
-            return {
-              originalPath: downloadPath,
-              previewPath: previewPath,
-              originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
-                downloadPath
-              )}`,
-              previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
-                previewPath
-              )}`
-            };
-          })
-          .catch(err => {
-            throw err;
-          });
+        return this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+          console.log("premature_resolve", downloadPath);
+          _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
+          return {
+            originalPath: downloadPath,
+            previewPath: previewPath,
+            originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
+            previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
+          };
+        }).catch(err => {
+          throw err;
+        });
       };
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
@@ -240,33 +238,19 @@ export class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
     if (message.contentProvider.type === "line") {
-      const downloadPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/videos",
-        `${message.id}.mp4`
-      );
-      const previewPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/videos",
-        `${message.id}-preview.jpg`
-      );
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
+      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
-        downloadPath => {
-          // FFmpeg and ImageMagick is needed here to run 'convert'
-          // Please consider about security and performance by yourself
-          cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        // FFmpeg and ImageMagick is needed here to run 'convert'
+        // Please consider about security and performance by yourself
+        _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
 
-          return {
-            originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(
-              downloadPath
-            )}`,
-            previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(
-              previewPath
-            )}`
-          };
-        }
-      );
+        return {
+          originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`,
+          previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
+        };
+      });
     } else if (message.contentProvider.type === "external") {
       getContent = Promise.resolve(message.contentProvider);
     }
@@ -284,21 +268,13 @@ export class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
     if (message.contentProvider.type === "line") {
-      const downloadPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/audios",
-        `${message.id}.m4a`
-      );
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
-        downloadPath => {
-          return {
-            originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
-              downloadPath
-            )}`
-          };
-        }
-      );
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        return {
+          originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}`
+        };
+      });
     } else {
       getContent = Promise.resolve(message.contentProvider);
     }
@@ -332,3 +308,5 @@ export class handlerBot {
     // });
   }
 }
+exports.handlerBot = handlerBot;
+//# sourceMappingURL=handlerBot.js.map
