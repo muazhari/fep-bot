@@ -94,6 +94,7 @@ class Bot {
 
     // Events listen assist
     this.handler = new _internal.handlerBot(this);
+    this.log();
     console.log("Bot instanced");
   }
 
@@ -109,38 +110,34 @@ class Bot {
     return shared_props[sourceIds.origin];
   }
 
-  profile() {
+  getProfile() {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
     });
   }
 
   log() {
-    _Store2.default.getStore("log_chat").then(log_chat => {
-      if (!log_chat || Object.keys(log_chat).length === 0) {
-        log_chat = {
-          groups: {},
-          users: {}
-        };
-      }
-
-      // switch (this.props.event.source.type) {
-      // case 'user':
-      //     const { userId } = this.props.event.source
-      //     if (!log_chat['users'][userId]) {
-      //       log_chat['users'][userId] = []
-      //     }
-      //     log_chat['user'][userId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // case 'group':
-      //     const { groupId } = this.props.event.source
-      //     if (!log_chat['groups'][groupId]) {
-      //       log_chat['groups'][groupId] = []
-      //     }
-      //     log_chat['groups'][groupId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // }
+    new Promise(async (resolve, reject) => {
+      await _Store2.default.setStore({ [this.props.event.timestamp]: this.props });
+      console.log("[LOG] Props logged", this.props.event.timestamp);
     });
+
+    // switch (this.props.event.source.type) {
+    // case 'user':
+    //     const { userId } = this.props.event.source
+    //     if (!log_chat['users'][userId]) {
+    //       log_chat['users'][userId] = []
+    //     }
+    //     log_chat['user'][userId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // case 'group':
+    //     const { groupId } = this.props.event.source
+    //     if (!log_chat['groups'][groupId]) {
+    //       log_chat['groups'][groupId] = []
+    //     }
+    //     log_chat['groups'][groupId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // }
   }
 
   setProps(data, id) {
