@@ -115,6 +115,7 @@ const userQueue = userId => {
 class handlerBot {
   constructor(Bot) {
     this.Bot = Bot;
+    this.features = this.Bot.Features;
     this.eventListener(Bot.props.event);
   }
 

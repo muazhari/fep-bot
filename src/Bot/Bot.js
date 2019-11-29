@@ -18,7 +18,7 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import handlerBot from "./handlerBot";
+import { handlerBot } from "../Bot";
 
 // share worker props by groupId
 export const shared_props = {};

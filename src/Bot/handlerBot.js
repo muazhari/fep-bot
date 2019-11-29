@@ -72,7 +72,7 @@ const handleCommand = (features, command) => {
   }
 };
 
-const userQueue = (userId) => {
+const userQueue = userId => {
   const queue = {};
 
   const increment = () => {
@@ -97,19 +97,20 @@ const userQueue = (userId) => {
 export class handlerBot {
   constructor(Bot) {
     this.Bot = Bot;
+    this.features = this.Bot.Features;
     this.eventListener(Bot.props.event);
   }
-  
+
   eventListener(event) {
     console.log(event);
-  // hidden error, need fix
-  // const this.Bot = new Bot({ event });
-  // this.Bot.log()
+    // hidden error, need fix
+    // const this.Bot = new Bot({ event });
+    // this.Bot.log()
 
-  // const whitelist = this.Bot.Features.Access.whitelist();
-  // console.log(whitelist);
-  // const type = whitelist.user || whitelist.room ? event.type : null;
-    
+    // const whitelist = this.Bot.Features.Access.whitelist();
+    // console.log(whitelist);
+    // const type = whitelist.user || whitelist.room ? event.type : null;
+
     switch (event.type) {
       case "message":
         const { message } = event;

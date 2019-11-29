@@ -39,9 +39,7 @@ var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
 
-var _handlerBot = require("./handlerBot");
-
-var _handlerBot2 = _interopRequireDefault(_handlerBot);
+var _Bot = require("../Bot");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -96,7 +94,7 @@ class Bot {
 
     // Events listen assist
     // this.listener = new listener(this)
-    this.handler = new _handlerBot2.default(this);
+    this.handler = new _Bot.handlerBot(this);
     console.log("Bot instanced");
   }
 
