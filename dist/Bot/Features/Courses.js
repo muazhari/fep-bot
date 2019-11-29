@@ -73,7 +73,7 @@ const searchCourseBySessionID = (courseName, sessionID) => {
 const searchSession = (courseName, args) => {
   let sessionsData;
   if (args[0]) {
-    if (args[0] == 'now') {
+    if (args[0] == "now") {
       sessionsData = searchCourseByDate(courseName);
     } else {
       sessionsData = searchCourseBySessionID(courseName, args[0]);
