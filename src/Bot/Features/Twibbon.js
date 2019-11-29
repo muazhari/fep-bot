@@ -340,7 +340,7 @@ export const Twibbon = Bot => {
         }
       };
 
-      Bot.profile().then(res => {
+      Bot.getProfile().then(res => {
         const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
         if (type === "manual") {
           messages.push(

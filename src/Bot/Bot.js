@@ -85,7 +85,7 @@ export class Bot {
     return shared_props[sourceIds.origin];
   }
 
-  profile() {
+  getProfile() {
     return new Promise((resolve, reject) => {
       this.client
         .getProfile(this.getId().user)
@@ -95,7 +95,7 @@ export class Bot {
   }
 
   log() {
-    Store.getStore("log_chat").then(log_chat => {
+    Store.getStore("chatLog").then(log_chat => {
       if (!log_chat || Object.keys(log_chat).length === 0) {
         log_chat = {
           groups: {},

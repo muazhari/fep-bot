@@ -109,14 +109,14 @@ class Bot {
     return shared_props[sourceIds.origin];
   }
 
-  profile() {
+  getProfile() {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
     });
   }
 
   log() {
-    _Store2.default.getStore("log_chat").then(log_chat => {
+    _Store2.default.getStore("chatLog").then(log_chat => {
       if (!log_chat || Object.keys(log_chat).length === 0) {
         log_chat = {
           groups: {},
