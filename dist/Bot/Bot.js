@@ -119,9 +119,13 @@ class Bot {
   log() {
     new Promise(async (resolve, reject) => {
       const val = { [this.props.event.timestamp]: this.props };
-      const old = await _Store2.default.getStore("propsLogs");
-      console.log("old", old);
-      await _Store2.default.setStore({ "propsLogs": _extends({}, old, val) });
+      let data = await _Store2.default.getStore("propsLogs");
+      if (data === undefined) {
+        data = [val];
+      } else {
+        data.push(val);
+      }
+      await _Store2.default.setStore({ propsLogs: data });
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 

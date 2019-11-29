@@ -98,9 +98,13 @@ export class Bot {
   log() {
     new Promise(async (resolve, reject) => {
       const val = { [this.props.event.timestamp]: this.props };
-      const old = await Store.getStore("propsLogs");
-      console.log("old", old);
-      await Store.setStore({"propsLogs" : {...old, ...val}});
+      let data = await Store.getStore("propsLogs");
+      if (data === undefined) {
+        data = [val];
+      } else {
+        data.push(val);
+      }
+      await Store.setStore({ propsLogs: data });
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 
