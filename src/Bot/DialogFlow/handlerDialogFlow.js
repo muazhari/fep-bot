@@ -1,6 +1,11 @@
 import { shared_props } from "../../Bot";
 
-export const handlerDialogFlow = (Bot, response) => {
+export class handlerDialogFlow {
+  constructor(Bot, response){
+    this.Bot = Bot;
+    this.response = response;
+    this.handleIntent(response);
+  }
   const { message } = Bot.props.event;
   const df = Bot.dialogFlow;
 

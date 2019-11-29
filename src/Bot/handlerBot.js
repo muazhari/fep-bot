@@ -95,7 +95,6 @@ const userQueue = userId => {
 };
 
 export const handlerBot = Bot => {
-  eventListener(Bot.props.event);
 
   const eventListener = event => {
     console.log(event);
@@ -179,7 +178,7 @@ export const handlerBot = Bot => {
       handleCommand(Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
-      Bot.dialogFlow.listen();
+      // Bot.dialogFlow.listen();
     }
   };
 
@@ -327,4 +326,6 @@ export const handlerBot = Bot => {
     //   stickerId: message.stickerId
     // });
   };
+  
+  eventListener(Bot.props.event);
 };

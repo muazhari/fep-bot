@@ -4,40 +4,45 @@ import { default_agent } from "../../Config/DialogFlow";
 import { shared_props } from "../../Bot";
 import { handlerDialogFlow } from "./internal";
 
-export const dialogFlow = Bot => {
-  const propsId = Bot.getId().origin;
-  initDialogFlowProps();
+export class dialogFlow {
+  constructor(Bot) {
+    this.propsId = Bot.getId().origin;
+    this.initDialogFlowProps();
 
-  // selected agent
-  const agent = default_agent;
-  const projectId = agent.projectId;
-  const config = agent.config;
+    // selected agent
+    this.agent = default_agent;
+    this.projectId = this.agent.projectId;
+    this.config = this.agent.config;
 
-  // A unique identifier for the given session
-  const sessionId = uuid.v4();
+    // A unique identifier for the given session
+    this.sessionId = uuid.v4();
 
-  // Create a new session
-  const sessionClient = new dialogflow.SessionsClient(config);
-  const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+    // Create a new session
+    this.sessionClient = new dialogflow.SessionsClient(this.config);
+    this.sessionPath = this.sessionClient.sessionPath(
+      this.projectId,
+      this.sessionId
+    );
 
-  // handler = handlerDialogFlow(Bot);
+    // handler = handlerDialogFlow(Bot);
+  }
 
-  const initDialogFlowProps = () => {
-    if (shared_props[propsId]["dialogFlow"] === undefined) {
-      shared_props[propsId]["dialogFlow"] = { isTalking: false };
+  initDialogFlowProps() {
+    if (shared_props[this.propsId]["dialogFlow"] === undefined) {
+      shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
     }
-  };
+  }
 
-  const getParameter = responses => {
+  getParameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
     const { allRequiredParamsPresent } = responses[0].queryResult;
     return { displayName, fields, allRequiredParamsPresent };
-  };
+  }
 
-  const getQuery = msg => {
+  getQuery(msg) {
     const query = {
-      session: sessionPath,
+      session: this.sessionPath,
       queryInput: {
         text: {
           // The query to send to the dialogflow agent
@@ -48,60 +53,56 @@ export const dialogFlow = Bot => {
       }
     };
     return query;
-  };
+  }
 
-  const chatGate = (parameter, chatCallback) => {
+  chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
     if (
-      shared_props[propsId].dialogFlow.isTalking ||
+      shared_props[this.propsId].dialogFlow.isTalking ||
       displayName === "chat.talk"
     ) {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[propsId].dialogFlow.isTalking = JSON.parse(
+        shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(
           fields.chat.stringValue
         );
       }
       return chatCallback();
     }
-  };
+  }
 
   // Send request and log result
-  const listen = () => {
+  listen() {
     return new Promise((resolve, reject) => {
       try {
-        const { message } = Bot.props.event;
-        const query = getQuery(message.text);
-        sessionClient.detectIntent(query).then(response => {
-          const parameter = getParameter(response);
+        const { message } = this.Bot.props.event;
+        const query = this.getQuery(message.text);
+        this.sessionClient.detectIntent(query).then(responses => {
+          const parameter = this.getParameter(responses);
 
-          const { queryResult } = response[0];
+          const { queryResult } = responses[0];
           const { fulfillmentText } = queryResult;
 
           const chatCallback = () => {
             const cleanResponses = { fulfillmentText, parameter };
-            handlerDialogFlow(Bot, response);
+            new handlerDialogFlow(Bot, responses);
             return resolve();
           };
 
           // if (fulfillmentText.length >= 1) {
-          chatGate(parameter, chatCallback);
+          this.chatGate(parameter, chatCallback);
           // }
 
           console.log(
             "isTalking",
-            shared_props[propsId].dialogFlow.isTalking
+            shared_props[this.propsId].dialogFlow.isTalking
           );
           console.log("parameter", JSON.stringify(parameter));
-          console.log("Detected intent", response[0].queryResult.displayName);
-          console.log(JSON.stringify(response));
+          console.log("Detected intent", responses[0].queryResult.displayName);
+          console.log(JSON.stringify(responses));
         });
       } catch (err) {
         reject(err);
       }
     });
-  };
-
-  return {
-    listen
-  };
-};
+  }
+}
