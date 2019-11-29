@@ -103,8 +103,7 @@ class Bot {
 
     Object.keys(sourceIds).map(type => {
       shared_props[sourceIds[type]] = _extends({}, shared_props[sourceIds[type]], {
-        event: props.event,
-        dialogFlow: _extends({}, shared_props[sourceIds[type]].dialogFlow)
+        event: props.event
       });
     });
 

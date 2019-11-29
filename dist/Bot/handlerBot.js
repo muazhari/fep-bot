@@ -48,7 +48,11 @@ const commandValidate = chat => {
 };
 
 const handleCommand = (commandList, commandValidate) => {
-  const { prefix: content_prefix, command: content_command, args: content_args } = commandValidate;
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = commandValidate;
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -207,7 +211,12 @@ const handleImage = Bot => {
       return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
         console.log("premature_resolve", downloadPath);
         _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-        return { originalPath: downloadPath, previewPath: previewPath, originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}` };
+        return {
+          originalPath: downloadPath,
+          previewPath: previewPath,
+          originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
+          previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
+        };
       }).catch(err => {
         throw err;
       });
@@ -235,7 +244,10 @@ const handleVideo = Bot => {
       // Please consider about security and performance by yourself
       _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
 
-      return { originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}` };
+      return {
+        originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`,
+        previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
+      };
     });
   } else if (message.contentProvider.type === "external") {
     getContent = Promise.resolve(message.contentProvider);
@@ -257,7 +269,9 @@ const handleAudio = Bot => {
     const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
 
     getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      return { originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}` };
+      return {
+        originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}`
+      };
     });
   } else {
     getContent = Promise.resolve(message.contentProvider);
@@ -274,7 +288,13 @@ const handleAudio = Bot => {
 
 const handleLocation = Bot => {
   const { message, replyToken } = Bot.props.event;
-  Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
+  Bot.sendMessage({
+    type: "location",
+    title: message.title,
+    address: message.address,
+    latitude: message.latitude,
+    longitude: message.longitude
+  });
 };
 
 const handleSticker = Bot => {

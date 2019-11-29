@@ -22,6 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
+    this.initDialogFlowProps();
 
     // selected agent
     this.agent = _DialogFlow.default_agent;
@@ -36,6 +37,12 @@ class DialogFlow {
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
     this.propsId = this.Bot.getId().origin;
+  }
+
+  initDialogFlowProps() {
+    if (_Bot.shared_props[this.propsId]["dialogFlow"] === undefined) {
+      _Bot.shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    }
   }
 
   getParameter(responses) {
@@ -64,11 +71,10 @@ class DialogFlow {
     const { fields, displayName } = parameter;
     if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        _Bot.shared_props[this.propsId]["dialogFlow"]["isTalking"] = JSON.parse(fields.chat.stringValue);
+        _Bot.shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
-    _Bot.shared_props[this.propsId]["dialogFlow"]["isTalking"] = false;
   }
 
   // Send request and log result

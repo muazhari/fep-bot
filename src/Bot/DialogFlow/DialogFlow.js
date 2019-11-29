@@ -6,6 +6,7 @@ import { shared_props } from "../../Bot";
 export class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
+    this.initDialogFlowProps();
 
     // selected agent
     this.agent = default_agent;
@@ -25,6 +26,12 @@ export class DialogFlow {
     this.propsId = this.Bot.getId().origin;
   }
   
+  initDialogFlowProps(){
+    if (shared_props[this.propsId]["dialogFlow"] === undefined) {
+      shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    }
+  }
+
   getParameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
@@ -54,13 +61,12 @@ export class DialogFlow {
       displayName === "chat.talk"
     ) {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId]["dialogFlow"]["isTalking"] = JSON.parse(
+        shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(
           fields.chat.stringValue
         );
       }
       return chatCallback();
     }
-    shared_props[this.propsId]["dialogFlow"]["isTalking"] = false;
   }
 
   // Send request and log result

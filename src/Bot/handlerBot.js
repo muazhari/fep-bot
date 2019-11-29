@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
-import {Bot, handlerDialogFlow, shared_props} from "./internal";
+import { Bot, handlerDialogFlow, shared_props } from "./internal";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -22,15 +22,19 @@ const commandValidate = chat => {
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
   if (prefix === command_prefix) {
-    console.log({prefix, command, args});
-    return {prefix, command, args};
+    console.log({ prefix, command, args });
+    return { prefix, command, args };
   } else {
     return false;
   }
 };
 
 const handleCommand = (commandList, commandValidate) => {
-  const {prefix: content_prefix, command: content_command, args: content_args} = commandValidate;
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = commandValidate;
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -45,7 +49,7 @@ const userQueue = Bot => {
   const queue = {};
 
   const increment = () => {
-    const {user: userId} = Bot.getId();
+    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -53,7 +57,7 @@ const userQueue = Bot => {
   };
 
   const decrement = () => {
-    const {user: userId} = Bot.getId();
+    const { user: userId } = Bot.getId();
     if (!queue[userId]) {
       queue[userId] = 0;
     }
@@ -62,13 +66,13 @@ const userQueue = Bot => {
     }
   };
 
-  return {increment, decrement};
+  return { increment, decrement };
 };
 
 export const handlerBot = event => {
   console.log(event);
 
-  const Worker = new Bot({event});
+  const Worker = new Bot({ event });
   // Worker.log()
 
   // const whitelist = Worker.Features.Access.whitelist();
@@ -77,7 +81,7 @@ export const handlerBot = event => {
 
   switch (event.type) {
     case "message":
-      const {message} = event;
+      const { message } = event;
       switch (message.type) {
         case "text":
           return handleText(Worker);
@@ -96,9 +100,13 @@ export const handlerBot = event => {
       }
 
     case "memberJoined":
-      return Worker.client.getProfile(event.joined.members[0].userId).then(profile => {
-        Worker.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
-      });
+      return Worker.client
+        .getProfile(event.joined.members[0].userId)
+        .then(profile => {
+          Worker.replyText(
+            `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
+          );
+        });
 
     case "follow":
       return Worker.replyText("Got followed event");
@@ -113,14 +121,14 @@ export const handlerBot = event => {
       return console.log(`Left: ${JSON.stringify(event)}`);
 
     case "postback":
-      let {data} = event.postback;
+      let { data } = event.postback;
       if (data === "DATE" || data === "TIME" || data === "DATETIME") {
         data += `(${JSON.stringify(event.postback.params)})`;
       }
 
       const objectData = JSON.parse(data);
 
-      const {Twibbon} = Worker.Features;
+      const { Twibbon } = Worker.Features;
       Twibbon.listen(objectData);
 
       break;
@@ -134,7 +142,7 @@ export const handlerBot = event => {
 };
 
 const handleText = Bot => {
-  const {message, replyToken, source} = Bot.props.event;
+  const { message, replyToken, source } = Bot.props.event;
   const {
     FEPList,
     StoreAdvance,
@@ -178,21 +186,42 @@ const handleText = Bot => {
 };
 
 const handleImage = Bot => {
-  const {message, replyToken} = Bot.props.event;
+  const { message, replyToken } = Bot.props.event;
   let getContent;
 
   if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-    const previewPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+    const downloadPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/images",
+      `${message.id}.jpg`
+    );
+    const previewPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/images",
+      `${message.id}-preview.jpg`
+    );
 
     getContent = () => {
-      return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-        console.log("premature_resolve", downloadPath);
-        cp.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-        return {originalPath: downloadPath, previewPath: previewPath, originalContentUrl: `${baseURL}/downloaded/images/${path.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/images/${path.basename(previewPath)}`};
-      }).catch(err => {
-        throw err;
-      });
+      return Bot.downloadContent(message.id, downloadPath)
+        .then(downloadPath => {
+          console.log("premature_resolve", downloadPath);
+          cp.execSync(
+            `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
+          );
+          return {
+            originalPath: downloadPath,
+            previewPath: previewPath,
+            originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
+              downloadPath
+            )}`,
+            previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
+              previewPath
+            )}`
+          };
+        })
+        .catch(err => {
+          throw err;
+        });
     };
   } else if (message.contentProvider.type === "external") {
     getContent = () => {
@@ -201,29 +230,46 @@ const handleImage = Bot => {
   }
 
   // Twibbon switch
-  const {Twibbon} = Bot.Features;
+  const { Twibbon } = Bot.Features;
   Twibbon.insert(getContent);
 };
 
 const handleVideo = Bot => {
-  const {message, replyToken} = Bot.props.event;
+  const { message, replyToken } = Bot.props.event;
   let getContent;
   if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
-    const previewPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
+    const downloadPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/videos",
+      `${message.id}.mp4`
+    );
+    const previewPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/videos",
+      `${message.id}-preview.jpg`
+    );
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      // FFmpeg and ImageMagick is needed here to run 'convert'
-      // Please consider about security and performance by yourself
-      cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+    getContent = Bot.downloadContent(message.id, downloadPath).then(
+      downloadPath => {
+        // FFmpeg and ImageMagick is needed here to run 'convert'
+        // Please consider about security and performance by yourself
+        cp.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
 
-      return {originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(previewPath)}`};
-    });
+        return {
+          originalContentUrl: `${baseURL}/downloaded/videos/${path.basename(
+            downloadPath
+          )}`,
+          previewImageUrl: `${baseURL}/downloaded/videos/${path.basename(
+            previewPath
+          )}`
+        };
+      }
+    );
   } else if (message.contentProvider.type === "external") {
     getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({originalContentUrl, previewImageUrl}) => {
+  return getContent.then(({ originalContentUrl, previewImageUrl }) => {
     // Bot.sendMessage({
     //   type: "video",
     //   originalContentUrl,
@@ -233,19 +279,29 @@ const handleVideo = Bot => {
 };
 
 const handleAudio = Bot => {
-  const {message, replyToken} = Bot.props.event;
+  const { message, replyToken } = Bot.props.event;
   let getContent;
   if (message.contentProvider.type === "line") {
-    const downloadPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
+    const downloadPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/audios",
+      `${message.id}.m4a`
+    );
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      return {originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(downloadPath)}`};
-    });
+    getContent = Bot.downloadContent(message.id, downloadPath).then(
+      downloadPath => {
+        return {
+          originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
+            downloadPath
+          )}`
+        };
+      }
+    );
   } else {
     getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({originalContentUrl}) => {
+  return getContent.then(({ originalContentUrl }) => {
     // Bot.sendMessage({
     //   type: "audio",
     //   originalContentUrl,
@@ -255,12 +311,18 @@ const handleAudio = Bot => {
 };
 
 const handleLocation = Bot => {
-  const {message, replyToken} = Bot.props.event;
-  Bot.sendMessage({type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude});
+  const { message, replyToken } = Bot.props.event;
+  Bot.sendMessage({
+    type: "location",
+    title: message.title,
+    address: message.address,
+    latitude: message.latitude,
+    longitude: message.longitude
+  });
 };
 
 const handleSticker = Bot => {
-  const {message, replyToken} = Bot.props.event;
+  const { message, replyToken } = Bot.props.event;
   // Bot.sendMessage({
   //   type: "sticker",
   //   packageId: message.packageId,

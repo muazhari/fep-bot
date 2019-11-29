@@ -10,7 +10,7 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import {DialogFlow} from "./DialogFlow";
+import { DialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -79,8 +79,7 @@ export class Bot {
     Object.keys(sourceIds).map(type => {
       shared_props[sourceIds[type]] = {
         ...shared_props[sourceIds[type]],
-        event: props.event,
-        dialogFlow: { ...shared_props[sourceIds[type]].dialogFlow },
+        event: props.event
       };
     });
 
@@ -89,7 +88,10 @@ export class Bot {
 
   profile() {
     return new Promise((resolve, reject) => {
-      this.client.getProfile(this.getId().user).then(resolve).catch(reject);
+      this.client
+        .getProfile(this.getId().user)
+        .then(resolve)
+        .catch(reject);
     });
   }
 
@@ -123,17 +125,15 @@ export class Bot {
 
   setProps(data, id) {
     console.log(data);
-    if (!id) 
-      id = this.getId().origin;
-    
+    if (!id) id = this.getId().origin;
+
     Object.keys(data).map(key => {
       this.shared_props[id][key] = data[key];
     });
   }
 
   getId(source) {
-    if (!source) 
-      source = this.props.event.source;
+    if (!source) source = this.props.event.source;
     const type = {};
 
     if (source.groupId) {
@@ -158,30 +158,34 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) 
-      return type;
-    }
-  
+    if (type) return type;
+  }
+
   replyText(texts) {
-    texts = Array.isArray(texts)
-      ? texts
-      : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({type: "text", text})));
+    texts = Array.isArray(texts) ? texts : [texts];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      texts.map(text => ({ type: "text", text }))
+    );
   }
 
   sendMessage(message) {
-    message = Array.isArray(message)
-      ? message
-      : [message];
-    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => msg));
+    message = Array.isArray(message) ? message : [message];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      message.map(msg => msg)
+    );
   }
 
   downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
-      const writeable = fs.createWriteStream(downloadPath);
-      stream.pipe(writeable);
-      stream.on("end", () => resolve(downloadPath));
-      stream.on("error", reject);
-    }));
+    return this.client.getMessageContent(messageId).then(
+      stream =>
+        new Promise((resolve, reject) => {
+          const writeable = fs.createWriteStream(downloadPath);
+          stream.pipe(writeable);
+          stream.on("end", () => resolve(downloadPath));
+          stream.on("error", reject);
+        })
+    );
   }
 }
