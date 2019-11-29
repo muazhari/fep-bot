@@ -118,7 +118,10 @@ class Bot {
 
   log() {
     new Promise(async (resolve, reject) => {
-      await _Store2.default.setStore({ [this.props.event.timestamp]: this.props });
+      const val = { [this.props.event.timestamp]: this.props };
+      const old = await _Store2.default.getStore("propsLogs");
+      console.log("old", old);
+      await _Store2.default.setStore({ "propsLogs": _extends({}, old, val) });
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 
