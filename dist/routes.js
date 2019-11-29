@@ -40,7 +40,11 @@ routes.post('/webhook', (req, res) => {
 
   //handle events separately
   Promise.all(req.body.events.map(event => {
-    (0, _Bot.handlerBot)(event);
+    try {
+      (0, _Bot.handlerBot)(event);
+    } catch (err) {
+      throw err;
+    }
   })).then(result => res.json(result)).catch(err => {
     console.log(err);
     res.status(500).end();

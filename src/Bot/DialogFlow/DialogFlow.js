@@ -6,6 +6,7 @@ import { shared_props } from "../../Bot";
 export class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
+    this.propsId = this.Bot.getId().origin;
     this.initDialogFlowProps();
 
     // selected agent
@@ -23,7 +24,6 @@ export class DialogFlow {
       this.sessionId
     );
 
-    this.propsId = this.Bot.getId().origin;
   }
   
   initDialogFlowProps(){
@@ -95,6 +95,7 @@ export class DialogFlow {
           );
           console.log("parameter", JSON.stringify(parameter));
           console.log("Detected intent", responses[0].queryResult.displayName);
+          console.log(JSON.stringify(responses));
         });
       } catch (err) {
         reject(err);

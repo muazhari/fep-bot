@@ -7,7 +7,6 @@ export const handlerDialogFlow = Bot => {
   df.chat().then(responses => {
     const {fulfillmentText, parameter} = responses;
 
-    console.log(responses);
     Bot.replyText(fulfillmentText);
   }).catch(err => {
     console.log("DialogFlow ERR", err);

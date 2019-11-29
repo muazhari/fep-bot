@@ -22,6 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
+    this.propsId = this.Bot.getId().origin;
     this.initDialogFlowProps();
 
     // selected agent
@@ -35,8 +36,6 @@ class DialogFlow {
     // Create a new session
     this.sessionClient = new _dialogflow2.default.SessionsClient(this.config);
     this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
-
-    this.propsId = this.Bot.getId().origin;
   }
 
   initDialogFlowProps() {
@@ -100,6 +99,7 @@ class DialogFlow {
           console.log("isTalking", _Bot.shared_props[this.propsId].dialogFlow.isTalking);
           console.log("parameter", JSON.stringify(parameter));
           console.log("Detected intent", responses[0].queryResult.displayName);
+          console.log(JSON.stringify(responses));
         });
       } catch (err) {
         reject(err);
