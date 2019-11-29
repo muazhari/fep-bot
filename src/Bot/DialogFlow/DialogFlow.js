@@ -6,10 +6,6 @@ import {shared_props} from "../../Bot";
 export class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
-    this.get_parameter = this.get_parameter.bind(this);
-    this.get_query = this.get_query.bind(this);
-    this.chat_switch = this.chat_switch.bind(this);
-    this.chat = this.chat.bind(this);
 
     // selected agent
     this.agent = default_agent;
@@ -25,14 +21,14 @@ export class DialogFlow {
 
     this.propsId = this.Bot.getId().origin;
   }
-  get_parameter(responses) {
+  getParameter(responses) {
     const {fields} = responses[0].queryResult.parameters;
     const {displayName} = responses[0].queryResult.intent;
     const {allRequiredParamsPresent} = responses[0].queryResult;
     return {displayName, fields, allRequiredParamsPresent};
   }
 
-  get_query(msg) {
+  getQuery(msg) {
     const query = {
       session: this.sessionPath,
       queryInput: {
@@ -47,7 +43,7 @@ export class DialogFlow {
     return query;
   }
 
-  chat_switch(parameter, chatCallback) {
+  chatGate(parameter, chatCallback) {
     const {fields, displayName} = parameter;
     if (shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
@@ -55,7 +51,7 @@ export class DialogFlow {
       }
       return chatCallback();
     }
-    shared_props[this.propsId]["dialogFlow"]["isTalking"] = 
+    shared_props[this.propsId]["dialogFlow"]["isTalking"] = false;
   }
 
   // Send request and log result
@@ -63,9 +59,9 @@ export class DialogFlow {
     return new Promise((resolve, reject) => {
       try {
         const {message} = this.Bot.props.event;
-        const query = this.get_query(message.text);
+        const query = this.getQuery(message.text);
         this.sessionClient.detectIntent(query).then(responses => {
-          const parameter = this.get_parameter(responses);
+          const parameter = this.getParameter(responses);
 
           const {queryResult} = responses[0];
           const {fulfillmentText} = queryResult;
@@ -75,7 +71,7 @@ export class DialogFlow {
           };
 
           if (fulfillmentText.length >= 1) {
-            this.chat_switch(parameter, chatCallback);
+            this.chatGate(parameter, chatCallback);
           }
   
           

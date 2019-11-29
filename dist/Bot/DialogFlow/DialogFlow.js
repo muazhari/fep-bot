@@ -22,10 +22,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class DialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
-    this.get_parameter = this.get_parameter.bind(this);
-    this.get_query = this.get_query.bind(this);
-    this.chat_switch = this.chat_switch.bind(this);
-    this.chat = this.chat.bind(this);
 
     // selected agent
     this.agent = _DialogFlow.default_agent;
@@ -41,14 +37,14 @@ class DialogFlow {
 
     this.propsId = this.Bot.getId().origin;
   }
-  get_parameter(responses) {
+  getParameter(responses) {
     const { fields } = responses[0].queryResult.parameters;
     const { displayName } = responses[0].queryResult.intent;
     const { allRequiredParamsPresent } = responses[0].queryResult;
     return { displayName, fields, allRequiredParamsPresent };
   }
 
-  get_query(msg) {
+  getQuery(msg) {
     const query = {
       session: this.sessionPath,
       queryInput: {
@@ -63,7 +59,7 @@ class DialogFlow {
     return query;
   }
 
-  chat_switch(parameter, chatCallback) {
+  chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
     if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
@@ -71,6 +67,7 @@ class DialogFlow {
       }
       return chatCallback();
     }
+    _Bot.shared_props[this.propsId]["dialogFlow"]["isTalking"] = false;
   }
 
   // Send request and log result
@@ -78,9 +75,9 @@ class DialogFlow {
     return new Promise((resolve, reject) => {
       try {
         const { message } = this.Bot.props.event;
-        const query = this.get_query(message.text);
+        const query = this.getQuery(message.text);
         this.sessionClient.detectIntent(query).then(responses => {
-          const parameter = this.get_parameter(responses);
+          const parameter = this.getParameter(responses);
 
           const { queryResult } = responses[0];
           const { fulfillmentText } = queryResult;
@@ -90,7 +87,7 @@ class DialogFlow {
           };
 
           if (fulfillmentText.length >= 1) {
-            this.chat_switch(parameter, chatCallback);
+            this.chatGate(parameter, chatCallback);
           }
 
           console.log("isTalking", _Bot.shared_props[this.propsId].dialogFlow.isTalking);
