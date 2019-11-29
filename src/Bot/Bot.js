@@ -18,6 +18,8 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
+import handlerBot from "./handlerBot";
+
 // share worker props by groupId
 export const shared_props = {};
 // export const listener_stack = {
@@ -71,6 +73,7 @@ export class Bot {
 
     // Events listen assist
     // this.listener = new listener(this)
+    handlerBot();
   }
 
   initProps(props) {

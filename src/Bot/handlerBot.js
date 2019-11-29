@@ -21,13 +21,11 @@ const destructCommand = chat => {
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  if (prefix === command_prefix) {
-    console.log({ prefix, command, args });
-    return { prefix, command, args };
-  }
+  console.log({ prefix, command, args });
+  return { prefix, command, args }
 };
 
-const handleCommand = (chat) => {
+const handleCommand = (command) => {
   const {
     FEPList,
     StoreAdvance,
@@ -64,7 +62,7 @@ const handleCommand = (chat) => {
     prefix: content_prefix,
     command: content_command,
     args: content_args
-  } = destructCommand(chat);
+  } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -75,7 +73,7 @@ const handleCommand = (chat) => {
   }
 };
 
-const userQueue = Bot => {
+const userQueue = () => {
   const queue = {};
 
   const increment = () => {
@@ -101,8 +99,9 @@ const userQueue = Bot => {
 
 export const handlerBot = event => {
   console.log(event);
-
-  const Worker = new Bot({ event });
+  
+  // hidden error, need fix
+  // const Worker = new Bot({ event });
   // Worker.log()
 
   // const whitelist = Worker.Features.Access.whitelist();
@@ -114,17 +113,17 @@ export const handlerBot = event => {
       const { message } = event;
       switch (message.type) {
         case "text":
-          return handleText(Worker);
+          return handleText();
         case "image":
-          return handleImage(Worker);
+          return handleImage();
         case "video":
-          return handleVideo(Worker);
+          return handleVideo();
         case "audio":
-          return handleAudio(Worker);
+          return handleAudio();
         case "location":
-          return handleLocation(Worker);
+          return handleLocation();
         case "sticker":
-          return handleSticker(Worker);
+          return handleSticker();
         default:
           throw new Error(`Unknown message: ${JSON.stringify(message)}`);
       }
@@ -171,22 +170,21 @@ export const handlerBot = event => {
   }
 };
 
-const handleText = Bot => {
+const handleText = () => {
   const { message, replyToken, source } = Bot.props.event;
-  
 
   // The text query request.
-  const chatSplitted = message.text.split(" ");
-  const isTextCommand = commandValidate(chatSplitted);
+  const splittedChat = message.text.split(" ");
+  const isTextCommand = splittedChat[0][0] == command_prefix;
   if (isTextCommand) {
-    handleCommand(msgToCmdValidate);
+    handleCommand(splittedChat);
   } else {
     // hidden error, need fix
     handlerDialogFlow(Bot);
   }
 };
 
-const handleImage = Bot => {
+const handleImage = () => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
 
@@ -235,7 +233,7 @@ const handleImage = Bot => {
   Twibbon.insert(getContent);
 };
 
-const handleVideo = Bot => {
+const handleVideo = () => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
   if (message.contentProvider.type === "line") {
@@ -279,7 +277,7 @@ const handleVideo = Bot => {
   });
 };
 
-const handleAudio = Bot => {
+const handleAudio = () => {
   const { message, replyToken } = Bot.props.event;
   let getContent;
   if (message.contentProvider.type === "line") {
@@ -311,7 +309,7 @@ const handleAudio = Bot => {
   });
 };
 
-const handleLocation = Bot => {
+const handleLocation = () => {
   const { message, replyToken } = Bot.props.event;
   Bot.sendMessage({
     type: "location",
@@ -322,7 +320,7 @@ const handleLocation = Bot => {
   });
 };
 
-const handleSticker = Bot => {
+const handleSticker = () => {
   const { message, replyToken } = Bot.props.event;
   // Bot.sendMessage({
   //   type: "sticker",
