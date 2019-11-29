@@ -44,10 +44,6 @@ export const shared_props = {};
 
 export class Bot {
   constructor(props) {
-    this.getId = this.getId.bind(this);
-    this.initProps = this.initProps.bind(this);
-
-    // this.shared_props = shared_props
     // console.log(shared_props)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
@@ -73,7 +69,7 @@ export class Bot {
 
     // Events listen assist
     // this.listener = new listener(this)
-    handlerBot();
+    new handlerBot(this);
   }
 
   initProps(props) {

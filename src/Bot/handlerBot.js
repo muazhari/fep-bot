@@ -97,8 +97,10 @@ const userQueue = () => {
   return { increment, decrement };
 };
 
-export const handlerBot = event => {
-  console.log(event);
+export class handlerBot {
+  constructor(Bot){
+    this.eventListener(Bot.props.event);
+  }
   
   // hidden error, need fix
   // const Worker = new Bot({ event });
@@ -108,6 +110,7 @@ export const handlerBot = event => {
   // console.log(whitelist);
   // const type = whitelist.user || whitelist.room ? event.type : null;
 
+  eventListener(event)
   switch (event.type) {
     case "message":
       const { message } = event;
