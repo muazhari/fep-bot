@@ -92,11 +92,11 @@ class Bot {
     };
 
     // DialogFlow assist
-    this.DialogFlow = new _DialogFlow.DialogFlow(this);
+    this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
     // Events listen assist
     // this.listener = new listener(this)
-    new _handlerBot2.default(this);
+    this.handler = new _handlerBot2.default(this);
     console.log("Bot instanced");
   }
 

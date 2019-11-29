@@ -10,7 +10,7 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import { DialogFlow } from "./DialogFlow";
+import { dialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -65,11 +65,11 @@ export class Bot {
     };
 
     // DialogFlow assist
-    this.DialogFlow = new DialogFlow(this);
+    this.dialogFlow = new dialogFlow(this);
 
     // Events listen assist
     // this.listener = new listener(this)
-    new handlerBot(this);
+    this.handler = new handlerBot(this);
     console.log("Bot instanced");
   }
 

@@ -1,1 +1,1 @@
-export * from "./DialogFlow"
+export * from "./dialogFlow"

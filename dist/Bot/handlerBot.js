@@ -115,16 +115,16 @@ const userQueue = userId => {
 class handlerBot {
   constructor(Bot) {
     this.Bot = Bot;
-    // this.eventListener(Bot.props.event);
+    this.eventListener(Bot.props.event);
   }
 
   eventListener(event) {
     console.log(event);
     // hidden error, need fix
-    // const Worker = new Bot({ event });
-    // Worker.log()
+    // const this.Bot = new Bot({ event });
+    // this.Bot.log()
 
-    // const whitelist = Worker.Features.Access.whitelist();
+    // const whitelist = this.Bot.Features.Access.whitelist();
     // console.log(whitelist);
     // const type = whitelist.user || whitelist.room ? event.type : null;
 
@@ -149,18 +149,18 @@ class handlerBot {
         }
 
       case "memberJoined":
-        return Worker.client.getProfile(event.joined.members[0].userId).then(profile => {
-          Worker.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
+        return this.Bot.client.getProfile(event.joined.members[0].userId).then(profile => {
+          this.Bot.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
         });
 
       case "follow":
-        return Worker.replyText("Got followed event");
+        return this.Bot.replyText("Got followed event");
 
       case "unfollow":
         return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
       case "join":
-        return Worker.replyText(`Joined ${event.source.type}`);
+        return this.Bot.replyText(`Joined ${event.source.type}`);
 
       case "leave":
         return console.log(`Left: ${JSON.stringify(event)}`);
@@ -173,13 +173,13 @@ class handlerBot {
 
         const objectData = JSON.parse(data);
 
-        const { Twibbon } = Worker.Features;
+        const { Twibbon } = this.Bot.Features;
         Twibbon.listen(objectData);
 
         break;
 
       case "beacon":
-        return Worker.replyText(`Got beacon: ${event.beacon}`);
+        return this.Bot.replyText(`Got beacon: ${event.beacon}`);
 
       default:
         throw new Error(`Unknown event: ${JSON.stringify(event)}`);
@@ -191,7 +191,7 @@ class handlerBot {
 
     // The text query request.
     const splittedChat = message.text.split(" ");
-    const isTextCommand = splittedChat[0][0] == command_prefix;
+    const isTextCommand = splittedChat[0][0] === command_prefix;
     if (isTextCommand) {
       handleCommand(this.Bot.Features, splittedChat);
     } else {

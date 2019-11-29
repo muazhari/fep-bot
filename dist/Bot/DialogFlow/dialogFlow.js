@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DialogFlow = undefined;
+exports.dialogFlow = undefined;
 
 var _dialogflow = require("dialogflow");
 
@@ -19,7 +19,7 @@ var _Bot = require("../../Bot");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-class DialogFlow {
+class dialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
     this.propsId = this.Bot.getId().origin;
@@ -107,5 +107,5 @@ class DialogFlow {
     });
   }
 }
-exports.DialogFlow = DialogFlow;
-//# sourceMappingURL=DialogFlow.js.map
+exports.dialogFlow = dialogFlow;
+//# sourceMappingURL=dialogFlow.js.map

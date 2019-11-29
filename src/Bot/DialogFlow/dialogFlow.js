@@ -3,7 +3,7 @@ import uuid from "uuid";
 import { default_agent } from "../../Config/DialogFlow";
 import { shared_props } from "../../Bot";
 
-export class DialogFlow {
+export class dialogFlow {
   constructor(Bot) {
     this.Bot = Bot;
     this.propsId = this.Bot.getId().origin;
