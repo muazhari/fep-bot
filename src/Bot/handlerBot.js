@@ -94,20 +94,17 @@ const userQueue = userId => {
   return { increment, decrement };
 };
 
-export class handlerBot {
-  constructor(Bot) {
-    this.Bot = Bot;
-    this.features = this.Bot.Features;
-    this.eventListener(Bot.props.event);
-  }
+export const handlerBot = (Bot) => {
+  Bot = Bot;
+  eventListener(Bot.props.event);
 
-  eventListener(event) {
+  const eventListener = (event) => {
     console.log(event);
     // hidden error, need fix
-    // const this.Bot = new Bot({ event });
-    // this.Bot.log()
+    // const Bot = new Bot({ event });
+    // Bot.log()
 
-    // const whitelist = this.Bot.Features.Access.whitelist();
+    // const whitelist = Bot.Features.Access.whitelist();
     // console.log(whitelist);
     // const type = whitelist.user || whitelist.room ? event.type : null;
 
@@ -116,38 +113,38 @@ export class handlerBot {
         const { message } = event;
         switch (message.type) {
           case "text":
-            return this.handleText();
+            return handleText();
           case "image":
-            return this.handleImage();
+            return handleImage();
           case "video":
-            return this.handleVideo();
+            return handleVideo();
           case "audio":
-            return this.handleAudio();
+            return handleAudio();
           case "location":
-            return this.handleLocation();
+            return handleLocation();
           case "sticker":
-            return this.handleSticker();
+            return handleSticker();
           default:
             throw new Error(`Unknown message: ${JSON.stringify(message)}`);
         }
 
       case "memberJoined":
-        return this.Bot.client
+        return Bot.client
           .getProfile(event.joined.members[0].userId)
           .then(profile => {
-            this.Bot.replyText(
+            Bot.replyText(
               `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
             );
           });
 
       case "follow":
-        return this.Bot.replyText("Got followed event");
+        return Bot.replyText("Got followed event");
 
       case "unfollow":
         return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
       case "join":
-        return this.Bot.replyText(`Joined ${event.source.type}`);
+        return Bot.replyText(`Joined ${event.source.type}`);
 
       case "leave":
         return console.log(`Left: ${JSON.stringify(event)}`);
@@ -160,35 +157,35 @@ export class handlerBot {
 
         const objectData = JSON.parse(data);
 
-        const { Twibbon } = this.Bot.Features;
+        const { Twibbon } = Bot.Features;
         Twibbon.listen(objectData);
 
         break;
 
       case "beacon":
-        return this.Bot.replyText(`Got beacon: ${event.beacon}`);
+        return Bot.replyText(`Got beacon: ${event.beacon}`);
 
       default:
         throw new Error(`Unknown event: ${JSON.stringify(event)}`);
     }
   }
 
-  handleText() {
-    const { message, replyToken, source } = this.Bot.props.event;
+  const handleText = () => {
+    const { message, replyToken, source } = Bot.props.event;
 
     // The text query request.
     const splittedChat = message.text.split(" ");
     const isTextCommand = splittedChat[0][0] === command_prefix;
     if (isTextCommand) {
-      handleCommand(this.Bot.Features, splittedChat);
+      handleCommand(Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
-      this.Bot.DialogFlow.listen();
+      Bot.DialogFlow.listen();
     }
   }
 
-  handleImage() {
-    const { message, replyToken } = this.Bot.props.event;
+  const handleImage = () => {
+    const { message, replyToken } = Bot.props.event;
     let getContent;
 
     if (message.contentProvider.type === "line") {
@@ -204,7 +201,7 @@ export class handlerBot {
       );
 
       getContent = () => {
-        return this.Bot.downloadContent(message.id, downloadPath)
+        return Bot.downloadContent(message.id, downloadPath)
           .then(downloadPath => {
             console.log("premature_resolve", downloadPath);
             cp.execSync(
@@ -232,12 +229,12 @@ export class handlerBot {
     }
 
     // Twibbon switch
-    const { Twibbon } = this.Bot.Features;
+    const { Twibbon } = Bot.Features;
     Twibbon.insert(getContent);
   }
 
-  handleVideo() {
-    const { message, replyToken } = this.Bot.props.event;
+  const handleVideo = () => {
+    const { message, replyToken } = Bot.props.event;
     let getContent;
     if (message.contentProvider.type === "line") {
       const downloadPath = path.join(
@@ -251,7 +248,7 @@ export class handlerBot {
         `${message.id}-preview.jpg`
       );
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
+      getContent = Bot.downloadContent(message.id, downloadPath).then(
         downloadPath => {
           // FFmpeg and ImageMagick is needed here to run 'convert'
           // Please consider about security and performance by yourself
@@ -272,7 +269,7 @@ export class handlerBot {
     }
 
     return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-      // this.Bot.sendMessage({
+      // tBot.sendMessage({
       //   type: "video",
       //   originalContentUrl,
       //   previewImageUrl
@@ -280,8 +277,8 @@ export class handlerBot {
     });
   }
 
-  handleAudio() {
-    const { message, replyToken } = this.Bot.props.event;
+  const handleAudio = () => {
+    const { message, replyToken } = Bot.props.event;
     let getContent;
     if (message.contentProvider.type === "line") {
       const downloadPath = path.join(
@@ -290,7 +287,7 @@ export class handlerBot {
         `${message.id}.m4a`
       );
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(
+      getContent = Bot.downloadContent(message.id, downloadPath).then(
         downloadPath => {
           return {
             originalContentUrl: `${baseURL}/downloaded/audios/${path.basename(
@@ -304,7 +301,7 @@ export class handlerBot {
     }
 
     return getContent.then(({ originalContentUrl }) => {
-      // this.Bot.sendMessage({
+      // Bot.sendMessage({
       //   type: "audio",
       //   originalContentUrl,
       //   duration: message.duration
@@ -312,9 +309,9 @@ export class handlerBot {
     });
   }
 
-  handleLocation() {
-    const { message, replyToken } = this.Bot.props.event;
-    this.Bot.sendMessage({
+  const handleLocation = () => {
+    const { message, replyToken } = Bot.props.event;
+    Bot.sendMessage({
       type: "location",
       title: message.title,
       address: message.address,
@@ -323,9 +320,9 @@ export class handlerBot {
     });
   }
 
-  handleSticker() {
-    const { message, replyToken } = this.Bot.props.event;
-    // this.Bot.sendMessage({
+  const handleSticker = () => {
+    const { message, replyToken } = Bot.props.event;
+    // Bot.sendMessage({
     //   type: "sticker",
     //   packageId: message.packageId,
     //   stickerId: message.stickerId
