@@ -94,11 +94,10 @@ const userQueue = userId => {
   return { increment, decrement };
 };
 
-export const handlerBot = (Bot) => {
-  Bot = Bot;
+export const handlerBot = Bot => {
   eventListener(Bot.props.event);
 
-  const eventListener = (event) => {
+  const eventListener = event => {
     console.log(event);
     // hidden error, need fix
     // const Bot = new Bot({ event });
@@ -168,7 +167,7 @@ export const handlerBot = (Bot) => {
       default:
         throw new Error(`Unknown event: ${JSON.stringify(event)}`);
     }
-  }
+  };
 
   const handleText = () => {
     const { message, replyToken, source } = Bot.props.event;
@@ -180,9 +179,9 @@ export const handlerBot = (Bot) => {
       handleCommand(Bot.Features, splittedChat);
     } else {
       // hidden error, need fix
-      Bot.DialogFlow.listen();
+      Bot.dialogFlow.listen();
     }
-  }
+  };
 
   const handleImage = () => {
     const { message, replyToken } = Bot.props.event;
@@ -231,7 +230,7 @@ export const handlerBot = (Bot) => {
     // Twibbon switch
     const { Twibbon } = Bot.Features;
     Twibbon.insert(getContent);
-  }
+  };
 
   const handleVideo = () => {
     const { message, replyToken } = Bot.props.event;
@@ -275,7 +274,7 @@ export const handlerBot = (Bot) => {
       //   previewImageUrl
       // });
     });
-  }
+  };
 
   const handleAudio = () => {
     const { message, replyToken } = Bot.props.event;
@@ -307,7 +306,7 @@ export const handlerBot = (Bot) => {
       //   duration: message.duration
       // });
     });
-  }
+  };
 
   const handleLocation = () => {
     const { message, replyToken } = Bot.props.event;
@@ -318,7 +317,7 @@ export const handlerBot = (Bot) => {
       latitude: message.latitude,
       longitude: message.longitude
     });
-  }
+  };
 
   const handleSticker = () => {
     const { message, replyToken } = Bot.props.event;
@@ -327,5 +326,5 @@ export const handlerBot = (Bot) => {
     //   packageId: message.packageId,
     //   stickerId: message.stickerId
     // });
-  }
-}
+  };
+};

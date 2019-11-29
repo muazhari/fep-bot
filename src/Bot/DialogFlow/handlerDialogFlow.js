@@ -2,15 +2,10 @@ import { shared_props } from "../../Bot";
 
 export const handlerDialogFlow = (Bot, response) => {
   const { message } = Bot.props.event;
-  const df = Bot.DialogFlow;
+  const df = Bot.dialogFlow;
 
-  df.chat()
-    .then(responses => {
-      const { fulfillmentText, parameter } = responses;
+  
+  const { fulfillmentText, parameter } = response;
 
-      Bot.replyText(fulfillmentText);
-    })
-    .catch(err => {
-      console.log("DialogFlow ERR", err);
-    });
+  Bot.replyText(fulfillmentText);
 };
