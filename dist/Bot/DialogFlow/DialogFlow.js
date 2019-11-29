@@ -67,9 +67,9 @@ class DialogFlow {
 
   chat_switch(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (_Bot.shared_props[this.propsId]["status"] === true || displayName === "chat.talk") {
+    if (_Bot.shared_props[this.propsId].dialogFlow.talking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        _Bot.shared_props[this.propsId]["status"] = JSON.parse(fields.chat.stringValue);
+        _Bot.shared_props[this.propsId]["dialogFlow"]["talking"] = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
@@ -86,8 +86,6 @@ class DialogFlow {
 
           const { queryResult } = responses[0];
           const { fulfillmentText } = queryResult;
-
-          const status = _Bot.shared_props[this.propsId].status === undefined ? false : _Bot.shared_props[this.propsId].status;
 
           const chatCallback = () => {
             return resolve({ fulfillmentText, parameter });

@@ -51,9 +51,9 @@ export class DialogFlow {
 
   chat_switch(parameter, chatCallback) {
     const {fields, displayName} = parameter;
-    if (shared_props[this.propsId]["status"] === true || displayName === "chat.talk") {
+    if (shared_props[this.propsId].dialogFlow.talking || displayName === "chat.talk") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId]["status"] = JSON.parse(fields.chat.stringValue);
+        shared_props[this.propsId]["dialogFlow"]["talking"] = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
@@ -70,10 +70,6 @@ export class DialogFlow {
 
           const {queryResult} = responses[0];
           const {fulfillmentText} = queryResult;
-
-          const status = shared_props[this.propsId].status === undefined
-            ? false
-            : shared_props[this.propsId].status;
 
           const chatCallback = () => {
             return resolve({fulfillmentText, parameter});
