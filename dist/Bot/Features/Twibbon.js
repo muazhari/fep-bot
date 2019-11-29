@@ -326,7 +326,7 @@ const Twibbon = exports.Twibbon = Bot => {
         }
       };
 
-      Bot.profile().then(res => {
+      Bot.getProfile().then(res => {
         const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
         if (type === "manual") {
           messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
@@ -447,7 +447,10 @@ const Twibbon = exports.Twibbon = Bot => {
         });
 
         const performResolve = () => {
-          resolve({ twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`, twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}` });
+          resolve({
+            twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`,
+            twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}`
+          });
 
           _fsExtra2.default.unlinkSync(data.originalPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
@@ -467,7 +470,11 @@ const Twibbon = exports.Twibbon = Bot => {
       };
 
       generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-        Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
+        Bot.sendMessage({
+          type: "image",
+          originalContentUrl: twibbonOriginalUrl,
+          previewImageUrl: twibbonPreviewUrl
+        });
       });
 
       //switch back
@@ -492,7 +499,12 @@ const Twibbon = exports.Twibbon = Bot => {
         type: _Bot.shared_props[user].twibbon.type
       };
 
-      getContent().then(({ originalPath, previewPath, originalContentUrl, previewImageUrl }) => {
+      getContent().then(({
+        originalPath,
+        previewPath,
+        originalContentUrl,
+        previewImageUrl
+      }) => {
         make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
       });
     }

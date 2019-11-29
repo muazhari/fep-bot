@@ -79,7 +79,6 @@ const FEPList = exports.FEPList = Bot => {
         const selected_batch = args.length !== 1 ? Object.keys(store).sort() : [data.batch];
 
         if (selected_batch.every(item => Object.keys(store).includes(item))) {
-
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
 
           selected_batch.forEach(batch => {

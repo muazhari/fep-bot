@@ -34,125 +34,16 @@ const batch_list = exports.batch_list = {
 
 const command_prefix = exports.command_prefix = "/";
 
-const commandValidate = chat => {
+const destructCommand = chat => {
   const prefix = chat[0][0];
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  if (prefix === command_prefix) {
-    console.log({ prefix, command, args });
-    return { prefix, command, args };
-  } else {
-    return false;
-  }
+  console.log({ prefix, command, args });
+  return { prefix, command, args };
 };
 
-const handleCommand = (commandList, commandValidate) => {
-  const { prefix: content_prefix, command: content_command, args: content_args } = commandValidate;
-
-  if (Object.keys(commandList).includes(content_command)) {
-    if (commandList[content_command].length >= 1) {
-      commandList[content_command](content_args);
-    } else {
-      commandList[content_command]();
-    }
-  }
-};
-
-const userQueue = Bot => {
-  const queue = {};
-
-  const increment = () => {
-    const { user: userId } = Bot.getId();
-    if (!queue[userId]) {
-      queue[userId] = 0;
-    }
-    queue[userId] += 1;
-  };
-
-  const decrement = () => {
-    const { user: userId } = Bot.getId();
-    if (!queue[userId]) {
-      queue[userId] = 0;
-    }
-    if (queue[userId] >= 1) {
-      queue[userId] -= 1;
-    }
-  };
-
-  return { increment, decrement };
-};
-
-const handlerBot = exports.handlerBot = event => {
-  console.log(event);
-
-  const Worker = new _internal.Bot({ event });
-  // Worker.log()
-
-  // const whitelist = Worker.Features.Access.whitelist();
-  // console.log(whitelist);
-  // const type = whitelist.user || whitelist.room ? event.type : null;
-
-  switch (event.type) {
-    case "message":
-      const { message } = event;
-      switch (message.type) {
-        case "text":
-          return handleText(Worker);
-        case "image":
-          return handleImage(Worker);
-        case "video":
-          return handleVideo(Worker);
-        case "audio":
-          return handleAudio(Worker);
-        case "location":
-          return handleLocation(Worker);
-        case "sticker":
-          return handleSticker(Worker);
-        default:
-          throw new Error(`Unknown message: ${JSON.stringify(message)}`);
-      }
-
-    case "memberJoined":
-      return Worker.client.getProfile(event.joined.members[0].userId).then(profile => {
-        Worker.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
-      });
-
-    case "follow":
-      return Worker.replyText("Got followed event");
-
-    case "unfollow":
-      return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
-
-    case "join":
-      return Worker.replyText(`Joined ${event.source.type}`);
-
-    case "leave":
-      return console.log(`Left: ${JSON.stringify(event)}`);
-
-    case "postback":
-      let { data } = event.postback;
-      if (data === "DATE" || data === "TIME" || data === "DATETIME") {
-        data += `(${JSON.stringify(event.postback.params)})`;
-      }
-
-      const objectData = JSON.parse(data);
-
-      const { Twibbon } = Worker.Features;
-      Twibbon.listen(objectData);
-
-      break;
-
-    case "beacon":
-      return Worker.replyText(`Got beacon: ${event.beacon.hwid}`);
-
-    default:
-      throw new Error(`Unknown event: ${JSON.stringify(event)}`);
-  }
-};
-
-const handleText = Bot => {
-  const { message, replyToken, source } = Bot.props.event;
+const handleCommand = (features, command) => {
   const {
     FEPList,
     StoreAdvance,
@@ -161,7 +52,7 @@ const handleText = Bot => {
     Twibbon,
     Courses,
     PosetLattice
-  } = Bot.Features;
+  } = features;
 
   const commandList = {
     add: FEPList.add,
@@ -184,105 +75,238 @@ const handleText = Bot => {
     pl: PosetLattice.generate
   };
 
-  // The text query request.
-  const chat_splitted = message.text.split(" ");
-  const msgToCmdValidate = commandValidate(chat_splitted);
-  if (msgToCmdValidate) {
-    handleCommand(commandList, msgToCmdValidate);
-  } else {
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = destructCommand(command);
+
+  if (Object.keys(commandList).includes(content_command)) {
+    if (commandList[content_command].length >= 1) {
+      commandList[content_command](content_args);
+    } else {
+      commandList[content_command]();
+    }
+  }
+};
+
+const userQueue = userId => {
+  const queue = {};
+
+  const increment = () => {
+    if (!queue[userId]) {
+      queue[userId] = 0;
+    }
+    queue[userId] += 1;
+  };
+
+  const decrement = () => {
+    if (!queue[userId]) {
+      queue[userId] = 0;
+    }
+    if (queue[userId] >= 1) {
+      queue[userId] -= 1;
+    }
+  };
+
+  return { increment, decrement };
+};
+
+class handlerBot {
+  constructor(Bot) {
+    this.Bot = Bot;
+    this.features = Bot.Features;
+    this.eventListener(Bot.props.event);
+  }
+
+  eventListener(event) {
+    console.log(event);
     // hidden error, need fix
-    (0, _internal.handlerDialogFlow)(Bot);
+    // const this.Bot = new Bot({ event });
+    // this.Bot.log()
+
+    // const whitelist = this.Bot.Features.Access.whitelist();
+    // console.log(whitelist);
+    // const type = whitelist.user || whitelist.room ? event.type : null;
+
+    switch (event.type) {
+      case "message":
+        const { message } = event;
+        switch (message.type) {
+          case "text":
+            return this.handleText();
+          case "image":
+            return this.handleImage();
+          case "video":
+            return this.handleVideo();
+          case "audio":
+            return this.handleAudio();
+          case "location":
+            return this.handleLocation();
+          case "sticker":
+            return this.handleSticker();
+          default:
+            throw new Error(`Unknown message: ${JSON.stringify(message)}`);
+        }
+
+      case "memberJoined":
+        return this.Bot.client.getProfile(event.joined.members[0].userId).then(profile => {
+          this.Bot.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
+        });
+
+      case "follow":
+        return this.Bot.replyText("Got followed event");
+
+      case "unfollow":
+        return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
+
+      case "join":
+        return this.Bot.replyText(`Joined ${event.source.type}`);
+
+      case "leave":
+        return console.log(`Left: ${JSON.stringify(event)}`);
+
+      case "postback":
+        let { data } = event.postback;
+        if (data === "DATE" || data === "TIME" || data === "DATETIME") {
+          data += `(${JSON.stringify(event.postback.params)})`;
+        }
+
+        const objectData = JSON.parse(data);
+
+        const { Twibbon } = this.Bot.Features;
+        Twibbon.listen(objectData);
+
+        break;
+
+      case "beacon":
+        return this.Bot.replyText(`Got beacon: ${event.beacon}`);
+
+      default:
+        throw new Error(`Unknown event: ${JSON.stringify(event)}`);
+    }
   }
-};
 
-const handleImage = Bot => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
+  handleText() {
+    const { message, replyToken, source } = this.Bot.props.event;
 
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+    // The text query request.
+    const splittedChat = message.text.split(" ");
+    const isTextCommand = splittedChat[0][0] === command_prefix;
+    if (isTextCommand) {
+      handleCommand(this.Bot.Features, splittedChat);
+    } else {
+      // hidden error, need fix
+      this.Bot.dialogFlow.listen();
+    }
+  }
 
-    getContent = () => {
-      return Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-        console.log("premature_resolve", downloadPath);
-        _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-        return { originalPath: downloadPath, previewPath: previewPath, originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}` };
-      }).catch(err => {
-        throw err;
+  handleImage() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
+
+    if (message.contentProvider.type === "line") {
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
+      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+
+      getContent = () => {
+        return this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+          console.log("premature_resolve", downloadPath);
+          _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
+          return {
+            originalPath: downloadPath,
+            previewPath: previewPath,
+            originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
+            previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
+          };
+        }).catch(err => {
+          throw err;
+        });
+      };
+    } else if (message.contentProvider.type === "external") {
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
+    }
+
+    // Twibbon switch
+    const { Twibbon } = this.Bot.Features;
+    Twibbon.insert(getContent);
+  }
+
+  handleVideo() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
+    if (message.contentProvider.type === "line") {
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
+      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
+
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        // FFmpeg and ImageMagick is needed here to run 'convert'
+        // Please consider about security and performance by yourself
+        _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+
+        return {
+          originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`,
+          previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
+        };
       });
-    };
-  } else if (message.contentProvider.type === "external") {
-    getContent = () => {
-      return Promise.resolve(message.contentProvider);
-    };
-  }
+    } else if (message.contentProvider.type === "external") {
+      getContent = Promise.resolve(message.contentProvider);
+    }
 
-  // Twibbon switch
-  const { Twibbon } = Bot.Features;
-  Twibbon.insert(getContent);
-};
-
-const handleVideo = Bot => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
-    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
-
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      // FFmpeg and ImageMagick is needed here to run 'convert'
-      // Please consider about security and performance by yourself
-      _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
-
-      return { originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`, previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}` };
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+      // this.Bot.sendMessage({
+      //   type: "video",
+      //   originalContentUrl,
+      //   previewImageUrl
+      // });
     });
-  } else if (message.contentProvider.type === "external") {
-    getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({ originalContentUrl, previewImageUrl }) => {
-    // Bot.sendMessage({
-    //   type: "video",
-    //   originalContentUrl,
-    //   previewImageUrl
-    // });
-  });
-};
+  handleAudio() {
+    const { message, replyToken } = this.Bot.props.event;
+    let getContent;
+    if (message.contentProvider.type === "line") {
+      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
 
-const handleAudio = Bot => {
-  const { message, replyToken } = Bot.props.event;
-  let getContent;
-  if (message.contentProvider.type === "line") {
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
+      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+        return {
+          originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}`
+        };
+      });
+    } else {
+      getContent = Promise.resolve(message.contentProvider);
+    }
 
-    getContent = Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      return { originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}` };
+    return getContent.then(({ originalContentUrl }) => {
+      // this.Bot.sendMessage({
+      //   type: "audio",
+      //   originalContentUrl,
+      //   duration: message.duration
+      // });
     });
-  } else {
-    getContent = Promise.resolve(message.contentProvider);
   }
 
-  return getContent.then(({ originalContentUrl }) => {
-    // Bot.sendMessage({
-    //   type: "audio",
-    //   originalContentUrl,
-    //   duration: message.duration
+  handleLocation() {
+    const { message, replyToken } = this.Bot.props.event;
+    this.Bot.sendMessage({
+      type: "location",
+      title: message.title,
+      address: message.address,
+      latitude: message.latitude,
+      longitude: message.longitude
+    });
+  }
+
+  handleSticker() {
+    const { message, replyToken } = this.Bot.props.event;
+    // this.Bot.sendMessage({
+    //   type: "sticker",
+    //   packageId: message.packageId,
+    //   stickerId: message.stickerId
     // });
-  });
-};
-
-const handleLocation = Bot => {
-  const { message, replyToken } = Bot.props.event;
-  Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
-};
-
-const handleSticker = Bot => {
-  const { message, replyToken } = Bot.props.event;
-  // Bot.sendMessage({
-  //   type: "sticker",
-  //   packageId: message.packageId,
-  //   stickerId: message.stickerId
-  // });
-};
+  }
+}
+exports.handlerBot = handlerBot;
 //# sourceMappingURL=handlerBot.js.map

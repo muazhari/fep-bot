@@ -39,6 +39,8 @@ var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
 
+var _internal = require("./internal");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -67,10 +69,6 @@ const shared_props = exports.shared_props = {};
 
 class Bot {
   constructor(props) {
-    this.getId = this.getId.bind(this);
-    this.initProps = this.initProps.bind(this);
-
-    // this.shared_props = shared_props
     // console.log(shared_props)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
@@ -92,56 +90,61 @@ class Bot {
     };
 
     // DialogFlow assist
-    this.DialogFlow = new _DialogFlow.DialogFlow(this);
+    this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
     // Events listen assist
-    // this.listener = new listener(this)
+    this.handler = new _internal.handlerBot(this);
+    this.log();
+    console.log("Bot instanced");
   }
 
   initProps(props) {
-    const SourceIds = this.getId(props.event.source);
+    const sourceIds = this.getId(props.event.source);
 
-    Object.keys(SourceIds).map(type => {
-      shared_props[SourceIds[type]] = _extends({}, shared_props[SourceIds[type]], {
+    Object.keys(sourceIds).map(type => {
+      shared_props[sourceIds[type]] = _extends({}, shared_props[sourceIds[type]], {
         event: props.event
       });
     });
 
-    return shared_props[SourceIds.origin];
+    return shared_props[sourceIds.origin];
   }
 
-  profile() {
+  getProfile() {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
     });
   }
 
   log() {
-    _Store2.default.getStore("log_chat").then(log_chat => {
-      if (!log_chat || Object.keys(log_chat).length === 0) {
-        log_chat = {
-          groups: {},
-          users: {}
-        };
+    new Promise(async (resolve, reject) => {
+      const val = { [this.props.event.timestamp]: this.props };
+      let data = await _Store2.default.getStore("propsLogs");
+      if (data === undefined) {
+        data = [val];
+      } else {
+        data.push(val);
       }
-
-      // switch (this.props.event.source.type) {
-      // case 'user':
-      //     const { userId } = this.props.event.source
-      //     if (!log_chat['users'][userId]) {
-      //       log_chat['users'][userId] = []
-      //     }
-      //     log_chat['user'][userId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // case 'group':
-      //     const { groupId } = this.props.event.source
-      //     if (!log_chat['groups'][groupId]) {
-      //       log_chat['groups'][groupId] = []
-      //     }
-      //     log_chat['groups'][groupId].push(this.props.event)
-      //     return await Store.setStore({ log_chat: log_chat })
-      // }
+      await _Store2.default.setStore({ propsLogs: data });
+      console.log("[LOG] Props logged", this.props.event.timestamp);
     });
+
+    // switch (this.props.event.source.type) {
+    // case 'user':
+    //     const { userId } = this.props.event.source
+    //     if (!log_chat['users'][userId]) {
+    //       log_chat['users'][userId] = []
+    //     }
+    //     log_chat['user'][userId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // case 'group':
+    //     const { groupId } = this.props.event.source
+    //     if (!log_chat['groups'][groupId]) {
+    //       log_chat['groups'][groupId] = []
+    //     }
+    //     log_chat['groups'][groupId].push(this.props.event)
+    //     return await Store.setStore({ log_chat: log_chat })
+    // }
   }
 
   setProps(data, id) {
