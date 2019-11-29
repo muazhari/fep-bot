@@ -16,7 +16,7 @@ export const batch_list = {
 
 export const command_prefix = "/";
 
-const commandValidate = chat => {
+const destructCommand = chat => {
   const prefix = chat[0][0];
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
@@ -24,17 +24,47 @@ const commandValidate = chat => {
   if (prefix === command_prefix) {
     console.log({ prefix, command, args });
     return { prefix, command, args };
-  } else {
-    return false;
   }
 };
 
-const handleCommand = (commandList, commandValidate) => {
+const handleCommand = (chat) => {
+  const {
+    FEPList,
+    StoreAdvance,
+    Basic,
+    Template,
+    Twibbon,
+    Courses,
+    PosetLattice
+  } = Bot.Features;
+
+  const commandList = {
+    add: FEPList.add,
+    upd: FEPList.update,
+    rem: FEPList.remove,
+    view: FEPList.view,
+    rstore: StoreAdvance.reset_store,
+    pstore: StoreAdvance.pre_store,
+    bstore: StoreAdvance.backup_store,
+    "]]": Basic.admin,
+    help: Basic.help,
+    button: Template.button,
+    profile: Basic.profile,
+    confirm: Template.confirm,
+    bifest: Template.bifest,
+    greet: Basic.greet,
+    say: Basic.say,
+    twibbon: Twibbon.ready,
+    algo: Courses.algo,
+    pl: PosetLattice.generate
+  };
+  
+  
   const {
     prefix: content_prefix,
     command: content_command,
     args: content_args
-  } = commandValidate;
+  } = destructCommand(chat);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -134,7 +164,7 @@ export const handlerBot = event => {
       break;
 
     case "beacon":
-      return Worker.replyText(`Got beacon: ${event.beacon.hwid}`);
+      return Worker.replyText(`Got beacon: ${event.beacon}`);
 
     default:
       throw new Error(`Unknown event: ${JSON.stringify(event)}`);
@@ -143,42 +173,13 @@ export const handlerBot = event => {
 
 const handleText = Bot => {
   const { message, replyToken, source } = Bot.props.event;
-  const {
-    FEPList,
-    StoreAdvance,
-    Basic,
-    Template,
-    Twibbon,
-    Courses,
-    PosetLattice
-  } = Bot.Features;
-
-  const commandList = {
-    add: FEPList.add,
-    upd: FEPList.update,
-    rem: FEPList.remove,
-    view: FEPList.view,
-    rstore: StoreAdvance.reset_store,
-    pstore: StoreAdvance.pre_store,
-    bstore: StoreAdvance.backup_store,
-    "]]": Basic.admin,
-    help: Basic.help,
-    button: Template.button,
-    profile: Basic.profile,
-    confirm: Template.confirm,
-    bifest: Template.bifest,
-    greet: Basic.greet,
-    say: Basic.say,
-    twibbon: Twibbon.ready,
-    algo: Courses.algo,
-    pl: PosetLattice.generate
-  };
+  
 
   // The text query request.
-  const chat_splitted = message.text.split(" ");
-  const msgToCmdValidate = commandValidate(chat_splitted);
-  if (msgToCmdValidate) {
-    handleCommand(commandList, msgToCmdValidate);
+  const chatSplitted = message.text.split(" ");
+  const isTextCommand = commandValidate(chatSplitted);
+  if (isTextCommand) {
+    handleCommand(msgToCmdValidate);
   } else {
     // hidden error, need fix
     handlerDialogFlow(Bot);
