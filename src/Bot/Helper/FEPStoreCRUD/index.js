@@ -9,12 +9,12 @@ const set_store = async data => {
     }
 
     let store = await Store.getStore("fep");
-    if (store === undefined) {
+    if (store === undefined || !Object.keys(data.batch).includes(batch_list)) {
       store = { [data.batch]: [] };
     }
 
-    const selected_user_data = [data.name, data.campus, data.room];
-    store[data.batch].push(selected_user_data);
+    const selectedUserData = [data.name, data.campus, data.room];
+    store[data.batch].push(selectedUserData);
     await Store.setStore({ fep: store });
     return resolve();
   });
@@ -35,13 +35,19 @@ const update_store = async data => {
 };
 
 const delete_store = async data => {
-  const store = await Store.getStore("fep");
+  return new Promise(async (resolve, reject) => {
+    if (!Object.keys(batch_list).includes(data.batch)) {
+      return reject("Not in a proper batch");
+    }
+    
+    const store = await Store.getStore("fep");
+    if (store[data.batch].length > 0) {
+      store[data.batch].splice(parseInt(data.num, 10) - 1, 1);
+    }
 
-  if (store[data.batch].length > 0) {
-    store[data.batch].splice(parseInt(data.num, 10) - 1, 1);
-  }
-
-  await Store.setStore({ fep: store });
+    await Store.setStore({ fep: store });
+    return resolve();
+  });
 };
 
 export default {

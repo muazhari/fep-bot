@@ -26,11 +26,12 @@ const FEPList = exports.FEPList = Bot => {
         campus: args[2],
         room: args[3]
       };
-      await _FEPStoreCRUD2.default.set_store(data);
-
-      Bot.Features.StoreAdvance.backup_store("silent");
-
-      Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
+      _FEPStoreCRUD2.default.set_store(data).then(() => {
+        Bot.Features.StoreAdvance.backup_store("silent");
+        Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
+      }).catch(err => {
+        Bot.replyText(`${err}`);
+      });
     } else {
       Bot.replyText(`${_Bot.command_prefix}add <batch> <name> <campus> <room>`);
     }
