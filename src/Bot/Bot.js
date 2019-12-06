@@ -177,7 +177,10 @@ export class Bot {
     message = Array.isArray(message) ? message : [message];
     return this.client.replyMessage(
       this.props.event.replyToken,
-      message.map(msg => msg)
+      message.map(msg => {
+        console.log("Message length", msg.length);
+        return msg;
+      })
     );
   }
 

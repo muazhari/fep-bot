@@ -23,8 +23,11 @@ const set_store = async data => {
     }
 
     let store = await _Store2.default.getStore("fep");
-    if (store === undefined || !Object.keys(data.batch).includes(_Bot.batch_list)) {
+    if (store === undefined) {
       store = { [data.batch]: [] };
+    }
+    if (!Object.keys(store).includes(data.batch)) {
+      store[data.batch] = [];
     }
 
     const selectedUserData = [data.name, data.campus, data.room];

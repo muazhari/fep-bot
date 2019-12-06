@@ -26,6 +26,7 @@ const FEPList = exports.FEPList = Bot => {
         campus: args[2],
         room: args[3]
       };
+
       _FEPStoreCRUD2.default.set_store(data).then(() => {
         Bot.Features.StoreAdvance.backup_store("silent");
         Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
@@ -46,9 +47,12 @@ const FEPList = exports.FEPList = Bot => {
         campus: args[3],
         room: args[4]
       };
-      await _FEPStoreCRUD2.default.update_store(data);
-      Bot.replyText("Done!");
-      Bot.Features.StoreAdvance.backup_store("silent");
+      _FEPStoreCRUD2.default.update_store(data).then(() => {
+        Bot.Features.StoreAdvance.backup_store("silent");
+        Bot.replyText(`Done update!\n${data.name} - ${data.campus} - ${data.room}`);
+      }).catch(err => {
+        Bot.replyText(`${err}`);
+      });
     } else {
       Bot.replyText(`${_Bot.command_prefix}upd <batch> <number> <name> <campus> <room>`);
     }
@@ -60,9 +64,12 @@ const FEPList = exports.FEPList = Bot => {
         batch: args[0],
         num: args[1]
       };
-      await _FEPStoreCRUD2.default.delete_store(data);
-      Bot.Features.StoreAdvance.backup_store("silent");
-      Bot.replyText("Done!");
+      _FEPStoreCRUD2.default.delete_store(data).then(() => {
+        Bot.Features.StoreAdvance.backup_store("silent");
+        Bot.replyText(`Done remove!\n${data.name} - ${data.campus} - ${data.room}`);
+      }).catch(err => {
+        Bot.replyText(`${err}`);
+      });
     } else {
       Bot.replyText(`${_Bot.command_prefix}del <batch> <number>`);
     }
@@ -83,15 +90,12 @@ const FEPList = exports.FEPList = Bot => {
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
 
           selected_batch.forEach(batch => {
-            console.log(batch);
             msg += `${batch.toUpperCase()}. ${_Bot.batch_list[batch]}\n`;
 
             for (let i = 0; i < store[batch].length; i += 1) {
               msg += `  ${i + 1}. ${store[batch][i][0]} - ${store[batch][i][1]} - ${store[batch][i][2]}\n`;
             }
             msg += `\n`;
-
-            console.log(msg.length);
           });
           Bot.replyText(msg);
         }
