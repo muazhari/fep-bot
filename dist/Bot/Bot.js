@@ -98,6 +98,7 @@ class Bot {
     console.log("Bot instanced");
   }
 
+  //should updated to implement firebase realtime database
   initProps(props) {
     const sourceIds = this.getId(props.event.source);
 
