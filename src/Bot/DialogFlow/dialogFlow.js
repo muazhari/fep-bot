@@ -60,7 +60,7 @@ export class dialogFlow {
     const { fields, displayName } = parameter;
     if (
       shared_props[this.propsId].dialogFlow.isTalking ||
-      displayName === "chat.talk"
+      displayName === "chat.talk" || displayName === "chat.silent"
     ) {
       if (Object.keys(fields).includes("chat")) {
         shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(

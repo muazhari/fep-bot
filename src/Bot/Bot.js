@@ -73,6 +73,7 @@ export class Bot {
     console.log("Bot instanced");
   }
 
+  //should updated to implement firebase realtime database
   initProps(props) {
     const sourceIds = this.getId(props.event.source);
 
@@ -98,13 +99,13 @@ export class Bot {
   log() {
     new Promise(async (resolve, reject) => {
       const val = { [this.props.event.timestamp]: this.props };
-      let data = await Store.getStore("propsLogs");
-      if (data === undefined) {
-        data = [val];
-      } else {
-        data.push(val);
-      }
-      await Store.setStore({ propsLogs: data });
+      // let data = await Store.getStore("propsLogs");
+      // if (data === undefined) {
+      //   data = [val];
+      // } else {
+      //   data.push(val);
+      // }
+      await Store.setStore(val);
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 
@@ -176,7 +177,10 @@ export class Bot {
     message = Array.isArray(message) ? message : [message];
     return this.client.replyMessage(
       this.props.event.replyToken,
-      message.map(msg => msg)
+      message.map(msg => {
+        console.log("Message length", msg.length);
+        return msg;
+      })
     );
   }
 

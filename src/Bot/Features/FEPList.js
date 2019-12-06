@@ -12,11 +12,15 @@ export const FEPList = Bot => {
         campus: args[2],
         room: args[3]
       };
-      await FEPStoreCRUD.set_store(data);
 
-      Bot.Features.StoreAdvance.backup_store("silent");
-
-      Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
+      FEPStoreCRUD.set_store(data)
+        .then(() => {
+          Bot.Features.StoreAdvance.backup_store("silent");
+          Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
+        })
+        .catch(err => {
+          Bot.replyText(`${err}`);
+        });
     } else {
       Bot.replyText(`${command_prefix}add <batch> <name> <campus> <room>`);
     }
@@ -31,9 +35,16 @@ export const FEPList = Bot => {
         campus: args[3],
         room: args[4]
       };
-      await FEPStoreCRUD.update_store(data);
-      Bot.replyText("Done!");
-      Bot.Features.StoreAdvance.backup_store("silent");
+      FEPStoreCRUD.update_store(data)
+        .then(() => {
+          Bot.Features.StoreAdvance.backup_store("silent");
+          Bot.replyText(
+            `Done update!\n${data.name} - ${data.campus} - ${data.room}`
+          );
+        })
+        .catch(err => {
+          Bot.replyText(`${err}`);
+        });
     } else {
       Bot.replyText(
         `${command_prefix}upd <batch> <number> <name> <campus> <room>`
@@ -47,9 +58,16 @@ export const FEPList = Bot => {
         batch: args[0],
         num: args[1]
       };
-      await FEPStoreCRUD.delete_store(data);
-      Bot.Features.StoreAdvance.backup_store("silent");
-      Bot.replyText("Done!");
+      FEPStoreCRUD.delete_store(data)
+        .then(() => {
+          Bot.Features.StoreAdvance.backup_store("silent");
+          Bot.replyText(
+            `Done remove!\n${data.name} - ${data.campus} - ${data.room}`
+          );
+        })
+        .catch(err => {
+          Bot.replyText(`${err}`);
+        });
     } else {
       Bot.replyText(`${command_prefix}del <batch> <number>`);
     }
@@ -58,20 +76,19 @@ export const FEPList = Bot => {
   const view = async args => {
     if (args.length === 1) {
       const data = {
-        batch: args[0] ? args[0] : undefined
+        batch: args[0]
       };
 
       const store = await Store.getStore("fep");
 
       if (store) {
         const selected_batch =
-          args.length !== 1 ? Object.keys(store).sort() : [data.batch];
+          data.batch === "all" ? Object.keys(store).sort() : [data.batch];
 
         if (selected_batch.every(item => Object.keys(store).includes(item))) {
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
 
           selected_batch.forEach(batch => {
-            console.log(batch);
             msg += `${batch.toUpperCase()}. ${batch_list[batch]}\n`;
 
             for (let i = 0; i < store[batch].length; i += 1) {
@@ -80,14 +97,12 @@ export const FEPList = Bot => {
               } - ${store[batch][i][2]}\n`;
             }
             msg += `\n`;
-
-            console.log(msg.length);
           });
           Bot.replyText(msg);
         }
       }
     } else {
-      Bot.replyText(`${command_prefix}view <batch>`);
+      Bot.replyText(`${command_prefix}view <batch || all>`);
     }
   };
 

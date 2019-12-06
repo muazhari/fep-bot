@@ -72,7 +72,7 @@ class dialogFlow {
 
   chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk") {
+    if (_Bot.shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
         _Bot.shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
