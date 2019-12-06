@@ -25,7 +25,7 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
+const defaultBackupUrl = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist";
 
 const StoreAdvance = exports.StoreAdvance = Bot => {
   const reset_store = async args => {
@@ -41,19 +41,19 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
         url: args[0]
       };
 
-      //       const response = await axios({
-      //         method: "get",
-      //         url: data.url,
-      //         // responseType: "text"
-      //       });
+      const response = await (0, _axios2.default)({
+        method: "get",
+        url: data.url
+        // responseType: "text"
+      });
 
-      //       console.log(typeof response.data);
+      console.log(typeof response.data);
 
-      const response = await _FEPCleaner2.default.run(data.url);
-      const parsed = JSON.parse(response);
-      console.log(parsed);
+      // const response = await FEPCleaner.run(data.url);
+      // const parsed = JSON.parse(response);
+      // console.log(parsed);
 
-      await _Store2.default.setStore({ fep: parsed });
+      await _Store2.default.setStore({ fep: response.data });
       Bot.replyText("Done!");
     } else {
       Bot.replyText(`${_Bot.command_prefix}pre_store <url>`);
@@ -66,12 +66,12 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
     };
 
     const fep = await _Store2.default.getStore("fep");
-    const backup = await _Store2.default.getStore("backup_fep");
+    let backup = await _Store2.default.getStore("backup_fep");
 
     if (backup) {
       backup.splice(-20);
     } else {
-      const backup = [];
+      backup = [];
     }
     // const response = requests.post('https://paste.c-net.org/')
 
@@ -82,7 +82,7 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
     await _Store2.default.setStore({ backup_fep: backup });
 
     if (args !== "silent") {
-      Bot.replyText(`Done!\n${Date.now()}`);
+      Bot.replyText(`Done backup!\n${Date.now()}`);
     }
   };
 

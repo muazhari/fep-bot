@@ -5,7 +5,8 @@ import storage from "node-persist";
 
 import axios from "axios";
 
-// const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
+const defaultBackupUrl =
+  "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist";
 
 export const StoreAdvance = Bot => {
   const reset_store = async args => {
@@ -21,19 +22,19 @@ export const StoreAdvance = Bot => {
         url: args[0]
       };
 
-      //       const response = await axios({
-      //         method: "get",
-      //         url: data.url,
-      //         // responseType: "text"
-      //       });
+      const response = await axios({
+        method: "get",
+        url: data.url
+        // responseType: "text"
+      });
 
-      //       console.log(typeof response.data);
+      console.log(typeof response.data);
 
-      const response = await FEPCleaner.run(data.url);
-      const parsed = JSON.parse(response);
-      console.log(parsed);
+      // const response = await FEPCleaner.run(data.url);
+      // const parsed = JSON.parse(response);
+      // console.log(parsed);
 
-      await Store.setStore({ fep: parsed });
+      await Store.setStore({ fep: response.data });
       Bot.replyText("Done!");
     } else {
       Bot.replyText(`${command_prefix}pre_store <url>`);
@@ -46,12 +47,12 @@ export const StoreAdvance = Bot => {
     };
 
     const fep = await Store.getStore("fep");
-    const backup = await Store.getStore("backup_fep");
+    let backup = await Store.getStore("backup_fep");
 
     if (backup) {
       backup.splice(-20);
     } else {
-      const backup = [];
+      backup = [];
     }
     // const response = requests.post('https://paste.c-net.org/')
 
@@ -62,7 +63,7 @@ export const StoreAdvance = Bot => {
     await Store.setStore({ backup_fep: backup });
 
     if (args !== "silent") {
-      Bot.replyText(`Done!\n${Date.now()}`);
+      Bot.replyText(`Done backup!\n${Date.now()}`);
     }
   };
 

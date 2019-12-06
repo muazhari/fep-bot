@@ -1,0 +1,1 @@
+{"key":"1575622922389","value":{"event":{"type":"message","replyToken":"95ed26a0417f42d6a005084020de70d7","source":{"userId":"U016bfe22df53b903b404a80efdd8ec65","type":"user"},"timestamp":1575622922389,"message":{"type":"text","id":"11039777420066","text":"/twibbon"}},"dialogFlow":{"isTalking":false},"twibbon":{"status":true,"source":{"id":"U016bfe22df53b903b404a80efdd8ec65"}}}}

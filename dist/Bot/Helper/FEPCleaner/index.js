@@ -21,7 +21,7 @@ var _path2 = _interopRequireDefault(_path);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const run = url => {
-  const filePath = _path2.default.join(__dirname, "../Helper/FEPCleaner", "feplist_cleaner.py");
+  const filePath = _path2.default.join(__dirname, "feplist_cleaner.py");
   const command = `python ${filePath} ${url}`;
   return new Promise((resolve, reject) => {
     _child_process2.default.exec(command, (error, stdout, stderr) => {
