@@ -41,15 +41,15 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
         url: args[0]
       };
 
-      //       const response = await axios({
-      //         method: "get",
-      //         url: data.url,
-      //         // responseType: "text"
-      //       });
+      const response = await (0, _axios2.default)({
+        method: "get",
+        url: data.url
+        // responseType: "text"
+      });
 
-      //       console.log(typeof response.data);
+      console.log(typeof response.data);
 
-      const response = await _FEPCleaner2.default.run(data.url);
+      // const response = await FEPCleaner.run(data.url);
       const parsed = JSON.parse(response);
       console.log(parsed);
 
