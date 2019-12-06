@@ -50,10 +50,10 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
       console.log(typeof response.data);
 
       // const response = await FEPCleaner.run(data.url);
-      const parsed = JSON.parse(response);
-      console.log(parsed);
+      // const parsed = JSON.parse(response);
+      // console.log(parsed);
 
-      await _Store2.default.setStore({ fep: parsed });
+      await _Store2.default.setStore({ fep: response.data });
       Bot.replyText("Done!");
     } else {
       Bot.replyText(`${_Bot.command_prefix}pre_store <url>`);

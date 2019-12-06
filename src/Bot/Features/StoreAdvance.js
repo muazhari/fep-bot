@@ -22,19 +22,19 @@ export const StoreAdvance = Bot => {
         url: args[0]
       };
 
-            const response = await axios({
-              method: "get",
-              url: data.url,
-              // responseType: "text"
-            });
+      const response = await axios({
+        method: "get",
+        url: data.url
+        // responseType: "text"
+      });
 
-            console.log(typeof response.data);
+      console.log(typeof response.data);
 
       // const response = await FEPCleaner.run(data.url);
-      const parsed = JSON.parse(response);
-      console.log(parsed);
+      // const parsed = JSON.parse(response);
+      // console.log(parsed);
 
-      await Store.setStore({ fep: parsed });
+      await Store.setStore({ fep: response.data });
       Bot.replyText("Done!");
     } else {
       Bot.replyText(`${command_prefix}pre_store <url>`);
