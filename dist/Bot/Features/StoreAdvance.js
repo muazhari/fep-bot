@@ -25,7 +25,7 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// const default_url = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist"
+const defaultBackupUrl = "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist";
 
 const StoreAdvance = exports.StoreAdvance = Bot => {
   const reset_store = async args => {
@@ -66,12 +66,12 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
     };
 
     const fep = await _Store2.default.getStore("fep");
-    const backup = await _Store2.default.getStore("backup_fep");
+    let backup = await _Store2.default.getStore("backup_fep");
 
     if (backup) {
       backup.splice(-20);
     } else {
-      const backup = [];
+      backup = [];
     }
     // const response = requests.post('https://paste.c-net.org/')
 
@@ -82,7 +82,7 @@ const StoreAdvance = exports.StoreAdvance = Bot => {
     await _Store2.default.setStore({ backup_fep: backup });
 
     if (args !== "silent") {
-      Bot.replyText(`Done!\n${Date.now()}`);
+      Bot.replyText(`Done backup!\n${Date.now()}`);
     }
   };
 

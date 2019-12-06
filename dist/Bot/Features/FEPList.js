@@ -78,13 +78,13 @@ const FEPList = exports.FEPList = Bot => {
   const view = async args => {
     if (args.length === 1) {
       const data = {
-        batch: args[0] ? args[0] : undefined
+        batch: args[0]
       };
 
       const store = await _Store2.default.getStore("fep");
 
       if (store) {
-        const selected_batch = args.length !== 1 ? Object.keys(store).sort() : [data.batch];
+        const selected_batch = data.batch === "all" ? Object.keys(store).sort() : [data.batch];
 
         if (selected_batch.every(item => Object.keys(store).includes(item))) {
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
@@ -101,7 +101,7 @@ const FEPList = exports.FEPList = Bot => {
         }
       }
     } else {
-      Bot.replyText(`${_Bot.command_prefix}view <batch>`);
+      Bot.replyText(`${_Bot.command_prefix}view <batch || all>`);
     }
   };
 

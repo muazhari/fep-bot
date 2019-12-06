@@ -38,6 +38,7 @@ class cleaner:
         return not hasNumbers(str) and str.lower() in self.batch_list
 
     def run(self):
+      batch = string()
         intersected_line = []
         for line in range(0, len(self.file)):
             if len(self.file[line]) > 0 and self.batch_validate(self.file[line][0]):
