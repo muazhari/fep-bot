@@ -63,4 +63,16 @@ Object.keys(_PosetLatticeGenerator).forEach(function (key) {
     }
   });
 });
+
+var _CloudinaryUtils = require("./CloudinaryUtils");
+
+Object.keys(_CloudinaryUtils).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _CloudinaryUtils[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map

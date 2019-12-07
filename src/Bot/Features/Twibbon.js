@@ -1,5 +1,6 @@
 import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
+import CloudinaryUtils from "../../Bot/Helper/CloudinaryUtils";
 import cloudinary from "cloudinary";
 import fs from "fs-extra";
 import request from "request";
@@ -417,26 +418,6 @@ export const Twibbon = Bot => {
     return result;
   };
 
-  const imgUpload = (url, filename) => {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload(url, { public_id: filename })
-        .then(image => {
-          console.log("** File Upload (Promise)");
-          console.log("* " + image.public_id);
-          console.log("* " + image.url);
-          resolve(image);
-        })
-        .catch(err => {
-          console.log("** File Upload (Promise)");
-          if (err) {
-            console.warn(err);
-            reject(err);
-          }
-        });
-    });
-  };
-
   const waitForAllUploads = (type, queue, imageObject, callback) => {
     uploads[type] = {
       ...uploads[type],
@@ -453,7 +434,7 @@ export const Twibbon = Bot => {
 
   const generate = data => {
     return new Promise((resolve, reject) => {
-      imgUpload(data.url, data.filename).then(image => {
+      CloudinaryUtils.upload(data.url, data.filename).then(image => {
         waitForAllUploads(
           "raw",
           1,
@@ -465,43 +446,26 @@ export const Twibbon = Bot => {
       });
 
       const performTransformations = () => {
-        const twibbon_ori_name = `${data.filename}-twibbon`;
-        const result_url = getResult(
+        const twibbonOriginalName = `${data.filename}-twibbon`;
+        const resultOriginalUrl = getResult(
           data.twibbonSetting,
           uploads.raw.twibbon_bg.public_id,
-          twibbon_ori_name,
+          twibbonOriginalName,
           1040
         );
 
-        const twibbon_preview_name = `${data.filename}-twibbon-preview`;
-        const result_preview_url = getResult(
+        const twibonPreviewName = `${data.filename}-twibbon-preview`;
+        const resultPreviewUrl = getResult(
           data.twibbonSetting,
           uploads.raw.twibbon_bg.public_id,
-          twibbon_preview_name,
+          twibonPreviewName,
           240
         );
 
-        imgUpload(result_url, twibbon_ori_name).then(image => {
-          waitForAllUploads(
-            "twibbon",
-            2,
-            {
-              original: image
-            },
-            performResolve
-          );
-        });
-
-        imgUpload(result_preview_url, twibbon_preview_name).then(image => {
-          waitForAllUploads(
-            "twibbon",
-            2,
-            {
-              preview: image
-            },
-            performResolve
-          );
-        });
+        const twibbonTransforms = Promise.all([
+          CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
+          CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
+        ]);
 
         const performResolve = () => {
           resolve({
