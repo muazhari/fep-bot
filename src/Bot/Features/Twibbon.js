@@ -6,14 +6,14 @@ import request from "request";
 import cp from "child_process";
 import path from "path";
 
-function objectsHaveSameKeys(...objects) {
+const objectsHaveSameKeys = (...objects) => {
   const allKeys = objects.reduce(
     (keys, object) => keys.concat(Object.keys(object)),
     []
   );
   const union = new Set(allKeys);
   return objects.every(object => union.size === Object.keys(object).length);
-}
+};
 
 export const Twibbon = Bot => {
   const uploads = {};
@@ -517,59 +517,59 @@ export const Twibbon = Bot => {
   };
 
   const make = args => {
-    if (args.length === 4) {
-      const data = {
-        url: args[0],
-        originalPath: args[1],
-        previewPath: args[2],
-        twibbonSetting: args[3],
-        filename: Bot.props.event.message.id
-      };
+    const data = {
+      url: args[0],
+      originalPath: args[1],
+      previewPath: args[2],
+      twibbonSetting: args[3],
+      filename: Bot.props.event.message.id
+    };
 
-      generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-        Bot.sendMessage({
-          type: "image",
-          originalContentUrl: twibbonOriginalUrl,
-          previewImageUrl: twibbonPreviewUrl
-        });
+    generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+      Bot.sendMessage({
+        type: "image",
+        originalContentUrl: twibbonOriginalUrl,
+        previewImageUrl: twibbonPreviewUrl
       });
+    });
 
-      //switch back
-      shared_props[Bot.getId().user].twibbon.status = false;
-    } else {
-      Bot.replyText(`${command_prefix}twibbon <image>`);
-    }
+    //switch back
+    shared_props[Bot.getId().user].twibbon.status = false;
   };
 
   const insert = getContent => {
-    const { user } = Bot.getId();
+    const { userId, originId } = Bot.getId();
 
-    const userSwitch =
-      shared_props[user].twibbon.status === undefined
-        ? false
-        : shared_props[user].twibbon.status;
+    if (shared_props[userId].twibbon) {
+      const userSwitch = shared_props[userId].twibbon.status;
 
-    const userInSameCommunal =
-      shared_props[user].twibbon.source.id === Bot.getId().origin;
+      const userInSameCommunal =
+        shared_props[userId].twibbon.source.id === originId;
 
-    const twibbon_id_chosen = shared_props[user].twibbon.id !== undefined;
+      const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
 
-    if (userSwitch && userInSameCommunal && twibbon_id_chosen) {
-      const twibbonSetting = {
-        id: shared_props[user].twibbon.id,
-        type: shared_props[user].twibbon.type
-      };
+      if (userSwitch && userInSameCommunal && twibbonIdChosen) {
+        const twibbonSetting = {
+          id: shared_props[userId].twibbon.id,
+          type: shared_props[userId].twibbon.type
+        };
 
-      getContent().then(
-        ({
-          originalPath,
-          previewPath,
-          originalContentUrl,
-          previewImageUrl
-        }) => {
-          make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
-        }
-      );
+        getContent().then(
+          ({
+            originalPath,
+            previewPath,
+            originalContentUrl,
+            previewImageUrl
+          }) => {
+            make([
+              originalContentUrl,
+              originalPath,
+              previewPath,
+              twibbonSetting
+            ]);
+          }
+        );
+      }
     }
   };
 
