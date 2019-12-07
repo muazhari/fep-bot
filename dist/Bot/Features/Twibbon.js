@@ -44,7 +44,7 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 const Twibbon = exports.Twibbon = Bot => {
-  const { userId, originId } = Bot.getId();
+  const { user: userId, origin: originId } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -292,6 +292,25 @@ const Twibbon = exports.Twibbon = Bot => {
     }
   };
 
+  const ready = args => {
+    if (args.length <= 1) {
+      const data = {
+        category: args[0]
+      };
+
+      // ready-up switch
+      _Bot.shared_props[userId]["twibbon"] = {
+        status: true,
+        source: {
+          id: originId
+        }
+      };
+      displayList(data.category);
+    } else {
+      Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
+    }
+  };
+
   const displayList = category => {
     let selected = Object.keys(twibbon_list).map(twibbonId => twibbonId).filter(twibbonId => typeof twibbonId === "string");
 
@@ -333,28 +352,6 @@ const Twibbon = exports.Twibbon = Bot => {
       }
     });
   };
-
-  const ready = args => {
-    console.log("ready COMMAND");
-    if (args.length <= 1) {
-      const data = {
-        category: args[0]
-      };
-
-      // ready-up switch
-      _Bot.shared_props[userId]["twibbon"] = {
-        status: true,
-        source: {
-          id: originId
-        }
-      };
-
-      displayList(data.category);
-    } else {
-      Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
-    }
-  };
-
   const listen = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;

@@ -17,7 +17,7 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 export const Twibbon = Bot => {
-  const { userId, originId } = Bot.getId();
+  const { user: userId, origin: originId } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -305,6 +305,25 @@ export const Twibbon = Bot => {
     }
   };
 
+  const ready = args => {
+    if (args.length <= 1) {
+      const data = {
+        category: args[0]
+      };
+
+      // ready-up switch
+      shared_props[userId]["twibbon"] = {
+        status: true,
+        source: {
+          id: originId
+        }
+      };
+      displayList(data.category);
+    } else {
+      Bot.replyText(`${command_prefix}twibbon <type>`);
+    }
+  };
+
   const displayList = category => {
     let selected = Object.keys(twibbon_list)
       .map(twibbonId => twibbonId)
@@ -355,28 +374,6 @@ export const Twibbon = Bot => {
       }
     });
   };
-
-  const ready = args => {
-    console.log("ready COMMAND");
-    if (args.length <= 1) {
-      const data = {
-        category: args[0]
-      };
-
-      // ready-up switch
-      shared_props[userId]["twibbon"] = {
-        status: true,
-        source: {
-          id: originId
-        }
-      };
-
-      displayList(data.category);
-    } else {
-      Bot.replyText(`${command_prefix}twibbon <type>`);
-    }
-  };
-
   const listen = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;
