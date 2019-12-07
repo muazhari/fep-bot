@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
 import { shared_props } from "./internal";
+import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils"
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -230,6 +231,8 @@ export class handlerBot {
         return Promise.resolve(message.contentProvider);
       };
     }
+    
+    CloudinaryUtils.upload
 
     // Twibbon switch
     const { Twibbon } = this.Bot.Features;

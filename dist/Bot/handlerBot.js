@@ -19,6 +19,10 @@ var _child_process2 = _interopRequireDefault(_child_process);
 
 var _internal = require("./internal");
 
+var _CloudinaryUtils = require("../Bot/Helper/CloudinaryUtils");
+
+var _CloudinaryUtils2 = _interopRequireDefault(_CloudinaryUtils);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // base URL for webhook server
@@ -228,6 +232,8 @@ class handlerBot {
         return Promise.resolve(message.contentProvider);
       };
     }
+
+    _CloudinaryUtils2.default.upload;
 
     // Twibbon switch
     const { Twibbon } = this.Bot.Features;
