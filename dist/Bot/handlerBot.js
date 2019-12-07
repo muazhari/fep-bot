@@ -210,7 +210,7 @@ class handlerBot {
     let getContent;
 
     const imageData = {
-      originalPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
       previewPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
@@ -219,47 +219,48 @@ class handlerBot {
     if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id).then(() => {
-          console.log("handleImageDownloaded", imageData.originalPath);
-          _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalPath} jpg:${imageData.previewPath}`);
+          console.log("getContentDownloaded", imageData.originalContentPath);
+          _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
           return imageData;
         }).catch(err => {
           throw err;
         });
       };
+
+      // Twibbon switch
+      const { Twibbon } = this.Bot.Features;
+      Twibbon.listenImage(getContent);
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
       };
     }
 
-    this.Bot.downloadContent(message.id, imageData.originalPath).then(() => {
-      const url = `${baseURL}/downloaded/images/${_path2.default.basename(imageData.originalPath)}`;
-      _CloudinaryUtils2.default.upload(url, message.id).then(fileMeta => {
-        _fsExtra2.default.unlinkSync(imageData.originalPath);
+    this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
+      _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
+        _fsExtra2.default.unlinkSync(imageData.originalContentPath);
       });
     });
-
-    // Twibbon switch
-    const { Twibbon } = this.Bot.Features;
-    Twibbon.listenImage(getContent);
   }
 
   handleVideo() {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
-      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+    const videoData = {
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
+      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
+    };
+
+    if (message.contentProvider.type === "line") {
+      getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
         // FFmpeg and ImageMagick is needed here to run 'convert'
         // Please consider about security and performance by yourself
-        _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+        _child_process2.default.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
 
-        return {
-          originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`,
-          previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
-        };
+        return videoData;
       });
     } else if (message.contentProvider.type === "external") {
       getContent = Promise.resolve(message.contentProvider);
@@ -277,13 +278,15 @@ class handlerBot {
   handleAudio() {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-        return {
-          originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}`
-        };
+    const audioData = {
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
+    };
+
+    if (message.contentProvider.type === "line") {
+      getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
+        return audioData;
       });
     } else {
       getContent = Promise.resolve(message.contentProvider);
