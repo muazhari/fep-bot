@@ -292,7 +292,50 @@ const Twibbon = exports.Twibbon = Bot => {
     }
   };
 
+  const displayList = category => {
+    let selected = Object.keys(twibbon_list).map(twibbonId => twibbonId).filter(twibbonId => typeof twibbonId === "string");
+
+    if (category) {
+      selected = Object.keys(twibbon_list).filter(twibbonId => twibbon_list[twibbonId].category === category);
+      if (selected.length === 0) {
+        return Bot.replyText(`Tidak ada kategori, lihat di ${_Bot.command_prefix}twibbon`);
+      }
+    }
+
+    console.log(selected);
+
+    const twibbonColumns = selected.map(id => {
+      const { url, name } = twibbon_list[id];
+      return {
+        thumbnailImageUrl: url,
+        imageBackgroundColor: "#FFFFFF",
+        text: `${name}`,
+        actions: [{
+          type: "postback",
+          label: "Auto-AI Mode",
+          data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+        }, {
+          type: "postback",
+          label: "Manual Mode",
+          data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+        }]
+      };
+    });
+
+    Bot.sendMessage({
+      type: "template",
+      altText: "Twibbon list",
+      template: {
+        type: "carousel",
+        columns: twibbonColumns,
+        imageAspectRatio: "square",
+        imageSize: "cover"
+      }
+    });
+  };
+
   const ready = args => {
+    console.log("ready COMMAND");
     if (args.length <= 1) {
       const data = {
         category: args[0]
@@ -306,7 +349,7 @@ const Twibbon = exports.Twibbon = Bot => {
         }
       };
 
-      displayList(data.category || "all");
+      displayList(data.category);
     } else {
       Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
     }
@@ -333,56 +376,6 @@ const Twibbon = exports.Twibbon = Bot => {
         }
         Bot.replyText(messages);
       });
-    }
-  };
-
-  const displayList = category => {
-    let selected = [];
-    if (category === "all") {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        return twibbon_id;
-      });
-    } else {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        if (twibbon_list[twibbon_id].category === category) {
-          return twibbon_id;
-        }
-      });
-    }
-
-    console.log(selected);
-
-    if (selected.length > 0) {
-      const twibbonColumns = selected.map(id => {
-        const { url, name } = twibbon_list[id];
-        return {
-          thumbnailImageUrl: url,
-          imageBackgroundColor: "#FFFFFF",
-          text: `${name}`,
-          actions: [{
-            type: "postback",
-            label: "Auto-AI Mode",
-            data: `{"twibbon":{"id":"${id}","type":"auto"}}`
-          }, {
-            type: "postback",
-            label: "Manual Mode",
-            data: `{"twibbon":{"id":"${id}","type":"manual"}}`
-          }]
-        };
-      });
-
-      Bot.sendMessage({
-        type: "template",
-        altText: "Twibbon list",
-        template: {
-          type: "carousel",
-          columns: twibbonColumns,
-          imageAspectRatio: "square",
-          imageSize: "cover"
-        }
-      });
-    } else {
-      Bot.replyText(`Tidak ada kategori, lihat di ${_Bot.command_prefix}twibbon`);
     }
   };
 

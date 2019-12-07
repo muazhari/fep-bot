@@ -305,7 +305,59 @@ export const Twibbon = Bot => {
     }
   };
 
+  const displayList = category => {
+    let selected = Object.keys(twibbon_list)
+      .map(twibbonId => twibbonId)
+      .filter(twibbonId => typeof twibbonId === "string");
+
+    if (category) {
+      selected = Object.keys(twibbon_list).filter(
+        twibbonId => twibbon_list[twibbonId].category === category
+      );
+      if (selected.length === 0) {
+        return Bot.replyText(
+          `Tidak ada kategori, lihat di ${command_prefix}twibbon`
+        );
+      }
+    }
+
+    console.log(selected);
+
+    const twibbonColumns = selected.map(id => {
+      const { url, name } = twibbon_list[id];
+      return {
+        thumbnailImageUrl: url,
+        imageBackgroundColor: "#FFFFFF",
+        text: `${name}`,
+        actions: [
+          {
+            type: "postback",
+            label: "Auto-AI Mode",
+            data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+          },
+          {
+            type: "postback",
+            label: "Manual Mode",
+            data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+          }
+        ]
+      };
+    });
+
+    Bot.sendMessage({
+      type: "template",
+      altText: "Twibbon list",
+      template: {
+        type: "carousel",
+        columns: twibbonColumns,
+        imageAspectRatio: "square",
+        imageSize: "cover"
+      }
+    });
+  };
+
   const ready = args => {
+    console.log("ready COMMAND");
     if (args.length <= 1) {
       const data = {
         category: args[0]
@@ -319,7 +371,7 @@ export const Twibbon = Bot => {
         }
       };
 
-      displayList(data.category || "all");
+      displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
     }
@@ -352,8 +404,6 @@ export const Twibbon = Bot => {
       });
     }
   };
-
-
 
   const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
     const result = cloudinary.url(
