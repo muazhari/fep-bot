@@ -44,7 +44,7 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 const Twibbon = exports.Twibbon = Bot => {
-  const uploads = {};
+  const { userId, originId } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -299,10 +299,10 @@ const Twibbon = exports.Twibbon = Bot => {
       };
 
       // ready-up switch
-      _Bot.shared_props[Bot.getId().user]["twibbon"] = {
+      _Bot.shared_props[userId]["twibbon"] = {
         status: true,
         source: {
-          id: Bot.getId().origin
+          id: originId
         }
       };
 
@@ -313,23 +313,21 @@ const Twibbon = exports.Twibbon = Bot => {
   };
 
   const listen = data => {
-    const { user } = Bot.getId();
-
     if (data.twibbon) {
       const { id, type } = data.twibbon;
 
       // ready-up switch
-      _Bot.shared_props[user]["twibbon"] = {
+      _Bot.shared_props[userId]["twibbon"] = {
         id: id,
         type: type,
         status: true,
         source: {
-          id: Bot.getId().origin
+          id: originId
         }
       };
 
-      Bot.getProfile().then(res => {
-        const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
+      Bot.getProfile().then(profile => {
+        const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
         if (type === "manual") {
           messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
         }
@@ -351,6 +349,8 @@ const Twibbon = exports.Twibbon = Bot => {
         }
       });
     }
+
+    console.log(selected);
 
     if (selected.length > 0) {
       const twibbonColumns = selected.map(id => {
@@ -435,12 +435,10 @@ const Twibbon = exports.Twibbon = Bot => {
     });
 
     //switch back
-    _Bot.shared_props[Bot.getId().user].twibbon.status = false;
+    _Bot.shared_props[userId].twibbon.status = false;
   };
 
   const insert = getContent => {
-    const { userId, originId } = Bot.getId();
-
     if (_Bot.shared_props[userId].twibbon) {
       const userSwitch = _Bot.shared_props[userId].twibbon.status;
 

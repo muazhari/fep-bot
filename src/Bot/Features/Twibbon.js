@@ -17,7 +17,7 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 export const Twibbon = Bot => {
-  const uploads = {};
+  const { userId, originId } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -312,10 +312,10 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      shared_props[Bot.getId().user]["twibbon"] = {
+      shared_props[userId]["twibbon"] = {
         status: true,
         source: {
-          id: Bot.getId().origin
+          id: originId
         }
       };
 
@@ -326,23 +326,23 @@ export const Twibbon = Bot => {
   };
 
   const listen = data => {
-    const { userId } = Bot.getId();
-
     if (data.twibbon) {
       const { id, type } = data.twibbon;
 
       // ready-up switch
-      shared_props[user]["twibbon"] = {
+      shared_props[userId]["twibbon"] = {
         id: id,
         type: type,
         status: true,
         source: {
-          id: Bot.getId().origin
+          id: originId
         }
       };
 
-      Bot.getProfile().then(res => {
-        const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
+      Bot.getProfile().then(profile => {
+        const messages = [
+          `Hai ${profile.displayName}, masukan gambar mu disini~`
+        ];
         if (type === "manual") {
           messages.push(
             `Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`
@@ -353,56 +353,7 @@ export const Twibbon = Bot => {
     }
   };
 
-  const displayList = category => {
-    let selected = [];
-    if (category === "all") {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        return twibbon_id;
-      });
-    } else {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        if (twibbon_list[twibbon_id].category === category) {
-          return twibbon_id;
-        }
-      });
-    }
 
-    if (selected.length > 0) {
-      const twibbonColumns = selected.map(id => {
-        const { url, name } = twibbon_list[id];
-        return {
-          thumbnailImageUrl: url,
-          imageBackgroundColor: "#FFFFFF",
-          text: `${name}`,
-          actions: [
-            {
-              type: "postback",
-              label: "Auto-AI Mode",
-              data: `{"twibbon":{"id":"${id}","type":"auto"}}`
-            },
-            {
-              type: "postback",
-              label: "Manual Mode",
-              data: `{"twibbon":{"id":"${id}","type":"manual"}}`
-            }
-          ]
-        };
-      });
-
-      Bot.sendMessage({
-        type: "template",
-        altText: "Twibbon list",
-        template: {
-          type: "carousel",
-          columns: twibbonColumns,
-          imageAspectRatio: "square",
-          imageSize: "cover"
-        }
-      });
-    } else {
-      Bot.replyText(`Tidak ada kategori, lihat di ${command_prefix}twibbon`);
-    }
-  };
 
   const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
     const result = cloudinary.url(
@@ -473,12 +424,10 @@ export const Twibbon = Bot => {
     });
 
     //switch back
-    shared_props[Bot.getId().user].twibbon.status = false;
+    shared_props[userId].twibbon.status = false;
   };
 
   const insert = getContent => {
-    const { userId, originId } = Bot.getId();
-
     if (shared_props[userId].twibbon) {
       const userSwitch = shared_props[userId].twibbon.status;
 
