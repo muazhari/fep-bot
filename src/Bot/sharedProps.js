@@ -1,6 +1,6 @@
 import Firebase from "../Services/Firebase";
 
-class sharedProps {
+class sharedPropsFactory {
   constructor() {
     this.store = {};
   }
@@ -18,6 +18,16 @@ class sharedProps {
       this.store[key] = props[key];
     });
   }
+
+  setById(props, id) {
+    Object.keys(props).map(key => {
+      this.store[id][key] = props[key];
+    });
+  }
 }
 
-export default new sharedProps();
+const sharedProps = new sharedPropsFactory();
+
+export {
+  sharedProps
+};

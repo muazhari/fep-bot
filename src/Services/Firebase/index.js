@@ -31,4 +31,4 @@ class Firebase {
   }
 }
 
-export default new Firebase({firebaseConfig, firebaseDataBaseURL});
+export default new Firebase({firebaseAdminConfig, firebaseDataBaseURL});

@@ -22,6 +22,7 @@ import { handlerBot, sharedProps } from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
+export const shared_props = {};
 // share worker props by groupId
 // export const listener_stack = {
 //   postback: {}
@@ -80,12 +81,12 @@ export class Bot {
 
     Object.keys(sourceIds).map(type => {
       sharedProps.set({
-                [sourceIds[type]]: {
-          ...shared_props[sourceIds[type]],
-          event: props.event
-        };)
+        [sourceIds[type]]: {
+          ...sharedProps.get(sourceIds[type]),
+          event: props.event,
+        }
+            })
     });
-
 
     return sharedProps.get(sourceIds.origin);
   }
@@ -128,16 +129,6 @@ export class Bot {
     //     log_chat['groups'][groupId].push(this.props.event)
     //     return await Store.setStore({ log_chat: log_chat })
     // }
-  }
-
-  setProps(data, id) {
-    console.log(data);
-    if (!id)
-      id = this.getId().origin;
-
-    Object.keys(data).map(key => {
-      this.shared_props[id][key] = data[key];
-    });
   }
 
   getId(source) {
