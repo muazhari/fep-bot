@@ -312,12 +312,15 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      SharedProps.set([userId]: "twibbon" = {
-        status: true,
-        source: {
-          id: originId
-        }
-      };
+      SharedProps.set({
+        [userId]: {
+          "twibbon": {
+            status: true,
+            source: {
+              id: originId
+            }
+          }
+        });
       displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
@@ -404,7 +407,7 @@ export const Twibbon = Bot => {
     const result = cloudinary.url(
       publicId,
       twibbon_list[twibbonSetting.id].transform(filename, size)[
-        twibbonSetting.type
+      twibbonSetting.type
       ]
     );
     return result;

@@ -82,7 +82,6 @@ export class Bot {
     Object.keys(sourceIds).map(type => {
       SharedProps.set({
         [sourceIds[type]]: {
-          ...SharedProps.get(sourceIds[type]),
           event: props.event
         }
       });
