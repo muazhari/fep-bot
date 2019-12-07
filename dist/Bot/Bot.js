@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Bot = exports.shared_props = undefined;
+exports.Bot = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -49,7 +49,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const shared_props = exports.shared_props = {};
+// export const shared_props = {};
 // share worker props by groupId
 // export const listener_stack = {
 //   postback: {}
@@ -107,14 +107,14 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      _Bot.sharedProps.set({
-        [sourceIds[type]]: _extends({}, _Bot.sharedProps.get(sourceIds[type]), {
+      _Bot.SharedProps.set({
+        [sourceIds[type]]: _extends({}, _Bot.SharedProps.get(sourceIds[type]), {
           event: props.event
         })
       });
     });
 
-    return _Bot.sharedProps.get(sourceIds.origin);
+    return _Bot.SharedProps.get(sourceIds.origin);
   }
 
   getProfile() {

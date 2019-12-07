@@ -18,11 +18,11 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import {handlerBot, sharedProps} from "../Bot";
+import {handlerBot, SharedProps} from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
-export const shared_props = {};
+// export const shared_props = {};
 // share worker props by groupId
 // export const listener_stack = {
 //   postback: {}
@@ -80,15 +80,15 @@ export class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      sharedProps.set({
+      SharedProps.set({
         [sourceIds[type]]: {
-          ...sharedProps.get(sourceIds[type]),
+          ...SharedProps.get(sourceIds[type]),
           event: props.event
         }
       });
     });
 
-    return sharedProps.get(sourceIds.origin);
+    return SharedProps.get(sourceIds.origin);
   }
 
   getProfile() {

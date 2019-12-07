@@ -1,4 +1,4 @@
-import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
+import { command_prefix, batch_list, baseURL, SharedProps } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import CloudinaryUtils from "../../Bot/Helper/CloudinaryUtils";
 import cloudinary from "cloudinary";
@@ -312,7 +312,7 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      shared_props[userId]["twibbon"] = {
+      SharedProps.set([userId]: "twibbon" = {
         status: true,
         source: {
           id: originId

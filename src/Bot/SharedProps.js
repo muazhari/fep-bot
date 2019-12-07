@@ -17,16 +17,23 @@ class SharedPropsFactory {
     Firebase.rdb.ref("SharedProps").set(this.store);
   }
 
-  set(props) {
-    Object.keys(props).forEach(key => {
-      this.store[key] = props[key];
-    });
-  }
-
-  setById(props, id) {
-    Object.keys(props).map(key => {
-      this.store[id][key] = props[key];
-    });
+  set(props, id) {
+    if (id) {
+      Object.keys(props).map(key => {
+        this.store[id][key] = {
+          ...this.store[id][key],
+          ...props[key]
+        };
+      });
+    } else {
+      Object.keys(props).forEach(key => {
+        this.store[key] = {
+          ...this.store[key],
+          ...props[key]
+        };
+      });
+    }
+    this.updateStore();
   }
 }
 

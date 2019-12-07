@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
-import {shared_props} from "./internal";
+import {SharedProps} from "../Bot";
 import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils";
 
 // base URL for webhook server
