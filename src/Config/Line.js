@@ -1,6 +1,6 @@
 const config = {
-  channelAccessToken: process.env.channelAccessToken,
+  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.channelSecret
 };
 
-export default config;
+export default config

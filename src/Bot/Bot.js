@@ -16,7 +16,7 @@ import mkdirp from "mkdirp";
 import path from "path";
 import uuid from "uuid";
 
-import config from "../Config/Line";
+import {config} from "../Config/Line";
 
 import {handlerBot} from "../Bot";
 

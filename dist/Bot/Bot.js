@@ -37,8 +37,6 @@ var _uuid2 = _interopRequireDefault(_uuid);
 
 var _Line = require("../Config/Line");
 
-var _Line2 = _interopRequireDefault(_Line);
-
 var _Bot = require("../Bot");
 
 var _Firebase = require("../Services/Firebase");
@@ -79,7 +77,7 @@ class Bot {
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(_Line2.default);
+    this.client = new line.Client(_Line.config);
 
     // Features creator
     this.Features = {
