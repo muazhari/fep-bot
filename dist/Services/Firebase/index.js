@@ -17,6 +17,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class Firebase {
   constructor(config) {
     this.app = _firebase2.default.initializeApp(config);
+    this.db = this.app.firestore();
+    this.initSetting();
+  }
+
+  initSetting() {
+    this.fireStoreSetting();
+  }
+
+  fireStoreSetting() {
+    this.db.settings({ timestampsInSnapshots: true });
   }
 }
 
