@@ -39,7 +39,11 @@ var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
 
-var _internal = require("./internal");
+var _Bot = require("../Bot");
+
+var _Firebase = require("../Services/Firebase");
+
+var _Firebase2 = _interopRequireDefault(_Firebase);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -93,7 +97,7 @@ class Bot {
     this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
     // Events listen assist
-    this.handler = new _internal.handlerBot(this);
+    this.handler = new _Bot.handlerBot(this);
     this.log();
     console.log("Bot instanced");
   }
@@ -119,14 +123,17 @@ class Bot {
 
   log() {
     new Promise(async (resolve, reject) => {
-      const val = { [this.props.event.timestamp]: this.props };
+      const val = {
+        [this.props.event.timestamp]: this.props
+      };
       // let data = await Store.getStore("propsLogs");
       // if (data === undefined) {
       //   data = [val];
       // } else {
       //   data.push(val);
       // }
-      await _Store2.default.setStore(val);
+      // await Store.setStore(val);
+      _Firebase2.default.db.collection("Props").add(this.props);
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 

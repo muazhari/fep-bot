@@ -8,7 +8,7 @@ var _firebase = require("firebase");
 
 var _firebase2 = _interopRequireDefault(_firebase);
 
-var _Firebase = require("./Config/Firebase");
+var _Firebase = require("../../Config/Firebase");
 
 var _Firebase2 = _interopRequireDefault(_Firebase);
 

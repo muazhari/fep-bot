@@ -10,7 +10,7 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import { dialogFlow } from "./DialogFlow";
+import {dialogFlow} from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -18,7 +18,9 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import { handlerBot } from "./internal";
+import {handlerBot} from "../Bot";
+
+import Firebase from "../Services/Firebase";
 
 // share worker props by groupId
 export const shared_props = {};
@@ -89,23 +91,23 @@ export class Bot {
 
   getProfile() {
     return new Promise((resolve, reject) => {
-      this.client
-        .getProfile(this.getId().user)
-        .then(resolve)
-        .catch(reject);
+      this.client.getProfile(this.getId().user).then(resolve).catch(reject);
     });
   }
 
   log() {
     new Promise(async (resolve, reject) => {
-      const val = { [this.props.event.timestamp]: this.props };
+      const val = {
+        [this.props.event.timestamp]: this.props
+      };
       // let data = await Store.getStore("propsLogs");
       // if (data === undefined) {
       //   data = [val];
       // } else {
       //   data.push(val);
       // }
-      await Store.setStore(val);
+      // await Store.setStore(val);
+      Firebase.db.collection("Props").add(this.props);
       console.log("[LOG] Props logged", this.props.event.timestamp);
     });
 
@@ -129,15 +131,17 @@ export class Bot {
 
   setProps(data, id) {
     console.log(data);
-    if (!id) id = this.getId().origin;
-
+    if (!id) 
+      id = this.getId().origin;
+    
     Object.keys(data).map(key => {
       this.shared_props[id][key] = data[key];
     });
   }
 
   getId(source) {
-    if (!source) source = this.props.event.source;
+    if (!source) 
+      source = this.props.event.source;
     const type = {};
 
     if (source.groupId) {
@@ -162,37 +166,33 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) return type;
-  }
-
+    if (type) 
+      return type;
+    }
+  
   replyText(texts) {
-    texts = Array.isArray(texts) ? texts : [texts];
-    return this.client.replyMessage(
-      this.props.event.replyToken,
-      texts.map(text => ({ type: "text", text }))
-    );
+    texts = Array.isArray(texts)
+      ? texts
+      : [texts];
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({type: "text", text})));
   }
 
   sendMessage(message) {
-    message = Array.isArray(message) ? message : [message];
-    return this.client.replyMessage(
-      this.props.event.replyToken,
-      message.map(msg => {
-        console.log("Message length", msg.length);
-        return msg;
-      })
-    );
+    message = Array.isArray(message)
+      ? message
+      : [message];
+    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
+      console.log("Message length", msg.length);
+      return msg;
+    }));
   }
 
   downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(
-      stream =>
-        new Promise((resolve, reject) => {
-          const writeable = fs.createWriteStream(downloadPath);
-          stream.pipe(writeable);
-          stream.on("end", () => resolve(downloadPath));
-          stream.on("error", reject);
-        })
-    );
+    return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
+      const writeable = fs.createWriteStream(downloadPath);
+      stream.pipe(writeable);
+      stream.on("end", () => resolve(downloadPath));
+      stream.on("error", reject);
+    }));
   }
 }

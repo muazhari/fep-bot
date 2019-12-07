@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import firebaseConfig from "./Config/Firebase";
+import firebaseConfig from "../Config/Firebase";
 
 class Firebase {
   constructor(config) {
