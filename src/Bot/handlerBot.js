@@ -192,35 +192,30 @@ export class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
-    const downloadPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/images",
-      `${message.id}.jpg`
-    );
-    const previewPath = path.join(
-      __dirname,
-      "../../src/Bot/Assets/downloaded/images",
-      `${message.id}-preview.jpg`
-    );
+    const imageData = {
+      originalPath: path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/images",
+        `${message.id}.jpg`
+      ),
+      previewPath: path.join(
+        __dirname,
+        "../../src/Bot/Assets/downloaded/images",
+        `${message.id}-preview.jpg`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
+      previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
+    };
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
-        return this.Bot.downloadContent(message.id, downloadPath)
-          .then(downloadPath => {
-            console.log("premature_resolve", downloadPath);
+        return this.Bot.downloadContent(message.id)
+          .then(() => {
+            console.log("handleImageDownloaded", imageData.originalPath);
             cp.execSync(
-              `convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`
+              `convert -resize 240x jpg:${imageData.originalPath} jpg:${imageData.previewPath}`
             );
-            return {
-              originalPath: downloadPath,
-              previewPath: previewPath,
-              originalContentUrl: `${baseURL}/downloaded/images/${path.basename(
-                downloadPath
-              )}`,
-              previewImageUrl: `${baseURL}/downloaded/images/${path.basename(
-                previewPath
-              )}`
-            };
+            return imageData;
           })
           .catch(err => {
             throw err;
@@ -232,10 +227,12 @@ export class handlerBot {
       };
     }
 
-    this.Bot.downloadContent(message.id, downloadPath).then((downloadPath) => {
-      const url = `${baseURL}/downloaded/images/${path.basename(downloadPath)}`;
+    this.Bot.downloadContent(message.id, imageData.originalPath).then(() => {
+      const url = `${baseURL}/downloaded/images/${path.basename(
+        imageData.originalPath
+      )}`;
       CloudinaryUtils.upload(url, message.id).then(fileMeta => {
-        fs.unlinkSync(downloadPath);
+        fs.unlinkSync(imageData.originalPath);
       });
     });
 

@@ -209,20 +209,19 @@ class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
-    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+    const imageData = {
+      originalPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
+      previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
+    };
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
-        return this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-          console.log("premature_resolve", downloadPath);
-          _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-          return {
-            originalPath: downloadPath,
-            previewPath: previewPath,
-            originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
-            previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
-          };
+        return this.Bot.downloadContent(message.id).then(() => {
+          console.log("handleImageDownloaded", imageData.originalPath);
+          _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalPath} jpg:${imageData.previewPath}`);
+          return imageData;
         }).catch(err => {
           throw err;
         });
@@ -233,10 +232,10 @@ class handlerBot {
       };
     }
 
-    this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-      const url = `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`;
+    this.Bot.downloadContent(message.id, imageData.originalPath).then(() => {
+      const url = `${baseURL}/downloaded/images/${_path2.default.basename(imageData.originalPath)}`;
       _CloudinaryUtils2.default.upload(url, message.id).then(fileMeta => {
-        _fsExtra2.default.unlinkSync(downloadPath);
+        _fsExtra2.default.unlinkSync(imageData.originalPath);
       });
     });
 
