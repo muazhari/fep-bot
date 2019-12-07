@@ -8,20 +8,24 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
+
 const firebaseAdminConfig = {
   type: process.env.FIREBASE_ADMIN_TYPE,
-  project_id: "fepi-bot",
-  private_key_id: "8f84de2d507315bf868724344d22f055036176e6",
-  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDGXddE/nvVWw1h\nSL/484IZPdZErcOv01A4jskqmJsGr20zqp8kR7oMlT9kmk15h0O4d9BIBmVrkxiO\ngvcTXjEce8rsehagaLUc1W1w/5c8rfLXvCMbGDWv8HiZxLbQNXTYphIpKCgwpawJ\nwOBZJiRyOMZQ4p680Duip1HMnWU1hwq0vED8pLX5b7sDRE7Nivo1eC3t/T3uoY7B\n0Ep9pZ/d90A7Dxka6ZAQEsP6JnRnGFQ4nTKSZkEheNrsHqUK4AoJ2f1VIbQR0FsH\nSeqD8Ua+MZ9t0s570va/RRb2Ey7xGRA9ucQxJt/9A8cV/n+/8TIJHg/tGHFgCx2t\nTzFvaV7pAgMBAAECggEAYlisHby90G2wGIdlBhxUaAdMcAhmeImfwCqqeb/nPE1F\nKtRwyh/1kb99Cnel6ZaycIaWcN8a8VagWid8L9IHL0QAu3VcOnMvN/hophlR9feX\n6nWQQiKim3Pxlur8aAXYxICxiE4sftHklYFWuVw7vZWAXSG96YajymSCHZv7Tamh\nSFsjXS43jaxaQsmHRqkrfF3YB+ZI60vFE2uv7MuqQ4LIwLDwkVHSqwTDDnq28vFg\nQogNufVOKwewVJZMkG144DucglTzUFBzVjv5BE1W6jc8lMsxxgOxyqru1VBgA6Dq\ns5pn2hnk8HmBtK7MIf+uT53huc0KhRcRgP+t3IW+sQKBgQD7rV24cxrckr5OUUWf\n7Bx1RllqkpDag9zmMVRCZA1s+ru1CY6d+Ju+nQGH0egLNH5BiCiicRW15GuxorWK\nxp0Zt1gZpytOuNzX8D1m1T03CUIK8n7wcAauCoLXHzK5H4ni/xUtw51DOpPkeSc8\nmw+bFr4S5ZnzeVLPBZLzti97swKBgQDJxhDhqRKu+3Jc2YxkUESeSrmgfL+dPEcI\n8eycJ9/PLeJqfAXIC6Ai+SuIttZV7bzvdKsFCV7Z1druQZLyMGQFC8hqREeZJh5g\nNnmohZax86qKBLSJWsOeaNUVcvqjnEp0Zwl5DS5Z5YanWKtCojAnu/pPGRbl4qxn\nzdQDQsM88wKBgQCTnF0Jn8kzcYXYnWY+o9cVGYu8K/Z1kz1ubaRDxDbzoiORzOcu\n0+9U3vVU2dJFMCaU/O0ISVc4dZ6McygTGuZtfNFZSmjmJRqyNB9vPsZGj1GC5jN5\nhdsFHPkcfxna5hqTXpTnYIHOOn8fU8eljjSa+73Di5K98HyXG2fTNRmobQKBgG7K\nK6DMpi6gcFYdOeIm1NaZrz044jmizFpUBBhmKJTo2+aePMpv37j0WfwScLPz+wb8\nZ583WvZ/X1vtc5M6EOFYa+41mZ60+H7ZyolG+MyzP5PTK5Iz3S+Q3leNr6PAgH1T\nyjbGjwnbZslifX7z8T8QD0v5OcJ2aTYCJYS41t0TAoGBANc1zPugHrSgO1RFAUKg\nPda8le9b66AF3SBay5fkL3jxpCdF07QNohTPzomApwfzPIx8ULtBbeGQ2ji2iGYD\nuFi4ecdj6wIOhEGeOYN2TN/rtB5R4RSvlOCcTX8lcCf0tnUlENJNhYcgdiBoNfZ9\nt1JH94yFgytGBLzLzh0GqamD\n-----END PRIVATE KEY-----\n",
-  client_email: "firebase-adminsdk-2ke0r@fepi-bot.iam.gserviceaccount.com",
-  client_id: "102277474314631589291",
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  token_uri: "https://oauth2.googleapis.com/token",
-  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-2ke0r%40fepi-bot.iam.gserviceaccount.com"
+  project_id: process.env.FIREBASE_ADMIN_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+  client_email: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_ADMIN_CLIENT_ID,
+  auth_uri: process.env.FIREBASE_ADMIN_AUTH_URI,
+  token_uri: process.env.FIREBASE_ADMIN_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
 };
+
+const firebaseDataBaseURL = process.env.FIREBASE_ADMIN_DATABASE_URL;
 
 export {
   firebaseConfig,
-  firebaseAdminConfig
+  firebaseAdminConfig,
+  firebaseDataBaseURL
 };

@@ -1,9 +1,13 @@
-import firebase from "firebase";
-import {firebaseConfig} from "../../Config/Firebase";
+import admin from "firebase-admin";
+import {firebaseConfig, firebaseAdminConfig, firebaseDataBaseURL} from "../../Config/Firebase";
+import fs from "fs-extra";
 
 class Firebase {
   constructor(config) {
-    this.app = firebase.initializeApp(config);
+    this.app = admin.initializeApp({
+      credential: admin.credential.cert(JSON.stringify(firebaseAdminConfig)),
+      dataBaseURL: firebaseDataBaseURL
+    });
     this.db = this.app.firestore();
     this.initSetting();
   }
