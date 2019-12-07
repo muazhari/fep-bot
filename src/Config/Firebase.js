@@ -22,10 +22,10 @@ const firebaseAdminConfig = {
   client_x509_cert_url: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
 };
 
-const firebaseDataBaseURL = process.env.FIREBASE_ADMIN_DATABASE_URL;
+const firebaseDatabaseURL = process.env.FIREBASE_ADMIN_DATABASE_URL;
 
 export {
   firebaseConfig,
   firebaseAdminConfig,
-  firebaseDataBaseURL
+  firebaseDatabaseURL
 };

@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
-import {firebaseConfig, firebaseAdminConfig, firebaseDataBaseURL} from "../../Config/Firebase";
+import functions from "firebase-functions";
+import {firebaseConfig, firebaseAdminConfig, firebaseDatabaseURL} from "../../Config/Firebase";
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
@@ -17,8 +18,8 @@ class Firebase {
     const serviceAccountKeyFile = "serviceAccountKey.json";
     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
     //     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
-    //     const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
-    //     await fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
+    // const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
+    // fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
     return admin.initializeApp({credential: admin.credential.cert(serviceAccountKeyPath), dataBaseURL: config.firebaseDataBaseURL});
   }
 
@@ -27,7 +28,7 @@ class Firebase {
   }
 
   fireStoreSetting() {
-    this.db.settings({timestampsInSnapshots: true});
+    this.fdb.settings({timestampsInSnapshots: true});
   }
 }
 
