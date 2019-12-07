@@ -193,11 +193,11 @@ export class handlerBot {
     };
 
     const imageLogPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
-    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
-      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
-        fs.unlinkSync(imageLogPath);
+    this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
+      await CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
         console.log("Image Logged", imageLogPath);
       });
+      fs.unlinkSync(imageLogPath);
     });
 
     if (message.contentProvider.type === "line") {
