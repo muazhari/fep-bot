@@ -79,11 +79,7 @@ const handleCommand = (features, command) => {
     pl: PosetLattice.generate
   };
 
-  const {
-    prefix: content_prefix,
-    command: content_command,
-    args: content_args
-  } = destructCommand(command);
+  const { prefix: content_prefix, command: content_command, args: content_args } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -219,9 +215,9 @@ class handlerBot {
 
     const imageLogPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, imageLogPath).then(() => {
-      console.log("Image Logged", imageLogPath);
       _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
         _fsExtra2.default.unlinkSync(imageLogPath);
+        console.log("Image Logged", imageLogPath);
       });
     });
 
@@ -318,13 +314,7 @@ class handlerBot {
 
   handleLocation() {
     const { message, replyToken } = this.Bot.props.event;
-    this.Bot.sendMessage({
-      type: "location",
-      title: message.title,
-      address: message.address,
-      latitude: message.latitude,
-      longitude: message.longitude
-    });
+    this.Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
   }
 
   handleSticker() {
