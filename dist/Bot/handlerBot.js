@@ -209,10 +209,10 @@ class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+    const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
+    const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
 
+    if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
           console.log("premature_resolve", downloadPath);
@@ -233,7 +233,12 @@ class handlerBot {
       };
     }
 
-    _CloudinaryUtils2.default.upload;
+    this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+      const url = `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`;
+      _CloudinaryUtils2.default.upload(url, message.id).then(fileMeta => {
+        _fsExtra2.default.unlinkSync(downloadPath);
+      });
+    });
 
     // Twibbon switch
     const { Twibbon } = this.Bot.Features;

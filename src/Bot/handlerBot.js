@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
 import { shared_props } from "./internal";
-import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils"
+import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils";
 
 // base URL for webhook server
 export const baseURL = process.env.BASE_URL;
@@ -192,18 +192,18 @@ export class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
-    if (message.contentProvider.type === "line") {
-      const downloadPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/images",
-        `${message.id}.jpg`
-      );
-      const previewPath = path.join(
-        __dirname,
-        "../../src/Bot/Assets/downloaded/images",
-        `${message.id}-preview.jpg`
-      );
+    const downloadPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/images",
+      `${message.id}.jpg`
+    );
+    const previewPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/images",
+      `${message.id}-preview.jpg`
+    );
 
+    if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id, downloadPath)
           .then(downloadPath => {
@@ -231,8 +231,13 @@ export class handlerBot {
         return Promise.resolve(message.contentProvider);
       };
     }
-    
-    CloudinaryUtils.upload
+
+    this.Bot.downloadContent(message.id, downloadPath).then((downloadPath) => {
+      const url = `${baseURL}/downloaded/images/${path.basename(downloadPath)}`;
+      CloudinaryUtils.upload(url, message.id).then(fileMeta => {
+        fs.unlinkSync(downloadPath);
+      });
+    });
 
     // Twibbon switch
     const { Twibbon } = this.Bot.Features;
