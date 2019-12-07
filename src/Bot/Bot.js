@@ -10,7 +10,7 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import {dialogFlow} from "./DialogFlow";
+import { dialogFlow } from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -18,12 +18,11 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import {handlerBot} from "../Bot";
+import { handlerBot, sharedProps } from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
 // share worker props by groupId
-export const shared_props = {};
 // export const listener_stack = {
 //   postback: {}
 // };
@@ -80,14 +79,15 @@ export class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      shared_props[sourceIds[type]] = {
-        ...shared_props[sourceIds[type]],
-        event: props.event
-      };
+      sharedProps.set({
+                [sourceIds[type]]: {
+          ...shared_props[sourceIds[type]],
+          event: props.event
+        };)
     });
 
-    // Firebase.rdb.ref("/sharedProps")
-    return shared_props[sourceIds.origin];
+
+    return sharedProps.get(sourceIds.origin);
   }
 
   getProfile() {
@@ -132,16 +132,16 @@ export class Bot {
 
   setProps(data, id) {
     console.log(data);
-    if (!id) 
+    if (!id)
       id = this.getId().origin;
-    
+
     Object.keys(data).map(key => {
       this.shared_props[id][key] = data[key];
     });
   }
 
   getId(source) {
-    if (!source) 
+    if (!source)
       source = this.props.event.source;
     const type = {};
 
@@ -167,15 +167,15 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) 
+    if (type)
       return type;
-    }
-  
+  }
+
   replyText(texts) {
     texts = Array.isArray(texts)
       ? texts
       : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({type: "text", text})));
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
   }
 
   sendMessage(message) {
