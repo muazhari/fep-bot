@@ -159,7 +159,7 @@ class Bot {
     if (!id) id = this.getId().origin;
 
     Object.keys(data).map(key => {
-      this.SharedProps.store[id][key] = data[key];
+      _Bot.SharedProps.store[id][key] = data[key];
     });
   }
 

@@ -2,40 +2,28 @@ import Firebase from "../Services/Firebase";
 
 class SharedPropsFactory {
   constructor() {
-    this.store = new Proxy(this.store, {
-      set: (obj, prop, newval) => {
-        var oldval = obj[prop];
-        console.log("set", oldval, obj, prop, newval);
-        obj[prop] = newval;
-        this.storeUpdateListener();
-      },
-      get: (obj, prop) => {
-        console.log("get", obj, prop);
-      }
-    });
+    this.store = {};
+    // this.store = new Proxy({}, {
+    //   set: this._set,
+    //   get: this._get
+    // });
   }
 
-  get(key) {
-    if (key) {
-      return this.store[key];
-    } else {
-      return this.store;
-    }
+  _set(obj, prop, newVal) {
+    const oldval = obj[prop];
+    console.log("set", oldval, obj, prop, newval);
+    obj[prop] = newVal;
+    this.storeUpdateListener();
+    return true;
+  }
+
+  _get(obj, prop) {
+    console.log("get", obj, prop);
+    return obj[prop];
   }
 
   storeUpdateListener() {
     Firebase.rdb.ref("SharedProps").set(this.store);
-  }
-
-  set(props) {
-    Object.keys(props).forEach(key => {
-      this.store[key] = {
-        ...this.store[key],
-        ...props[key]
-      };
-    });
-
-    this.updateStore();
   }
 }
 
