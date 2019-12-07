@@ -306,7 +306,7 @@ const Twibbon = exports.Twibbon = Bot => {
         }
       };
 
-      display_list(data.category || "all");
+      displayList(data.category || "all");
     } else {
       Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
     }
@@ -338,7 +338,7 @@ const Twibbon = exports.Twibbon = Bot => {
     }
   };
 
-  const display_list = category => {
+  const displayList = category => {
     let selected = [];
     if (category === "all") {
       selected = Object.keys(twibbon_list).map(twibbon_id => {
@@ -352,45 +352,41 @@ const Twibbon = exports.Twibbon = Bot => {
       });
     }
 
-    const pure_selected = selected.filter(item => {
-      return typeof item === "string";
-    });
+    if (selected.length > 0) {
+      const twibbonColumns = selected.map(id => {
+        const { url, name } = twibbon_list[id];
+        return {
+          thumbnailImageUrl: url,
+          imageBackgroundColor: "#FFFFFF",
+          text: `${name}`,
+          actions: [{
+            type: "postback",
+            label: "Auto-AI Mode",
+            data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+          }, {
+            type: "postback",
+            label: "Manual Mode",
+            data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+          }]
+        };
+      });
 
-    if (pure_selected.length === 0) {
+      Bot.sendMessage({
+        type: "template",
+        altText: "Twibbon list",
+        template: {
+          type: "carousel",
+          columns: twibbonColumns,
+          imageAspectRatio: "square",
+          imageSize: "cover"
+        }
+      });
+    } else {
       Bot.replyText(`Tidak ada kategori, lihat di ${_Bot.command_prefix}twibbon`);
     }
-
-    const twibbon_contents = pure_selected.map(id => {
-      const { url, name } = twibbon_list[id];
-      return {
-        thumbnailImageUrl: url,
-        imageBackgroundColor: "#FFFFFF",
-        text: `${name}`,
-        actions: [{
-          type: "postback",
-          label: "Auto-AI Mode",
-          data: `{"twibbon":{"id":"${id}","type":"auto"}}`
-        }, {
-          type: "postback",
-          label: "Manual Mode",
-          data: `{"twibbon":{"id":"${id}","type":"manual"}}`
-        }]
-      };
-    });
-
-    Bot.sendMessage({
-      type: "template",
-      altText: "Twibbon list",
-      template: {
-        type: "carousel",
-        columns: twibbon_contents,
-        imageAspectRatio: "square",
-        imageSize: "cover"
-      }
-    });
   };
 
-  const getResult = (twibbonSetting, publicId, filename, size) => {
+  const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
     const result = _cloudinary2.default.url(publicId, twibbon_list[twibbonSetting.id].transform(filename, size)[twibbonSetting.type]);
     return result;
   };
@@ -403,10 +399,10 @@ const Twibbon = exports.Twibbon = Bot => {
 
       const performTransformations = twibbonBackgroundMeta => {
         const twibbonOriginalName = `${data.filename}-twibbon`;
-        const resultOriginalUrl = getResult(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibbonOriginalName, 1040);
+        const resultOriginalUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibbonOriginalName, 1040);
 
         const twibonPreviewName = `${data.filename}-twibbon-preview`;
-        const resultPreviewUrl = getResult(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
+        const resultPreviewUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
         Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]).then(fileMeta => {
           resolve({

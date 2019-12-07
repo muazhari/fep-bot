@@ -319,14 +319,14 @@ export const Twibbon = Bot => {
         }
       };
 
-      display_list(data.category || "all");
+      displayList(data.category || "all");
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
     }
   };
 
   const listen = data => {
-    const { user } = Bot.getId();
+    const { userId } = Bot.getId();
 
     if (data.twibbon) {
       const { id, type } = data.twibbon;
@@ -353,7 +353,7 @@ export const Twibbon = Bot => {
     }
   };
 
-  const display_list = category => {
+  const displayList = category => {
     let selected = [];
     if (category === "all") {
       selected = Object.keys(twibbon_list).map(twibbon_id => {
@@ -367,48 +367,44 @@ export const Twibbon = Bot => {
       });
     }
 
-    const pure_selected = selected.filter(item => {
-      return typeof item === "string";
-    });
+    if (selected.length > 0) {
+      const twibbonColumns = selected.map(id => {
+        const { url, name } = twibbon_list[id];
+        return {
+          thumbnailImageUrl: url,
+          imageBackgroundColor: "#FFFFFF",
+          text: `${name}`,
+          actions: [
+            {
+              type: "postback",
+              label: "Auto-AI Mode",
+              data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+            },
+            {
+              type: "postback",
+              label: "Manual Mode",
+              data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+            }
+          ]
+        };
+      });
 
-    if (pure_selected.length === 0) {
+      Bot.sendMessage({
+        type: "template",
+        altText: "Twibbon list",
+        template: {
+          type: "carousel",
+          columns: twibbonColumns,
+          imageAspectRatio: "square",
+          imageSize: "cover"
+        }
+      });
+    } else {
       Bot.replyText(`Tidak ada kategori, lihat di ${command_prefix}twibbon`);
     }
-
-    const twibbon_contents = pure_selected.map(id => {
-      const { url, name } = twibbon_list[id];
-      return {
-        thumbnailImageUrl: url,
-        imageBackgroundColor: "#FFFFFF",
-        text: `${name}`,
-        actions: [
-          {
-            type: "postback",
-            label: "Auto-AI Mode",
-            data: `{"twibbon":{"id":"${id}","type":"auto"}}`
-          },
-          {
-            type: "postback",
-            label: "Manual Mode",
-            data: `{"twibbon":{"id":"${id}","type":"manual"}}`
-          }
-        ]
-      };
-    });
-
-    Bot.sendMessage({
-      type: "template",
-      altText: "Twibbon list",
-      template: {
-        type: "carousel",
-        columns: twibbon_contents,
-        imageAspectRatio: "square",
-        imageSize: "cover"
-      }
-    });
   };
 
-  const getResult = (twibbonSetting, publicId, filename, size) => {
+  const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
     const result = cloudinary.url(
       publicId,
       twibbon_list[twibbonSetting.id].transform(filename, size)[
@@ -420,13 +416,15 @@ export const Twibbon = Bot => {
 
   const generate = data => {
     return new Promise((resolve, reject) => {
-      CloudinaryUtils.upload(data.url, data.filename).then(twibbonBackgroundMeta => {
-        performTransformations(twibbonBackgroundMeta);
-      });
+      CloudinaryUtils.upload(data.url, data.filename).then(
+        twibbonBackgroundMeta => {
+          performTransformations(twibbonBackgroundMeta);
+        }
+      );
 
       const performTransformations = twibbonBackgroundMeta => {
         const twibbonOriginalName = `${data.filename}-twibbon`;
-        const resultOriginalUrl = getResult(
+        const resultOriginalUrl = getTransformedFileUrl(
           data.twibbonSetting,
           twibbonBackgroundMeta.public_id,
           twibbonOriginalName,
@@ -434,7 +432,7 @@ export const Twibbon = Bot => {
         );
 
         const twibonPreviewName = `${data.filename}-twibbon-preview`;
-        const resultPreviewUrl = getResult(
+        const resultPreviewUrl = getTransformedFileUrl(
           data.twibbonSetting,
           twibbonBackgroundMeta.public_id,
           twibonPreviewName,
