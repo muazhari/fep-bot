@@ -9,6 +9,7 @@ import * as line from "@line/bot-sdk";
 
 import line_config from "./Config/Line";
 import cloudinary_config from "./Config/Cloudinary";
+import firebaseConfig from './Config/Firebase'
 
 cloudinary.config(cloudinary_config);
 
