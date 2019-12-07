@@ -3,6 +3,9 @@ import Firebase from "../Services/Firebase";
 class SharedPropsFactory {
   constructor() {
     this.store = {};
+    this.watch("store", (id, prev, next) => {
+      this.storeUpdateListener();
+    });
   }
 
   get(key) {
@@ -13,7 +16,7 @@ class SharedPropsFactory {
     }
   }
 
-  updateStore() {
+  storeUpdateListener() {
     Firebase.rdb.ref("SharedProps").set(this.store);
   }
 

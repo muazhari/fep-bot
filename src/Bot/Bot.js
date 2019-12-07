@@ -22,7 +22,6 @@ import {handlerBot, SharedProps} from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
-// export const shared_props = {};
 // share worker props by groupId
 // export const listener_stack = {
 //   postback: {}
@@ -46,7 +45,7 @@ import Firebase from "../Services/Firebase";
 
 export class Bot {
   constructor(props) {
-    // console.log(shared_props)
+    // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
     // console.log(this.props)
@@ -80,14 +79,13 @@ export class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      SharedProps.set({
-        [sourceIds[type]]: {
-          event: props.event
-        }
-      });
+      SharedProps.store[sourceIds[type]] = {
+        ...SharedProps.store[sourceIds[type]],
+        event: props.event
+      };
     });
 
-    return SharedProps.get(sourceIds.origin);
+    return SharedProps.store[sourceIds.origin];
   }
 
   getProfile() {
@@ -128,6 +126,16 @@ export class Bot {
     //     log_chat['groups'][groupId].push(this.props.event)
     //     return await Store.setStore({ log_chat: log_chat })
     // }
+  }
+
+  setProps(data, id) {
+    console.log(data);
+    if (!id) 
+      id = this.getId().origin;
+    
+    Object.keys(data).map(key => {
+      this.SharedProps.store[id][key] = data[key];
+    });
   }
 
   getId(source) {

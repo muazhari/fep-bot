@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Bot = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Store = require("../Services/Store");
 
 var _Store2 = _interopRequireDefault(_Store);
@@ -47,7 +49,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// export const shared_props = {};
 // share worker props by groupId
 // export const listener_stack = {
 //   postback: {}
@@ -71,7 +72,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class Bot {
   constructor(props) {
-    // console.log(shared_props)
+    // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
     // console.log(this.props)
@@ -105,14 +106,12 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      _Bot.SharedProps.set({
-        [sourceIds[type]]: {
-          event: props.event
-        }
+      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
+        event: props.event
       });
     });
 
-    return _Bot.SharedProps.get(sourceIds.origin);
+    return _Bot.SharedProps.store[sourceIds.origin];
   }
 
   getProfile() {
@@ -153,6 +152,15 @@ class Bot {
     //     log_chat['groups'][groupId].push(this.props.event)
     //     return await Store.setStore({ log_chat: log_chat })
     // }
+  }
+
+  setProps(data, id) {
+    console.log(data);
+    if (!id) id = this.getId().origin;
+
+    Object.keys(data).map(key => {
+      this.SharedProps.store[id][key] = data[key];
+    });
   }
 
   getId(source) {
