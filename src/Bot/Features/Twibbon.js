@@ -473,39 +473,37 @@ export const Twibbon = Bot => {
   };
 
   const listenImage = getContent => {
-    return newPromise((resolve, reject) => {
-      if (shared_props[userId].twibbon) {
-        const userSwitch = shared_props[userId].twibbon.status;
+    if (shared_props[userId].twibbon) {
+      const userSwitch = shared_props[userId].twibbon.status;
 
-        const userInSameCommunal =
-          shared_props[userId].twibbon.source.id === originId;
+      const userInSameCommunal =
+        shared_props[userId].twibbon.source.id === originId;
 
-        const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
+      const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
 
-        if (userSwitch && userInSameCommunal && twibbonIdChosen) {
-          const twibbonSetting = {
-            id: shared_props[userId].twibbon.id,
-            type: shared_props[userId].twibbon.type
-          };
+      if (userSwitch && userInSameCommunal && twibbonIdChosen) {
+        const twibbonSetting = {
+          id: shared_props[userId].twibbon.id,
+          type: shared_props[userId].twibbon.type
+        };
 
-          getContent().then(
-            ({
+        getContent().then(
+          ({
+            originalPath,
+            previewPath,
+            originalContentUrl,
+            previewImageUrl
+          }) => {
+            make([
+              originalContentUrl,
               originalPath,
               previewPath,
-              originalContentUrl,
-              previewImageUrl
-            }) => {
-              make([
-                originalContentUrl,
-                originalPath,
-                previewPath,
-                twibbonSetting
-              ]);
-            }
-          );
-        }
+              twibbonSetting
+            ]);
+          }
+        );
       }
-    });
+    }
   };
 
   return { ready, listenImage, listenPostBack };
