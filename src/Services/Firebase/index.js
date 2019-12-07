@@ -11,11 +11,12 @@ class Firebase {
     this.initSetting();
   }
 
-  initApp(config) {
-    const serviceAccountKeyFile = "serviceAccountKey.json";
-    const serviceAccountKeyPath = path.join(__dirname, "../../../../src/Bot/Config", `${serviceAccountKeyFile}`);
-    const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
-    fs.writeFile(serviceAccountKeyFile, serviceAccountKeyData, "utf8");
+//   async initApp(config) {
+//     const serviceAccountKeyFile = "serviceAccountKey.json";
+//     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
+//     const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
+//     await fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
+    const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
     return admin.initializeApp({credential: admin.credential.cert(serviceAccountKeyPath), dataBaseURL: config.firebaseDataBaseURL});
   }
 
