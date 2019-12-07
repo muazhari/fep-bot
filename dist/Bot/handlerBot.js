@@ -175,7 +175,7 @@ class handlerBot {
         const objectData = JSON.parse(data);
 
         const { Twibbon } = this.Bot.Features;
-        Twibbon.listen(objectData);
+        Twibbon.listenPostback(objectData);
 
         break;
 
@@ -231,7 +231,7 @@ class handlerBot {
 
     // Twibbon switch
     const { Twibbon } = this.Bot.Features;
-    Twibbon.insert(getContent);
+    Twibbon.listenImage(getContent);
   }
 
   handleVideo() {
