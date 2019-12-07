@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Twibbon = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _Bot = require("../../Bot");
 
 var _FEPStoreCRUD = require("../../Bot/Helper/FEPStoreCRUD");
@@ -392,46 +390,33 @@ const Twibbon = exports.Twibbon = Bot => {
     });
   };
 
-  const getResult = (twibbon_setting, public_id, filename, size) => {
-    const result = _cloudinary2.default.url(public_id, twibbon_list[twibbon_setting.id].transform(filename, size)[twibbon_setting.type]);
+  const getResult = (twibbonSetting, publicId, filename, size) => {
+    const result = _cloudinary2.default.url(publicId, twibbon_list[twibbonSetting.id].transform(filename, size)[twibbonSetting.type]);
     return result;
-  };
-
-  const waitForAllUploads = (type, queue, imageObject, callback) => {
-    uploads[type] = _extends({}, uploads[type], imageObject);
-    const ids = Object.keys(uploads[type]);
-    if (ids.length === queue) {
-      console.log("**  uploaded all raw files (" + ids.join(",") + ") to cloudinary");
-      callback();
-    }
   };
 
   const generate = data => {
     return new Promise((resolve, reject) => {
-      _CloudinaryUtils2.default.upload(data.url, data.filename).then(image => {
-        waitForAllUploads("raw", 1, {
-          twibbon_bg: image
-        }, performTransformations);
+      _CloudinaryUtils2.default.upload(data.url, data.filename).then(twibbonBackgroundMeta => {
+        performTransformations(twibbonBackgroundMeta);
       });
 
-      const performTransformations = () => {
+      const performTransformations = twibbonBackgroundMeta => {
         const twibbonOriginalName = `${data.filename}-twibbon`;
-        const resultOriginalUrl = getResult(data.twibbonSetting, uploads.raw.twibbon_bg.public_id, twibbonOriginalName, 1040);
+        const resultOriginalUrl = getResult(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibbonOriginalName, 1040);
 
         const twibonPreviewName = `${data.filename}-twibbon-preview`;
-        const resultPreviewUrl = getResult(data.twibbonSetting, uploads.raw.twibbon_bg.public_id, twibonPreviewName, 240);
+        const resultPreviewUrl = getResult(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
-        const twibbonTransforms = Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]);
-
-        const performResolve = () => {
+        Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]).then(fileMeta => {
           resolve({
-            twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`,
-            twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}`
+            twibbonOriginalUrl: `${fileMeta[0].secure_url}`,
+            twibbonPreviewUrl: `${fileMeta[1].secure_url}`
           });
 
           _fsExtra2.default.unlinkSync(data.originalPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
-        };
+        });
       };
     });
   };

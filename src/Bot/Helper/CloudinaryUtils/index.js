@@ -8,6 +8,8 @@ import request from "request";
 import cp from "child_process";
 import path from "path";
 
+const uploadQueue = {};
+
 const upload = (url, filename) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
@@ -27,6 +29,20 @@ const upload = (url, filename) => {
       });
   });
 };
+
+const waitForAllUploads = (type, limit, fileMeta, callback) => {
+  uploadQueue[type] = {
+    ...uploadQueue[type],
+    ...fileMeta
+  };
+  const ids = Object.keys(uploadQueue[type]);
+  if (ids.length === limit) {
+    console.log("**  uploaded all files (" + ids.join(",") + ") to cloudinary");
+    callback();
+  }
+};
+
 export default {
-  upload
+  upload,
+  waitForAllUploads
 };

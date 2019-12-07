@@ -408,48 +408,27 @@ export const Twibbon = Bot => {
     });
   };
 
-  const getResult = (twibbon_setting, public_id, filename, size) => {
+  const getResult = (twibbonSetting, publicId, filename, size) => {
     const result = cloudinary.url(
-      public_id,
-      twibbon_list[twibbon_setting.id].transform(filename, size)[
-        twibbon_setting.type
+      publicId,
+      twibbon_list[twibbonSetting.id].transform(filename, size)[
+        twibbonSetting.type
       ]
     );
     return result;
   };
 
-  const waitForAllUploads = (type, queue, imageObject, callback) => {
-    uploads[type] = {
-      ...uploads[type],
-      ...imageObject
-    };
-    const ids = Object.keys(uploads[type]);
-    if (ids.length === queue) {
-      console.log(
-        "**  uploaded all raw files (" + ids.join(",") + ") to cloudinary"
-      );
-      callback();
-    }
-  };
-
   const generate = data => {
     return new Promise((resolve, reject) => {
-      CloudinaryUtils.upload(data.url, data.filename).then(image => {
-        waitForAllUploads(
-          "raw",
-          1,
-          {
-            twibbon_bg: image
-          },
-          performTransformations
-        );
+      CloudinaryUtils.upload(data.url, data.filename).then(twibbonBackgroundMeta => {
+        performTransformations(twibbonBackgroundMeta);
       });
 
-      const performTransformations = () => {
+      const performTransformations = twibbonBackgroundMeta => {
         const twibbonOriginalName = `${data.filename}-twibbon`;
         const resultOriginalUrl = getResult(
           data.twibbonSetting,
-          uploads.raw.twibbon_bg.public_id,
+          twibbonBackgroundMeta.public_id,
           twibbonOriginalName,
           1040
         );
@@ -457,25 +436,23 @@ export const Twibbon = Bot => {
         const twibonPreviewName = `${data.filename}-twibbon-preview`;
         const resultPreviewUrl = getResult(
           data.twibbonSetting,
-          uploads.raw.twibbon_bg.public_id,
+          twibbonBackgroundMeta.public_id,
           twibonPreviewName,
           240
         );
 
-        const twibbonTransforms = Promise.all([
+        Promise.all([
           CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
           CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
-        ]);
-
-        const performResolve = () => {
+        ]).then(fileMeta => {
           resolve({
-            twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`,
-            twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}`
+            twibbonOriginalUrl: `${fileMeta[0].secure_url}`,
+            twibbonPreviewUrl: `${fileMeta[1].secure_url}`
           });
 
           fs.unlinkSync(data.originalPath);
           fs.unlinkSync(data.previewPath);
-        };
+        });
       };
     });
   };

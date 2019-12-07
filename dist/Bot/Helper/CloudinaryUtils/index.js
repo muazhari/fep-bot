@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Bot = require("../../../Bot");
 
 var _nodePersist = require("node-persist");
@@ -40,6 +42,8 @@ var _path2 = _interopRequireDefault(_path);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+const uploadQueue = {};
+
 const upload = (url, filename) => {
   return new Promise((resolve, reject) => {
     _cloudinary2.default.uploader.upload(url, { public_id: filename }).then(file => {
@@ -56,7 +60,18 @@ const upload = (url, filename) => {
     });
   });
 };
+
+const waitForAllUploads = (type, limit, fileMeta, callback) => {
+  uploadQueue[type] = _extends({}, uploadQueue[type], fileMeta);
+  const ids = Object.keys(uploadQueue[type]);
+  if (ids.length === limit) {
+    console.log("**  uploaded all files (" + ids.join(",") + ") to cloudinary");
+    callback();
+  }
+};
+
 exports.default = {
-  upload
+  upload,
+  waitForAllUploads
 };
 //# sourceMappingURL=index.js.map
