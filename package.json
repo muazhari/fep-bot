@@ -43,7 +43,7 @@
     "cloudinary": "^1.17.0",
     "dialogflow": "^0.14.1",
     "express": "^4.17.1",
-    "firebase": "^7.5.2",
+    "firebase-admin": "^8.8.0",
     "fs-extra": "^8.1.0",
     "googleapis": "^45.0.0",
     "morgan": "^1.9.1",
