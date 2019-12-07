@@ -340,8 +340,6 @@ export const Twibbon = Bot => {
       }
     }
 
-    console.log(selected);
-
     const twibbonColumns = selected.map(id => {
       const { url, name } = twibbon_list[id];
       return {
@@ -374,7 +372,7 @@ export const Twibbon = Bot => {
       }
     });
   };
-  const listen = data => {
+  const listenPostBack = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;
 
@@ -474,39 +472,41 @@ export const Twibbon = Bot => {
     shared_props[userId].twibbon.status = false;
   };
 
-  const insert = getContent => {
-    if (shared_props[userId].twibbon) {
-      const userSwitch = shared_props[userId].twibbon.status;
+  const listenImage = getContent => {
+    return newPromise((resolve, reject) => {
+      if (shared_props[userId].twibbon) {
+        const userSwitch = shared_props[userId].twibbon.status;
 
-      const userInSameCommunal =
-        shared_props[userId].twibbon.source.id === originId;
+        const userInSameCommunal =
+          shared_props[userId].twibbon.source.id === originId;
 
-      const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
+        const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
 
-      if (userSwitch && userInSameCommunal && twibbonIdChosen) {
-        const twibbonSetting = {
-          id: shared_props[userId].twibbon.id,
-          type: shared_props[userId].twibbon.type
-        };
+        if (userSwitch && userInSameCommunal && twibbonIdChosen) {
+          const twibbonSetting = {
+            id: shared_props[userId].twibbon.id,
+            type: shared_props[userId].twibbon.type
+          };
 
-        getContent().then(
-          ({
-            originalPath,
-            previewPath,
-            originalContentUrl,
-            previewImageUrl
-          }) => {
-            make([
-              originalContentUrl,
+          getContent().then(
+            ({
               originalPath,
               previewPath,
-              twibbonSetting
-            ]);
-          }
-        );
+              originalContentUrl,
+              previewImageUrl
+            }) => {
+              make([
+                originalContentUrl,
+                originalPath,
+                previewPath,
+                twibbonSetting
+              ]);
+            }
+          );
+        }
       }
-    }
+    });
   };
 
-  return { ready, insert, listen };
+  return { ready, listenImage, listenPostBack };
 };
