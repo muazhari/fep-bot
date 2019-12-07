@@ -2,9 +2,16 @@ import Firebase from "../Services/Firebase";
 
 class SharedPropsFactory {
   constructor() {
-    this.store = {};
-    this.watch("store", (id, prev, next) => {
-      this.storeUpdateListener();
+    this.store = new Proxy(this.store, {
+      set: (obj, prop, newval) => {
+        var oldval = obj[prop];
+        console.log("set", oldval, obj, prop, newval);
+        obj[prop] = newval;
+        this.storeUpdateListener();
+      },
+      get: (obj, prop) => {
+        console.log("get", obj, prop);
+      }
     });
   }
 
