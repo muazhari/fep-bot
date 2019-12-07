@@ -350,12 +350,8 @@ const Twibbon = exports.Twibbon = Bot => {
       }
     });
   };
-  const listenPostBack = data => {
-    console.log("PRE TWIBBON LISTENED POSTBACK", data);
-
+  const listenPostback = data => {
     if (data.twibbon) {
-      console.log("YES TWIBBON LISTENED POSTBACK", data);
-
       const { id, type } = data.twibbon;
 
       // ready-up switch
@@ -402,7 +398,7 @@ const Twibbon = exports.Twibbon = Bot => {
             twibbonPreviewUrl: `${fileMeta[1].secure_url}`
           });
 
-          _fsExtra2.default.unlinkSync(data.originalPath);
+          _fsExtra2.default.unlinkSync(data.originalContentPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
         });
       };
@@ -412,7 +408,7 @@ const Twibbon = exports.Twibbon = Bot => {
   const make = args => {
     const data = {
       url: args[0],
-      originalPath: args[1],
+      originalContentPath: args[1],
       previewPath: args[2],
       twibbonSetting: args[3],
       filename: Bot.props.event.message.id
@@ -445,17 +441,17 @@ const Twibbon = exports.Twibbon = Bot => {
         };
 
         getContent().then(({
-          originalPath,
+          originalContentPath,
           previewPath,
           originalContentUrl,
           previewImageUrl
         }) => {
-          make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
+          make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
         });
       }
     }
   };
 
-  return { ready, listenImage, listenPostBack };
+  return { ready, listenImage, listenPostback };
 };
 //# sourceMappingURL=Twibbon.js.map

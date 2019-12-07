@@ -217,6 +217,14 @@ class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
+    const imageLogPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
+      console.log("Image Logged", imageLogPath);
+      _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
+        _fsExtra2.default.unlinkSync(imageLogPath);
+      });
+    });
+
     if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
@@ -236,12 +244,6 @@ class handlerBot {
         return Promise.resolve(message.contentProvider);
       };
     }
-
-    this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
-        _fsExtra2.default.unlinkSync(imageData.originalContentPath);
-      });
-    });
 
     return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({

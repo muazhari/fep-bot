@@ -162,7 +162,7 @@ export class handlerBot {
         const objectData = JSON.parse(data);
 
         const { Twibbon } = this.Bot.Features;
-        console.log("LISTENED POSTBACK", objectData)
+        console.log("LISTENED POSTBACK", objectData);
         Twibbon.listenPostback(objectData);
 
         break;
@@ -208,6 +208,20 @@ export class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
+    const imageLogPath = path.join(
+      __dirname,
+      "../../src/Bot/Assets/downloaded/images",
+      `${message.id}-log.jpg`
+    );
+    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
+      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(
+        fileMeta => {
+          console.log("Image Logged", imageLogPath);
+          fs.unlinkSync(imageLogPath);
+        }
+      );
+    });
+
     if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(
@@ -234,16 +248,6 @@ export class handlerBot {
         return Promise.resolve(message.contentProvider);
       };
     }
-
-    this.Bot.downloadContent(message.id, imageData.originalContentPath).then(
-      () => {
-        CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(
-          fileMeta => {
-            fs.unlinkSync(imageData.originalContentPath);
-          }
-        );
-      }
-    );
 
     return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({
