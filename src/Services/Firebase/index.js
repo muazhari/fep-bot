@@ -7,16 +7,18 @@ import cp from "child_process";
 class Firebase {
   constructor(config) {
     this.app = this.initApp(config);
-    this.db = this.app.firestore();
+    this.fdb = this.app.firestore();
+    this.rdb = this.app.database();
+
     this.initSetting();
   }
 
-//   async initApp(config) {
-//     const serviceAccountKeyFile = "serviceAccountKey.json";
-//     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
-//     const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
-//     await fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
+  initApp(config) {
+    const serviceAccountKeyFile = "serviceAccountKey.json";
     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
+    //     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
+    //     const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
+    //     await fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
     return admin.initializeApp({credential: admin.credential.cert(serviceAccountKeyPath), dataBaseURL: config.firebaseDataBaseURL});
   }
 
