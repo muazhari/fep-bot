@@ -179,6 +179,7 @@ class handlerBot {
         const objectData = JSON.parse(data);
 
         const { Twibbon } = this.Bot.Features;
+        console.log("LISTENED POSTBACK", objectData);
         Twibbon.listenPostback(objectData);
 
         break;
@@ -218,7 +219,7 @@ class handlerBot {
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
-        return this.Bot.downloadContent(message.id).then(() => {
+        return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
           console.log("getContentDownloaded", imageData.originalContentPath);
           _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
           return imageData;
@@ -240,6 +241,14 @@ class handlerBot {
       _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(fileMeta => {
         _fsExtra2.default.unlinkSync(imageData.originalContentPath);
       });
+    });
+
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+      // this.Bot.sendMessage({
+      //   type: "image",
+      //   originalContentUrl: originalContentUrl,
+      //   previewImageUrl: previewImageUrl
+      // });
     });
   }
 
@@ -263,7 +272,9 @@ class handlerBot {
         return videoData;
       });
     } else if (message.contentProvider.type === "external") {
-      getContent = Promise.resolve(message.contentProvider);
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
     }
 
     return getContent.then(({ originalContentUrl, previewImageUrl }) => {
@@ -289,7 +300,9 @@ class handlerBot {
         return audioData;
       });
     } else {
-      getContent = Promise.resolve(message.contentProvider);
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
     }
 
     return getContent.then(({ originalContentUrl }) => {

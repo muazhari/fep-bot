@@ -351,7 +351,11 @@ const Twibbon = exports.Twibbon = Bot => {
     });
   };
   const listenPostBack = data => {
+    console.log("PRE TWIBBON LISTENED POSTBACK", data);
+
     if (data.twibbon) {
+      console.log("YES TWIBBON LISTENED POSTBACK", data);
+
       const { id, type } = data.twibbon;
 
       // ready-up switch
