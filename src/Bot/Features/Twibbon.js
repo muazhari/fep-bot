@@ -1,22 +1,23 @@
 import { command_prefix, batch_list, baseURL, shared_props } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
+import CloudinaryUtils from "../../Bot/Helper/CloudinaryUtils";
 import cloudinary from "cloudinary";
 import fs from "fs-extra";
 import request from "request";
 import cp from "child_process";
 import path from "path";
 
-function objectsHaveSameKeys(...objects) {
+const objectsHaveSameKeys = (...objects) => {
   const allKeys = objects.reduce(
     (keys, object) => keys.concat(Object.keys(object)),
     []
   );
   const union = new Set(allKeys);
   return objects.every(object => union.size === Object.keys(object).length);
-}
+};
 
 export const Twibbon = Bot => {
-  const uploads = {};
+  const { user: userId, origin: originId } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -311,70 +312,35 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      shared_props[Bot.getId().user]["twibbon"] = {
+      shared_props[userId]["twibbon"] = {
         status: true,
         source: {
-          id: Bot.getId().origin
+          id: originId
         }
       };
-
-      display_list(data.category || "all");
+      displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
     }
   };
 
-  const listen = data => {
-    const { user } = Bot.getId();
+  const displayList = category => {
+    let selected = Object.keys(twibbon_list)
+      .map(twibbonId => twibbonId)
+      .filter(twibbonId => typeof twibbonId === "string");
 
-    if (data.twibbon) {
-      const { id, type } = data.twibbon;
-
-      // ready-up switch
-      shared_props[user]["twibbon"] = {
-        id: id,
-        type: type,
-        status: true,
-        source: {
-          id: Bot.getId().origin
-        }
-      };
-
-      Bot.getProfile().then(res => {
-        const messages = [`Hai ${res.displayName}, masukan gambar mu disini~`];
-        if (type === "manual") {
-          messages.push(
-            `Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`
-          );
-        }
-        Bot.replyText(messages);
-      });
-    }
-  };
-
-  const display_list = category => {
-    let selected = [];
-    if (category === "all") {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        return twibbon_id;
-      });
-    } else {
-      selected = Object.keys(twibbon_list).map(twibbon_id => {
-        if (twibbon_list[twibbon_id].category === category) {
-          return twibbon_id;
-        }
-      });
+    if (category) {
+      selected = Object.keys(twibbon_list).filter(
+        twibbonId => twibbon_list[twibbonId].category === category
+      );
+      if (selected.length === 0) {
+        return Bot.replyText(
+          `Tidak ada kategori, lihat di ${command_prefix}twibbon`
+        );
+      }
     }
 
-    const pure_selected = selected.filter(item => {
-      return typeof item === "string";
-    });
-
-    if (pure_selected.length === 0) {
-      Bot.replyText(`Tidak ada kategori, lihat di ${command_prefix}twibbon`);
-    }
-
-    const twibbon_contents = pure_selected.map(id => {
+    const twibbonColumns = selected.map(id => {
       const { url, name } = twibbon_list[id];
       return {
         thumbnailImageUrl: url,
@@ -400,178 +366,145 @@ export const Twibbon = Bot => {
       altText: "Twibbon list",
       template: {
         type: "carousel",
-        columns: twibbon_contents,
+        columns: twibbonColumns,
         imageAspectRatio: "square",
         imageSize: "cover"
       }
     });
   };
+  const listenPostBack = data => {
+    if (data.twibbon) {
+      const { id, type } = data.twibbon;
 
-  const getResult = (twibbon_setting, public_id, filename, size) => {
+      // ready-up switch
+      shared_props[userId]["twibbon"] = {
+        id: id,
+        type: type,
+        status: true,
+        source: {
+          id: originId
+        }
+      };
+
+      Bot.getProfile().then(profile => {
+        const messages = [
+          `Hai ${profile.displayName}, masukan gambar mu disini~`
+        ];
+        if (type === "manual") {
+          messages.push(
+            `Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`
+          );
+        }
+        Bot.replyText(messages);
+      });
+    }
+  };
+
+  const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
     const result = cloudinary.url(
-      public_id,
-      twibbon_list[twibbon_setting.id].transform(filename, size)[
-        twibbon_setting.type
+      publicId,
+      twibbon_list[twibbonSetting.id].transform(filename, size)[
+        twibbonSetting.type
       ]
     );
     return result;
   };
 
-  const imgUpload = (url, filename) => {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload(url, { public_id: filename })
-        .then(image => {
-          console.log("** File Upload (Promise)");
-          console.log("* " + image.public_id);
-          console.log("* " + image.url);
-          resolve(image);
-        })
-        .catch(err => {
-          console.log("** File Upload (Promise)");
-          if (err) {
-            console.warn(err);
-            reject(err);
-          }
-        });
-    });
-  };
-
-  const waitForAllUploads = (type, queue, imageObject, callback) => {
-    uploads[type] = {
-      ...uploads[type],
-      ...imageObject
-    };
-    const ids = Object.keys(uploads[type]);
-    if (ids.length === queue) {
-      console.log(
-        "**  uploaded all raw files (" + ids.join(",") + ") to cloudinary"
-      );
-      callback();
-    }
-  };
-
   const generate = data => {
     return new Promise((resolve, reject) => {
-      imgUpload(data.url, data.filename).then(image => {
-        waitForAllUploads(
-          "raw",
-          1,
-          {
-            twibbon_bg: image
-          },
-          performTransformations
-        );
-      });
+      CloudinaryUtils.upload(data.url, data.filename).then(
+        twibbonBackgroundMeta => {
+          performTransformations(twibbonBackgroundMeta);
+        }
+      );
 
-      const performTransformations = () => {
-        const twibbon_ori_name = `${data.filename}-twibbon`;
-        const result_url = getResult(
+      const performTransformations = twibbonBackgroundMeta => {
+        const twibbonOriginalName = `${data.filename}-twibbon`;
+        const resultOriginalUrl = getTransformedFileUrl(
           data.twibbonSetting,
-          uploads.raw.twibbon_bg.public_id,
-          twibbon_ori_name,
+          twibbonBackgroundMeta.public_id,
+          twibbonOriginalName,
           1040
         );
 
-        const twibbon_preview_name = `${data.filename}-twibbon-preview`;
-        const result_preview_url = getResult(
+        const twibonPreviewName = `${data.filename}-twibbon-preview`;
+        const resultPreviewUrl = getTransformedFileUrl(
           data.twibbonSetting,
-          uploads.raw.twibbon_bg.public_id,
-          twibbon_preview_name,
+          twibbonBackgroundMeta.public_id,
+          twibonPreviewName,
           240
         );
 
-        imgUpload(result_url, twibbon_ori_name).then(image => {
-          waitForAllUploads(
-            "twibbon",
-            2,
-            {
-              original: image
-            },
-            performResolve
-          );
-        });
-
-        imgUpload(result_preview_url, twibbon_preview_name).then(image => {
-          waitForAllUploads(
-            "twibbon",
-            2,
-            {
-              preview: image
-            },
-            performResolve
-          );
-        });
-
-        const performResolve = () => {
+        Promise.all([
+          CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
+          CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
+        ]).then(fileMeta => {
           resolve({
-            twibbonOriginalUrl: `${uploads.twibbon.original.secure_url}`,
-            twibbonPreviewUrl: `${uploads.twibbon.preview.secure_url}`
+            twibbonOriginalUrl: `${fileMeta[0].secure_url}`,
+            twibbonPreviewUrl: `${fileMeta[1].secure_url}`
           });
 
           fs.unlinkSync(data.originalPath);
           fs.unlinkSync(data.previewPath);
-        };
+        });
       };
     });
   };
 
   const make = args => {
-    if (args.length === 4) {
-      const data = {
-        url: args[0],
-        originalPath: args[1],
-        previewPath: args[2],
-        twibbonSetting: args[3],
-        filename: Bot.props.event.message.id
-      };
+    const data = {
+      url: args[0],
+      originalPath: args[1],
+      previewPath: args[2],
+      twibbonSetting: args[3],
+      filename: Bot.props.event.message.id
+    };
 
-      generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-        Bot.sendMessage({
-          type: "image",
-          originalContentUrl: twibbonOriginalUrl,
-          previewImageUrl: twibbonPreviewUrl
-        });
+    generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
+      Bot.sendMessage({
+        type: "image",
+        originalContentUrl: twibbonOriginalUrl,
+        previewImageUrl: twibbonPreviewUrl
       });
+    });
 
-      //switch back
-      shared_props[Bot.getId().user].twibbon.status = false;
-    } else {
-      Bot.replyText(`${command_prefix}twibbon <image>`);
+    //switch back
+    shared_props[userId].twibbon.status = false;
+  };
+
+  const listenImage = getContent => {
+    if (shared_props[userId].twibbon) {
+      const userSwitch = shared_props[userId].twibbon.status;
+
+      const userInSameCommunal =
+        shared_props[userId].twibbon.source.id === originId;
+
+      const twibbonIdChosen = shared_props[userId].twibbon.id !== undefined;
+
+      if (userSwitch && userInSameCommunal && twibbonIdChosen) {
+        const twibbonSetting = {
+          id: shared_props[userId].twibbon.id,
+          type: shared_props[userId].twibbon.type
+        };
+
+        getContent().then(
+          ({
+            originalPath,
+            previewPath,
+            originalContentUrl,
+            previewImageUrl
+          }) => {
+            make([
+              originalContentUrl,
+              originalPath,
+              previewPath,
+              twibbonSetting
+            ]);
+          }
+        );
+      }
     }
   };
 
-  const insert = getContent => {
-    const { user } = Bot.getId();
-
-    const userSwitch =
-      shared_props[user].twibbon.status === undefined
-        ? false
-        : shared_props[user].twibbon.status;
-
-    const userInSameCommunal =
-      shared_props[user].twibbon.source.id === Bot.getId().origin;
-
-    const twibbon_id_chosen = shared_props[user].twibbon.id !== undefined;
-
-    if (userSwitch && userInSameCommunal && twibbon_id_chosen) {
-      const twibbonSetting = {
-        id: shared_props[user].twibbon.id,
-        type: shared_props[user].twibbon.type
-      };
-
-      getContent().then(
-        ({
-          originalPath,
-          previewPath,
-          originalContentUrl,
-          previewImageUrl
-        }) => {
-          make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
-        }
-      );
-    }
-  };
-
-  return { ready, insert, listen };
+  return { ready, listenImage, listenPostBack };
 };
