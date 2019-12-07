@@ -10,7 +10,7 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import { dialogFlow } from "./DialogFlow";
+import {dialogFlow} from "./DialogFlow";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -18,7 +18,7 @@ import uuid from "uuid";
 
 import config from "../Config/Line";
 
-import { handlerBot, sharedProps } from "../Bot";
+import {handlerBot, sharedProps} from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
@@ -83,9 +83,9 @@ export class Bot {
       sharedProps.set({
         [sourceIds[type]]: {
           ...sharedProps.get(sourceIds[type]),
-          event: props.event,
+          event: props.event
         }
-            })
+      });
     });
 
     return sharedProps.get(sourceIds.origin);
@@ -132,7 +132,7 @@ export class Bot {
   }
 
   getId(source) {
-    if (!source)
+    if (!source) 
       source = this.props.event.source;
     const type = {};
 
@@ -158,15 +158,15 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type)
+    if (type) 
       return type;
-  }
-
+    }
+  
   replyText(texts) {
     texts = Array.isArray(texts)
       ? texts
       : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({type: "text", text})));
   }
 
   sendMessage(message) {

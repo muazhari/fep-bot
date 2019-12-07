@@ -20,7 +20,7 @@ class Firebase {
     //     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
     // const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
     // fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
-    return admin.initializeApp({credential: admin.credential.cert(serviceAccountKeyPath), dataBaseURL: config.firebaseDataBaseURL});
+    return admin.initializeApp({credential: admin.credential.cert(serviceAccountKeyPath), databaseURL: config.firebaseDatabaseURL});
   }
 
   initSetting() {
@@ -32,4 +32,4 @@ class Firebase {
   }
 }
 
-export default new Firebase({firebaseAdminConfig, firebaseDataBaseURL});
+export default new Firebase({firebaseAdminConfig, firebaseDatabaseURL});

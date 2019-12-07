@@ -1,6 +1,6 @@
 import Firebase from "../Services/Firebase";
 
-class sharedPropsFactory {
+class SharedPropsFactory {
   constructor() {
     this.store = {};
   }
@@ -11,6 +11,10 @@ class sharedPropsFactory {
     } else {
       return this.store;
     }
+  }
+
+  updateStore() {
+    Firebase.rdb.ref("SharedProps").set(this.store);
   }
 
   set(props) {
@@ -26,8 +30,8 @@ class sharedPropsFactory {
   }
 }
 
-const sharedProps = new sharedPropsFactory();
+const SharedProps = new SharedPropsFactory();
 
 export {
-  sharedProps
+  SharedProps
 };
