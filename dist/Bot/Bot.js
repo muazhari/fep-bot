@@ -106,9 +106,9 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      _Bot.SharedProps.set([sourceIds[type]], _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
+      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
         event: props.event
-      }));
+      });
     });
 
     return _Bot.SharedProps.store[sourceIds.origin];

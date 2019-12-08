@@ -11,11 +11,16 @@ import observe from "observe";
 
 class SharedPropsFactory {
   constructor() {
+    // this.store = observe({});
     // this.store = new Proxy({}, {
     //   set: this._set,
     //   get: this._get
     // });
+    this.store.on("change", change => {
+      this.storeUpdateListener();
+    });
   }
+
   log(sourceId) {
     new Promise((resolve, reject) => {
       if (sourceId) {
@@ -34,10 +39,6 @@ class SharedPropsFactory {
 }
 
 const SharedProps = new SharedPropsFactory();
-
-this.store.on("change", change => {
-  this.storeUpdateListener();
-});
 
 export {
   SharedProps
