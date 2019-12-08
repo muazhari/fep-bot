@@ -299,7 +299,7 @@ const Twibbon = exports.Twibbon = Bot => {
       };
 
       // ready-up switch
-      _Bot.shared_props[userId]["twibbon"] = {
+      _Bot.SharedProps.store[userId]["twibbon"] = {
         status: true,
         source: {
           id: originId
@@ -350,12 +350,12 @@ const Twibbon = exports.Twibbon = Bot => {
       }
     });
   };
-  const listenPostBack = data => {
+  const listenPostback = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;
 
       // ready-up switch
-      _Bot.shared_props[userId]["twibbon"] = {
+      _Bot.SharedProps.store[userId]["twibbon"] = {
         id: id,
         type: type,
         status: true,
@@ -393,12 +393,9 @@ const Twibbon = exports.Twibbon = Bot => {
         const resultPreviewUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
         Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]).then(fileMeta => {
-          resolve({
-            twibbonOriginalUrl: `${fileMeta[0].secure_url}`,
-            twibbonPreviewUrl: `${fileMeta[1].secure_url}`
-          });
+          resolve({ twibbonOriginalUrl: `${fileMeta[0].secure_url}`, twibbonPreviewUrl: `${fileMeta[1].secure_url}` });
 
-          _fsExtra2.default.unlinkSync(data.originalPath);
+          _fsExtra2.default.unlinkSync(data.originalContentPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
         });
       };
@@ -408,50 +405,41 @@ const Twibbon = exports.Twibbon = Bot => {
   const make = args => {
     const data = {
       url: args[0],
-      originalPath: args[1],
+      originalContentPath: args[1],
       previewPath: args[2],
       twibbonSetting: args[3],
       filename: Bot.props.event.message.id
     };
 
     generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      Bot.sendMessage({
-        type: "image",
-        originalContentUrl: twibbonOriginalUrl,
-        previewImageUrl: twibbonPreviewUrl
-      });
+      Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
     });
 
     //switch back
-    _Bot.shared_props[userId].twibbon.status = false;
+    _Bot.SharedProps.store[userId].twibbon.status = false;
   };
 
   const listenImage = getContent => {
-    if (_Bot.shared_props[userId].twibbon) {
-      const userSwitch = _Bot.shared_props[userId].twibbon.status;
+    if (_Bot.SharedProps.store[userId].twibbon) {
+      const userSwitch = _Bot.SharedProps.store[userId].twibbon.status;
 
-      const userInSameCommunal = _Bot.shared_props[userId].twibbon.source.id === originId;
+      const userInSameCommunal = _Bot.SharedProps.store[userId].twibbon.source.id === originId;
 
-      const twibbonIdChosen = _Bot.shared_props[userId].twibbon.id !== undefined;
+      const twibbonIdChosen = _Bot.SharedProps.store[userId].twibbon.id !== undefined;
 
       if (userSwitch && userInSameCommunal && twibbonIdChosen) {
         const twibbonSetting = {
-          id: _Bot.shared_props[userId].twibbon.id,
-          type: _Bot.shared_props[userId].twibbon.type
+          id: _Bot.SharedProps.store[userId].twibbon.id,
+          type: _Bot.SharedProps.store[userId].twibbon.type
         };
 
-        getContent().then(({
-          originalPath,
-          previewPath,
-          originalContentUrl,
-          previewImageUrl
-        }) => {
-          make([originalContentUrl, originalPath, previewPath, twibbonSetting]);
+        getContent().then(({ originalContentPath, previewPath, originalContentUrl, previewImageUrl }) => {
+          make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
         });
       }
     }
   };
 
-  return { ready, listenImage, listenPostBack };
+  return { ready, listenImage, listenPostback };
 };
 //# sourceMappingURL=Twibbon.js.map

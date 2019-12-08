@@ -17,7 +17,11 @@ var _child_process = require("child_process");
 
 var _child_process2 = _interopRequireDefault(_child_process);
 
-var _internal = require("./internal");
+var _Bot = require("../Bot");
+
+var _CloudinaryUtils = require("../Bot/Helper/CloudinaryUtils");
+
+var _CloudinaryUtils2 = _interopRequireDefault(_CloudinaryUtils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39,7 +43,7 @@ const destructCommand = chat => {
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  console.log({ prefix, command, args });
+  console.log("[HandlerBot] Command destructed", { prefix, command, args });
   return { prefix, command, args };
 };
 
@@ -75,11 +79,7 @@ const handleCommand = (features, command) => {
     pl: PosetLattice.generate
   };
 
-  const {
-    prefix: content_prefix,
-    command: content_command,
-    args: content_args
-  } = destructCommand(command);
+  const { prefix: content_prefix, command: content_command, args: content_args } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -120,7 +120,7 @@ class handlerBot {
   }
 
   eventListener(event) {
-    console.log(event);
+    console.log("[HandlerBot] Event:", event);
     // hidden error, need fix
     // const this.Bot = new Bot({ event });
     // this.Bot.log()
@@ -158,13 +158,13 @@ class handlerBot {
         return this.Bot.replyText("Got followed event");
 
       case "unfollow":
-        return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
+        return console.log(`[HandlerBot] Unfollowed this bot: ${JSON.stringify(event)}`);
 
       case "join":
         return this.Bot.replyText(`Joined ${event.source.type}`);
 
       case "leave":
-        return console.log(`Left: ${JSON.stringify(event)}`);
+        return console.log(`[HandlerBot] Left: ${JSON.stringify(event)}`);
 
       case "postback":
         let { data } = event.postback;
@@ -175,6 +175,7 @@ class handlerBot {
         const objectData = JSON.parse(data);
 
         const { Twibbon } = this.Bot.Features;
+        console.log("[HandlerBot] Postback listened", objectData);
         Twibbon.listenPostback(objectData);
 
         break;
@@ -205,54 +206,72 @@ class handlerBot {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`);
-      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`);
+    const imageData = {
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
+      previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
+    };
 
+    const imageLogPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
+      await _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Image Logged", imageLogPath);
+      });
+      _fsExtra2.default.unlinkSync(imageLogPath);
+    });
+
+    if (message.contentProvider.type === "line") {
       getContent = () => {
-        return this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-          console.log("premature_resolve", downloadPath);
-          _child_process2.default.execSync(`convert -resize 240x jpg:${downloadPath} jpg:${previewPath}`);
-          return {
-            originalPath: downloadPath,
-            previewPath: previewPath,
-            originalContentUrl: `${baseURL}/downloaded/images/${_path2.default.basename(downloadPath)}`,
-            previewImageUrl: `${baseURL}/downloaded/images/${_path2.default.basename(previewPath)}`
-          };
+        return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
+          _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
+          return imageData;
         }).catch(err => {
           throw err;
         });
       };
+
+      // Twibbon switch
+      const { Twibbon } = this.Bot.Features;
+      Twibbon.listenImage(getContent);
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
       };
     }
 
-    // Twibbon switch
-    const { Twibbon } = this.Bot.Features;
-    Twibbon.listenImage(getContent);
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
+      // this.Bot.sendMessage({
+      //   type: "image",
+      //   originalContentUrl: originalContentUrl,
+      //   previewImageUrl: previewImageUrl
+      // });
+    });
   }
 
   handleVideo() {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`);
-      const previewPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.jpg`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
+    const videoData = {
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
+      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
+    };
+
+    if (message.contentProvider.type === "line") {
+      getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
         // FFmpeg and ImageMagick is needed here to run 'convert'
         // Please consider about security and performance by yourself
-        _child_process2.default.execSync(`convert mp4:${downloadPath}[0] jpeg:${previewPath}`);
+        _child_process2.default.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
 
-        return {
-          originalContentUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(downloadPath)}`,
-          previewImageUrl: `${baseURL}/downloaded/videos/${_path2.default.basename(previewPath)}`
-        };
+        return videoData;
       });
     } else if (message.contentProvider.type === "external") {
-      getContent = Promise.resolve(message.contentProvider);
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
     }
 
     return getContent.then(({ originalContentUrl, previewImageUrl }) => {
@@ -267,16 +286,20 @@ class handlerBot {
   handleAudio() {
     const { message, replyToken } = this.Bot.props.event;
     let getContent;
-    if (message.contentProvider.type === "line") {
-      const downloadPath = _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`);
 
-      getContent = this.Bot.downloadContent(message.id, downloadPath).then(downloadPath => {
-        return {
-          originalContentUrl: `${baseURL}/downloaded/audios/${_path2.default.basename(downloadPath)}`
-        };
+    const audioData = {
+      originalContentPath: _path2.default.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
+    };
+
+    if (message.contentProvider.type === "line") {
+      getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
+        return audioData;
       });
     } else {
-      getContent = Promise.resolve(message.contentProvider);
+      getContent = () => {
+        return Promise.resolve(message.contentProvider);
+      };
     }
 
     return getContent.then(({ originalContentUrl }) => {
@@ -290,13 +313,7 @@ class handlerBot {
 
   handleLocation() {
     const { message, replyToken } = this.Bot.props.event;
-    this.Bot.sendMessage({
-      type: "location",
-      title: message.title,
-      address: message.address,
-      latitude: message.latitude,
-      longitude: message.longitude
-    });
+    this.Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
   }
 
   handleSticker() {

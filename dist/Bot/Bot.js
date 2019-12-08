@@ -3,13 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Bot = exports.shared_props = undefined;
+exports.Bot = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _Store = require("../Services/Store");
-
-var _Store2 = _interopRequireDefault(_Store);
 
 var _botSdk = require("@line/bot-sdk");
 
@@ -18,6 +14,10 @@ var line = _interopRequireWildcard(_botSdk);
 var _Features = require("./Features");
 
 var _DialogFlow = require("./DialogFlow");
+
+var _Store = require("../Services/Store");
+
+var _Store2 = _interopRequireDefault(_Store);
 
 var _fsExtra = require("fs-extra");
 
@@ -39,14 +39,17 @@ var _Line = require("../Config/Line");
 
 var _Line2 = _interopRequireDefault(_Line);
 
-var _internal = require("./internal");
+var _Bot = require("../Bot");
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _Firebase = require("../Services/Firebase");
+
+var _Firebase2 = _interopRequireDefault(_Firebase);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 // share worker props by groupId
-const shared_props = exports.shared_props = {};
 // export const listener_stack = {
 //   postback: {}
 // };
@@ -69,15 +72,18 @@ const shared_props = exports.shared_props = {};
 
 class Bot {
   constructor(props) {
-    // console.log(shared_props)
+    // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
+    // this.props = {
+    //   event: props
+    // };
     // console.log(this.props)
 
     // create LINE SDK client
     this.client = new line.Client(_Line2.default);
 
-    // Features creator
+    //  Features creator
     this.Features = {
       FEPList: (0, _Features.FEPList)(this),
       StoreAdvance: (0, _Features.StoreAdvance)(this),
@@ -89,13 +95,13 @@ class Bot {
       PosetLattice: (0, _Features.PosetLattice)(this)
     };
 
-    // DialogFlow assist
+    //  DialogFlow assist
     this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
-    // Events listen assist
-    this.handler = new _internal.handlerBot(this);
-    this.log();
-    console.log("Bot instanced");
+    //  Events listen assist
+    this.handler = new _Bot.handlerBot(this);
+    _Bot.SharedProps.log(this.getId().user);
+    console.log("[Bot] Instanced");
   }
 
   //should updated to implement firebase realtime database
@@ -103,57 +109,18 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      shared_props[sourceIds[type]] = _extends({}, shared_props[sourceIds[type]], {
+      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
         event: props.event
       });
     });
 
-    return shared_props[sourceIds.origin];
+    return _Bot.SharedProps.store[sourceIds.origin];
   }
 
   getProfile() {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
-    });
-  }
-
-  log() {
-    new Promise(async (resolve, reject) => {
-      const val = { [this.props.event.timestamp]: this.props };
-      // let data = await Store.getStore("propsLogs");
-      // if (data === undefined) {
-      //   data = [val];
-      // } else {
-      //   data.push(val);
-      // }
-      await _Store2.default.setStore(val);
-      console.log("[LOG] Props logged", this.props.event.timestamp);
-    });
-
-    // switch (this.props.event.source.type) {
-    // case 'user':
-    //     const { userId } = this.props.event.source
-    //     if (!log_chat['users'][userId]) {
-    //       log_chat['users'][userId] = []
-    //     }
-    //     log_chat['user'][userId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // case 'group':
-    //     const { groupId } = this.props.event.source
-    //     if (!log_chat['groups'][groupId]) {
-    //       log_chat['groups'][groupId] = []
-    //     }
-    //     log_chat['groups'][groupId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // }
-  }
-
-  setProps(data, id) {
-    console.log(data);
-    if (!id) id = this.getId().origin;
-
-    Object.keys(data).map(key => {
-      this.shared_props[id][key] = data[key];
+      console.log("[Bot] Got profile");
     });
   }
 
@@ -188,13 +155,16 @@ class Bot {
 
   replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({ type: "text", text })));
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
+      console.log("[Bot] Sent Text, length: ", text.length);
+      return { type: "text", text };
+    }));
   }
 
   sendMessage(message) {
     message = Array.isArray(message) ? message : [message];
     return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("Message length", msg.length);
+      console.log("[Bot] Sent Message");
       return msg;
     }));
   }
@@ -203,8 +173,14 @@ class Bot {
     return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
       const writeable = _fsExtra2.default.createWriteStream(downloadPath);
       stream.pipe(writeable);
-      stream.on("end", () => resolve(downloadPath));
-      stream.on("error", reject);
+      stream.on("end", () => {
+        console.log("[Bot] Content Successfuly Downloaded", downloadPath);
+        resolve(downloadPath);
+      });
+      stream.on("error", err => {
+
+        reject(err);
+      });
     }));
   }
 }

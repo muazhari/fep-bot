@@ -51,4 +51,16 @@ Object.keys(_DialogFlow).forEach(function (key) {
     }
   });
 });
+
+var _SharedProps = require("./SharedProps");
+
+Object.keys(_SharedProps).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _SharedProps[key];
+    }
+  });
+});
 //# sourceMappingURL=internal.js.map

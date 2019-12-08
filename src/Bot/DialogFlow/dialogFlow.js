@@ -1,8 +1,8 @@
 import dialogflow from "dialogflow";
 import uuid from "uuid";
-import { default_agent } from "../../Config/DialogFlow";
-import { shared_props } from "../../Bot";
-import { handlerDialogFlow } from "./internal";
+import {default_agent} from "../../Config/DialogFlow";
+import {SharedProps} from "../../Bot";
+import {handlerDialogFlow} from "./internal";
 
 export class dialogFlow {
   constructor(Bot) {
@@ -20,25 +20,24 @@ export class dialogFlow {
 
     // Create a new session
     this.sessionClient = new dialogflow.SessionsClient(this.config);
-    this.sessionPath = this.sessionClient.sessionPath(
-      this.projectId,
-      this.sessionId
-    );
+    this.sessionPath = this.sessionClient.sessionPath(this.projectId, this.sessionId);
 
     // handler = handlerDialogFlow(Bot);
   }
 
   initDialogFlowProps() {
-    if (shared_props[this.propsId]["dialogFlow"] === undefined) {
-      shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    if (SharedProps.store[this.propsId]["dialogFlow"] === undefined) {
+      SharedProps.store[this.propsId]["dialogFlow"] = {
+        isTalking: false
+      };
     }
   }
 
   getParameter(responses) {
-    const { fields } = responses[0].queryResult.parameters;
-    const { displayName } = responses[0].queryResult.intent;
-    const { allRequiredParamsPresent } = responses[0].queryResult;
-    return { displayName, fields, allRequiredParamsPresent };
+    const {fields} = responses[0].queryResult.parameters;
+    const {displayName} = responses[0].queryResult.intent;
+    const {allRequiredParamsPresent} = responses[0].queryResult;
+    return {displayName, fields, allRequiredParamsPresent};
   }
 
   getQuery(msg) {
@@ -57,15 +56,10 @@ export class dialogFlow {
   }
 
   chatGate(parameter, chatCallback) {
-    const { fields, displayName } = parameter;
-    if (
-      shared_props[this.propsId].dialogFlow.isTalking ||
-      displayName === "chat.talk" || displayName === "chat.silent"
-    ) {
+    const {fields, displayName} = parameter;
+    if (SharedProps.store[this.propsId].dialogFlow.isTalking || displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(
-          fields.chat.stringValue
-        );
+        SharedProps.store[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
@@ -75,16 +69,19 @@ export class dialogFlow {
   listen() {
     return new Promise((resolve, reject) => {
       try {
-        const { message } = this.Bot.props.event;
+        const {message} = this.Bot.props.event;
         const query = this.getQuery(message.text);
         this.sessionClient.detectIntent(query).then(responses => {
           const parameter = this.getParameter(responses);
 
-          const { queryResult } = responses[0];
-          const { fulfillmentText } = queryResult;
+          const {queryResult} = responses[0];
+          const {fulfillmentText} = queryResult;
 
           const chatCallback = () => {
-            const cleanResponses = { fulfillmentText, parameter };
+            const cleanResponses = {
+              fulfillmentText,
+              parameter
+            };
             new handlerDialogFlow(this.Bot, cleanResponses);
             return resolve();
           };
@@ -93,13 +90,10 @@ export class dialogFlow {
           this.chatGate(parameter, chatCallback);
           // }
 
-          console.log(
-            "isTalking",
-            shared_props[this.propsId].dialogFlow.isTalking
-          );
-          console.log("parameter", JSON.stringify(parameter));
-          console.log("Detected intent", responses[0].queryResult.displayName);
-          console.log(JSON.stringify(responses));
+          console.log("[DialogFlow] isTalking", SharedProps.store[this.propsId].dialogFlow.isTalking);
+          console.log("[DialogFlow] Parameter", JSON.stringify(parameter));
+          console.log("[DialogFlow] Detected intent", responses[0].queryResult.displayName);
+          console.log("[DialogFlow] responses: ", JSON.stringify(responses));
         });
       } catch (err) {
         reject(err);
