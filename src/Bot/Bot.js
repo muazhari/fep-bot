@@ -1,4 +1,3 @@
-import Store from "../Services/Store";
 import * as line from "@line/bot-sdk";
 import {
   FEPList,
@@ -11,6 +10,7 @@ import {
   PosetLattice
 } from "./Features";
 import {dialogFlow} from "./DialogFlow";
+import Store from "../Services/Store";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
@@ -72,7 +72,7 @@ export class Bot {
     this.dialogFlow = new dialogFlow(this);
 
     //  Events listen assist
-    // this.handler = new handlerBot(this);
+    this.handler = new handlerBot(this);
     this.log();
     console.log("Bot instanced");
   }
@@ -95,40 +95,6 @@ export class Bot {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
     });
-  }
-
-  log() {
-    new Promise(async (resolve, reject) => {
-      // const val = {
-      //   [this.props.event.timestamp]: this.props
-      // };
-      // let data = await Store.getStore("propsLogs");
-      // if (data === undefined) {
-      //   data = [val];
-      // } else {
-      //   data.push(val);
-      // }
-      // await Store.setStore(val);
-      Firebase.fdb.collection("Props").add(this.props);
-      console.log("[LOG] Props logged", this.props.event.timestamp);
-    });
-
-    // switch (this.props.event.source.type) {
-    // case 'user':
-    //     const { userId } = this.props.event.source
-    //     if (!log_chat['users'][userId]) {
-    //       log_chat['users'][userId] = []
-    //     }
-    //     log_chat['user'][userId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // case 'group':
-    //     const { groupId } = this.props.event.source
-    //     if (!log_chat['groups'][groupId]) {
-    //       log_chat['groups'][groupId] = []
-    //     }
-    //     log_chat['groups'][groupId].push(this.props.event)
-    //     return await Store.setStore({ log_chat: log_chat })
-    // }
   }
 
   setProps(data, id) {
