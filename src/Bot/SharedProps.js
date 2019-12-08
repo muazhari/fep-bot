@@ -28,13 +28,13 @@ class SharedPropsFactory {
         Firebase.fdb.collection("Props").add(this.store.get([sourceId]));
         console.log("[SharedProps] Props logged", sourceId, new Date());
       }
-      Firebase.fdb.collection("Store").add(this.store);
+      Firebase.fdb.collection("Store").add(this.store.get(""));
       console.log("[SharedProps] Store logged", new Date());
     });
   }
 
   storeUpdateListener() {
-    Firebase.rdb.ref("SharedProps").set(this.store);
+    Firebase.rdb.ref("SharedProps").set(this.store.get(""));
     console.log("[SharedProps] Store updated", new Date());
   }
 }

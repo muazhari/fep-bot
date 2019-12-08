@@ -58,13 +58,13 @@ class SharedPropsFactory {
         _Firebase2.default.fdb.collection("Props").add(this.store.get([sourceId]));
         console.log("[SharedProps] Props logged", sourceId, new Date());
       }
-      _Firebase2.default.fdb.collection("Store").add(this.store);
+      _Firebase2.default.fdb.collection("Store").add(this.store.get(""));
       console.log("[SharedProps] Store logged", new Date());
     });
   }
 
   storeUpdateListener() {
-    _Firebase2.default.rdb.ref("SharedProps").set(this.store);
+    _Firebase2.default.rdb.ref("SharedProps").set(this.store.get(""));
     console.log("[SharedProps] Store updated", new Date());
   }
 }
