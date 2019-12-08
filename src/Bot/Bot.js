@@ -47,16 +47,16 @@ export class Bot {
   constructor(props) {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
-    // this.props = this.initProps(props);
-    this.props = {
-      event: props
-    };
+    this.props = this.initProps(props);
+    // this.props = {
+    //   event: props
+    // };
     // console.log(this.props)
 
     // create LINE SDK client
     this.client = new line.Client(config);
 
-    // Features creator
+    //  Features creator
     this.Features = {
       FEPList: FEPList(this),
       StoreAdvance: StoreAdvance(this),
@@ -68,28 +68,28 @@ export class Bot {
       PosetLattice: PosetLattice(this)
     };
 
-    // DialogFlow assist
+    //  DialogFlow assist
     this.dialogFlow = new dialogFlow(this);
 
-    // Events listen assist
-    this.handler = new handlerBot(this);
+    //  Events listen assist
+    // this.handler = new handlerBot(this);
     this.log();
     console.log("Bot instanced");
   }
 
   //should updated to implement firebase realtime database
-  // initProps(props) {
-  //   const sourceIds = this.getId(props.event.source);
+  initProps(props) {
+    const sourceIds = this.getId(props.event.source);
 
-  //   Object.keys(sourceIds).map(type => {
-  //     SharedProps.store[sourceIds[type]] = {
-  //       ...SharedProps.store[sourceIds[type]],
-  //       event: props.event
-  //     };
-  //   });
+    Object.keys(sourceIds).map(type => {
+      SharedProps.store[sourceIds[type]] = {
+        ...SharedProps.store[sourceIds[type]],
+        event: props.event
+      };
+    });
 
-  //   return SharedProps.store[sourceIds.origin];
-  // }
+    return SharedProps.store[sourceIds.origin];
+  }
 
   getProfile() {
     return new Promise((resolve, reject) => {

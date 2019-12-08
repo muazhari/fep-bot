@@ -2,11 +2,11 @@ import Firebase from "../Services/Firebase";
 
 class SharedPropsFactory {
   constructor() {
-    this.store = {};
-    // this.store = new Proxy({}, {
-    //   set: this._set,
-    //   get: this._get
-    // });
+    // this.store = {};
+    this.store = new Proxy({}, {
+      set: this._set,
+      get: this._get
+    });
   }
 
   _set(obj, prop, newVal) {

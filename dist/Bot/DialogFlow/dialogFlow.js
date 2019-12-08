@@ -43,8 +43,8 @@ class dialogFlow {
   }
 
   initDialogFlowProps() {
-    if (shared_props[this.propsId]["dialogFlow"] === undefined) {
-      shared_props[this.propsId]["dialogFlow"] = { isTalking: false };
+    if (_Bot.SharedProps.store[this.propsId]["dialogFlow"] === undefined) {
+      _Bot.SharedProps.store[this.propsId]["dialogFlow"] = { isTalking: false };
     }
   }
 
@@ -72,9 +72,9 @@ class dialogFlow {
 
   chatGate(parameter, chatCallback) {
     const { fields, displayName } = parameter;
-    if (shared_props[this.propsId].dialogFlow.isTalking || displayName === "chat.talk" || displayName === "chat.silent") {
+    if (_Bot.SharedProps.store[this.propsId].dialogFlow.isTalking || displayName === "chat.talk" || displayName === "chat.silent") {
       if (Object.keys(fields).includes("chat")) {
-        shared_props[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
+        _Bot.SharedProps.store[this.propsId].dialogFlow.isTalking = JSON.parse(fields.chat.stringValue);
       }
       return chatCallback();
     }
@@ -102,7 +102,7 @@ class dialogFlow {
           this.chatGate(parameter, chatCallback);
           // }
 
-          console.log("isTalking", shared_props[this.propsId].dialogFlow.isTalking);
+          console.log("isTalking", _Bot.SharedProps.store[this.propsId].dialogFlow.isTalking);
           console.log("parameter", JSON.stringify(parameter));
           console.log("Detected intent", responses[0].queryResult.displayName);
           console.log(JSON.stringify(responses));

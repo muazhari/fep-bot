@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Bot = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Store = require("../Services/Store");
 
 var _Store2 = _interopRequireDefault(_Store);
@@ -72,16 +74,16 @@ class Bot {
   constructor(props) {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
-    // this.props = this.initProps(props);
-    this.props = {
-      event: props
-    };
+    this.props = this.initProps(props);
+    // this.props = {
+    //   event: props
+    // };
     // console.log(this.props)
 
     // create LINE SDK client
     this.client = new line.Client(_Line2.default);
 
-    // Features creator
+    //  Features creator
     this.Features = {
       FEPList: (0, _Features.FEPList)(this),
       StoreAdvance: (0, _Features.StoreAdvance)(this),
@@ -93,28 +95,27 @@ class Bot {
       PosetLattice: (0, _Features.PosetLattice)(this)
     };
 
-    // DialogFlow assist
+    //  DialogFlow assist
     this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
-    // Events listen assist
-    this.handler = new _Bot.handlerBot(this);
+    //  Events listen assist
+    // this.handler = new handlerBot(this);
     this.log();
     console.log("Bot instanced");
   }
 
   //should updated to implement firebase realtime database
-  // initProps(props) {
-  //   const sourceIds = this.getId(props.event.source);
+  initProps(props) {
+    const sourceIds = this.getId(props.event.source);
 
-  //   Object.keys(sourceIds).map(type => {
-  //     SharedProps.store[sourceIds[type]] = {
-  //       ...SharedProps.store[sourceIds[type]],
-  //       event: props.event
-  //     };
-  //   });
+    Object.keys(sourceIds).map(type => {
+      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
+        event: props.event
+      });
+    });
 
-  //   return SharedProps.store[sourceIds.origin];
-  // }
+    return _Bot.SharedProps.store[sourceIds.origin];
+  }
 
   getProfile() {
     return new Promise((resolve, reject) => {

@@ -13,11 +13,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class SharedPropsFactory {
   constructor() {
-    this.store = {};
-    // this.store = new Proxy({}, {
-    //   set: this._set,
-    //   get: this._get
-    // });
+    // this.store = {};
+    this.store = new Proxy({}, {
+      set: this._set,
+      get: this._get
+    });
   }
 
   _set(obj, prop, newVal) {
