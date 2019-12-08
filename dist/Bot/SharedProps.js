@@ -33,9 +33,9 @@ var _Firebase = require("../Services/Firebase");
 
 var _Firebase2 = _interopRequireDefault(_Firebase);
 
-var _melankeWatchjs = require("melanke-watchjs");
+var _observe = require("observe");
 
-var _melankeWatchjs2 = _interopRequireDefault(_melankeWatchjs);
+var _observe2 = _interopRequireDefault(_observe);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46,8 +46,9 @@ class SharedPropsFactory {
     //   set: this._set,
     //   get: this._get
     // });
-    this.observer = _melankeWatchjs2.default.watch(this.store, () => {
-      this.storeUpdateListener();
+    this.observer = (0, _observe2.default)(this.store);
+    this.observer.on("change", change => {
+      this.storeUpdateListener;
     });
   }
 

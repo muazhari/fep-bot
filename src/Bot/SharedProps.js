@@ -7,7 +7,7 @@ import uuid from "uuid";
 import config from "../Config/Line";
 
 import Firebase from "../Services/Firebase";
-import WatchJS from "melanke-watchjs";
+import observe from "observe";
 
 class SharedPropsFactory {
   constructor() {
@@ -16,8 +16,9 @@ class SharedPropsFactory {
     //   set: this._set,
     //   get: this._get
     // });
-    this.observer = WatchJS.watch(this.store, () => {
-      this.storeUpdateListener();
+    this.observer = observe(this.store);
+    this.observer.on("change", change => {
+      this.storeUpdateListener;
     });
   }
 
