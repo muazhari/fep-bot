@@ -105,7 +105,7 @@ class dialogFlow {
           this.chatGate(parameter, chatCallback);
           // }
 
-          console.log("[DialogFlow] isTalking", _Bot.SharedProps.store.get([this.propsId, "dialogFlow.isTalking"]));
+          console.log("[DialogFlow] isTalking", _Bot.SharedProps.store.get([this.propsId, "dialogFlow", "isTalking"]));
           console.log("[DialogFlow] Parameter", JSON.stringify(parameter));
           console.log("[DialogFlow] Detected intent", responses[0].queryResult.displayName);
           console.log("[DialogFlow] responses:", JSON.stringify(responses));

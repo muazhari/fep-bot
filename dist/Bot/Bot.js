@@ -81,23 +81,23 @@ class Bot {
     this.client = new line.Client(_Line2.default);
 
     //  Features creator
-    // this.Features = {
-    //   FEPList: FEPList(this),
-    //   StoreAdvance: StoreAdvance(this),
-    //   Basic: Basic(this),
-    //   Access: Access(this),
-    //   Template: Template(this),
-    //   Twibbon: Twibbon(this),
-    //   Courses: Courses(this),
-    //   PosetLattice: PosetLattice(this)
-    // };
+    this.Features = {
+      FEPList: (0, _Features.FEPList)(this),
+      StoreAdvance: (0, _Features.StoreAdvance)(this),
+      Basic: (0, _Features.Basic)(this),
+      Access: (0, _Features.Access)(this),
+      Template: (0, _Features.Template)(this),
+      // Twibbon: Twibbon(this),
+      Courses: (0, _Features.Courses)(this),
+      PosetLattice: (0, _Features.PosetLattice)(this)
+    };
 
     //  DialogFlow assist
-    // this.dialogFlow = new dialogFlow(this);
+    this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
     //   Events listen assist
-    // this.handler = new handlerBot(this);
-    // SharedProps.log(this.getId().user);
+    this.handler = new _Bot.handlerBot(this);
+    _Bot.SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
   }
 

@@ -54,23 +54,23 @@ export class Bot {
     this.client = new line.Client(config);
 
     //  Features creator
-    // this.Features = {
-    //   FEPList: FEPList(this),
-    //   StoreAdvance: StoreAdvance(this),
-    //   Basic: Basic(this),
-    //   Access: Access(this),
-    //   Template: Template(this),
-    //   Twibbon: Twibbon(this),
-    //   Courses: Courses(this),
-    //   PosetLattice: PosetLattice(this)
-    // };
+    this.Features = {
+      FEPList: FEPList(this),
+      StoreAdvance: StoreAdvance(this),
+      Basic: Basic(this),
+      Access: Access(this),
+      Template: Template(this),
+      // Twibbon: Twibbon(this),
+      Courses: Courses(this),
+      PosetLattice: PosetLattice(this)
+    };
 
     //  DialogFlow assist
-    // this.dialogFlow = new dialogFlow(this);
+    this.dialogFlow = new dialogFlow(this);
 
     //   Events listen assist
-    // this.handler = new handlerBot(this);
-    // SharedProps.log(this.getId().user);
+    this.handler = new handlerBot(this);
+    SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
   }
 
