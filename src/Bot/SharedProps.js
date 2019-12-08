@@ -9,6 +9,24 @@ import config from "../Config/Line";
 import Firebase from "../Services/Firebase";
 import observe from "observe";
 
+const copySet = (newObj, oldObj) => {
+  let temp = {};
+  const keys = Object.keys(newObj);
+
+  if (keys <= 0) {
+    return old;
+  } else {
+    keys.forEach(k => {
+      temp[k] = {
+        ...oldObj[k],
+        ...copySet(newObj[k])
+      };
+    });
+  }
+
+  return temp;
+};
+
 class SharedPropsFactory {
   constructor() {
     this.store = {};
@@ -20,6 +38,26 @@ class SharedPropsFactory {
     // this.store.on("change", change => {
     //   this.storeUpdateListener();
     // });
+  }
+
+  set(props) {
+    const copySet = (newObj, oldObj) => {
+      let temp = {};
+      const keys = Object.keys(newObj);
+
+      if (keys <= 0) {
+        return old;
+      } else {
+        keys.forEach(k => {
+          temp[k] = {
+            ...oldObj[k],
+            ...copySet(newObj[k])
+          };
+        });
+      }
+
+      return temp;
+    };
   }
 
   log(sourceId) {

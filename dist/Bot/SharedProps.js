@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SharedProps = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Store = require("../Services/Store");
 
 var _Store2 = _interopRequireDefault(_Store);
@@ -39,6 +41,21 @@ var _observe2 = _interopRequireDefault(_observe);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+const copySet = (newObj, oldObj) => {
+  let temp = {};
+  const keys = Object.keys(newObj);
+
+  if (keys <= 0) {
+    return old;
+  } else {
+    keys.forEach(k => {
+      temp[k] = _extends({}, oldObj[k], copySet(newObj[k]));
+    });
+  }
+
+  return temp;
+};
+
 class SharedPropsFactory {
   constructor() {
     this.store = {};
@@ -50,6 +67,23 @@ class SharedPropsFactory {
     // this.store.on("change", change => {
     //   this.storeUpdateListener();
     // });
+  }
+
+  set(props) {
+    const copySet = (newObj, oldObj) => {
+      let temp = {};
+      const keys = Object.keys(newObj);
+
+      if (keys <= 0) {
+        return old;
+      } else {
+        keys.forEach(k => {
+          temp[k] = _extends({}, oldObj[k], copySet(newObj[k]));
+        });
+      }
+
+      return temp;
+    };
   }
 
   log(sourceId) {
