@@ -22,14 +22,13 @@ class SharedPropsFactory {
     });
   }
   log(sourceId) {
-    new Promise(async (resolve, reject) => {
+    new Promise((resolve, reject) => {
       if (sourceId) {
         Firebase.fdb.collection("Props").add(this.store[sourceId]);
         console.log("[SharedProps] Props logged", sourceId, new Date());
-      } else {
-        Firebase.fdb.collection("Store").add(this.store);
-        console.log("[SharedProps] Store logged", new Date());
       }
+      Firebase.fdb.collection("Store").add(this.store);
+      console.log("[SharedProps] Store logged", new Date());
     });
   }
 
