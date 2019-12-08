@@ -19,41 +19,23 @@ class SharedPropsFactory {
 
     watch(this.store, () => {
       this.storeUpdateListener();
-      this.
     });
   }
-
-  _set(obj, prop, newVal) {
-    const oldval = obj[prop];
-    console.log("set", oldval, obj, prop, newval);
-    obj[prop] = newVal;
-    this.storeUpdateListener();
-  }
-
-  _get(obj, prop) {
-    console.log("get", obj, prop);
-    // return obj[prop];
-  }
-
-  log() {
+  log(sourceId) {
     new Promise(async (resolve, reject) => {
-      // const val = {
-      //   [this.props.event.timestamp]: this.props
-      // };
-      // let data = await Store.getStore("propsLogs");
-      // if (data === undefined) {
-      //   data = [val];
-      // } else {
-      //   data.push(val);
-      // }
-      // await Store.setStore(val);
-      Firebase.fdb.collection("Props").add(this.props);
-      console.log("[LOG] Props logged", this.props.event.timestamp);
+      if (sourceId) {
+        Firebase.fdb.collection("Props").add(this.store[sourceId]);
+        console.log("[LOG] Props logged", sourceId, this.store[sourceId].event.timestamp);
+      } else {
+        Firebase.fdb.collection("Store").add(this.store);
+        console.log("[LOG] Store logged", new Date());
+      }
     });
   }
 
   storeUpdateListener() {
     Firebase.rdb.ref("SharedProps").set(this.store);
+    console.log("[SharedStore] Store updated", new Date());
   }
 }
 

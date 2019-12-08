@@ -73,7 +73,7 @@ export class Bot {
 
     //  Events listen assist
     this.handler = new handlerBot(this);
-    this.log();
+    SharedProps.log(this.getId().user);
     console.log("Bot instanced");
   }
 
