@@ -1,4 +1,4 @@
-import { shared_props } from "../../Bot";
+import { SharedProps } from "../../Bot";
 
 export class handlerDialogFlow {
   constructor(Bot, response) {

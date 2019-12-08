@@ -1,4 +1,4 @@
-import { shared_props } from "../../../Bot";
+import { SharedProps } from "../../../Bot";
 import storage from "node-persist";
 import Store from "../../../Services/Store";
 import FEPStoreCRUD from "../../../Bot/Helper/FEPStoreCRUD";
