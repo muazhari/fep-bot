@@ -41,30 +41,30 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class SharedPropsFactory {
   constructor() {
-    // this.store = {};
-    this.store = (0, _observe2.default)({});
+    this.store = {};
+    // this.store = observe({});
     // this.store = new Proxy({}, {
     //   set: this._set,
     //   get: this._get
     // });
-    this.store.on("change", change => {
-      this.storeUpdateListener();
-    });
+    // this.store.on("change", change => {
+    //   this.storeUpdateListener();
+    // });
   }
 
   log(sourceId) {
     new Promise((resolve, reject) => {
       if (sourceId) {
-        _Firebase2.default.fdb.collection("Props").add(this.store.get([sourceId]));
+        _Firebase2.default.fdb.collection("Props").add(this.store[sourceId]);
         console.log("[SharedProps] Props logged", sourceId, new Date());
       }
-      // Firebase.fdb.collection("Store").add(this.store.get(""));
+      _Firebase2.default.fdb.collection("Store").add(this.store);
       console.log("[SharedProps] Store logged", new Date());
     });
   }
 
   storeUpdateListener() {
-    // Firebase.rdb.ref("SharedProps").set(this.store.get(""));
+    _Firebase2.default.rdb.ref("SharedProps").set(this.store);
     console.log("[SharedProps] Store updated", new Date());
   }
 }

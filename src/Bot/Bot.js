@@ -48,6 +48,9 @@ export class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
+    // this.props = {
+    //   event: props
+    // };
     // console.log(this.props)
 
     // create LINE SDK client
@@ -60,7 +63,7 @@ export class Bot {
       Basic: Basic(this),
       Access: Access(this),
       Template: Template(this),
-      // Twibbon: Twibbon(this),
+      Twibbon: Twibbon(this),
       Courses: Courses(this),
       PosetLattice: PosetLattice(this)
     };
@@ -68,7 +71,7 @@ export class Bot {
     //  DialogFlow assist
     this.dialogFlow = new dialogFlow(this);
 
-    //   Events listen assist
+    //  Events listen assist
     this.handler = new handlerBot(this);
     SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
@@ -79,13 +82,13 @@ export class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      SharedProps.store.set([sourceIds[type]], {
-        ...SharedProps.store.get([sourceIds[type]]),
+      SharedProps.store[sourceIds[type]] = {
+        ...SharedProps.store[sourceIds[type]],
         event: props.event
-      });
+      };
     });
 
-    return SharedProps.store.get([sourceIds.origin]);
+    return SharedProps.store[sourceIds.origin];
   }
 
   getProfile() {
@@ -151,11 +154,11 @@ export class Bot {
       const writeable = fs.createWriteStream(downloadPath);
       stream.pipe(writeable);
       stream.on("end", () => {
-        console.log("[Bot] Content Download Success", downloadPath);
+        console.log("[Bot] Content Successfuly Downloaded", downloadPath);
         resolve(downloadPath);
       });
       stream.on("error", err => {
-        console.log("[Bot] Content Download Failed ", err);
+        
         reject(err);
       });
     }));

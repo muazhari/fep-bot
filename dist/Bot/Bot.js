@@ -75,6 +75,9 @@ class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
+    // this.props = {
+    //   event: props
+    // };
     // console.log(this.props)
 
     // create LINE SDK client
@@ -87,7 +90,7 @@ class Bot {
       Basic: (0, _Features.Basic)(this),
       Access: (0, _Features.Access)(this),
       Template: (0, _Features.Template)(this),
-      // Twibbon: Twibbon(this),
+      Twibbon: (0, _Features.Twibbon)(this),
       Courses: (0, _Features.Courses)(this),
       PosetLattice: (0, _Features.PosetLattice)(this)
     };
@@ -95,7 +98,7 @@ class Bot {
     //  DialogFlow assist
     this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
-    //   Events listen assist
+    //  Events listen assist
     this.handler = new _Bot.handlerBot(this);
     _Bot.SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
@@ -106,12 +109,12 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      _Bot.SharedProps.store.set([sourceIds[type]], _extends({}, _Bot.SharedProps.store.get([sourceIds[type]]), {
+      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
         event: props.event
-      }));
+      });
     });
 
-    return _Bot.SharedProps.store.get([sourceIds.origin]);
+    return _Bot.SharedProps.store[sourceIds.origin];
   }
 
   getProfile() {
@@ -171,11 +174,11 @@ class Bot {
       const writeable = _fsExtra2.default.createWriteStream(downloadPath);
       stream.pipe(writeable);
       stream.on("end", () => {
-        console.log("[Bot] Content Download Success", downloadPath);
+        console.log("[Bot] Content Successfuly Downloaded", downloadPath);
         resolve(downloadPath);
       });
       stream.on("error", err => {
-        console.log("[Bot] Content Download Failed ", err);
+
         reject(err);
       });
     }));
