@@ -41,6 +41,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class SharedPropsFactory {
   constructor() {
+    // this.store = {};
     this.store = (0, _observe2.default)({});
     // this.store = new Proxy({}, {
     //   set: this._set,
@@ -54,7 +55,7 @@ class SharedPropsFactory {
   log(sourceId) {
     new Promise((resolve, reject) => {
       if (sourceId) {
-        _Firebase2.default.fdb.collection("Props").add(this.store[sourceId]);
+        _Firebase2.default.fdb.collection("Props").add(this.store.get([sourceId]));
         console.log("[SharedProps] Props logged", sourceId, new Date());
       }
       _Firebase2.default.fdb.collection("Store").add(this.store);

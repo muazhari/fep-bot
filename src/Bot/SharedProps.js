@@ -11,7 +11,8 @@ import observe from "observe";
 
 class SharedPropsFactory {
   constructor() {
-    // this.store = observe({});
+    // this.store = {};
+    this.store = observe({});
     // this.store = new Proxy({}, {
     //   set: this._set,
     //   get: this._get
@@ -24,7 +25,7 @@ class SharedPropsFactory {
   log(sourceId) {
     new Promise((resolve, reject) => {
       if (sourceId) {
-        Firebase.fdb.collection("Props").add(this.store[sourceId]);
+        Firebase.fdb.collection("Props").add(this.store.get([sourceId]));
         console.log("[SharedProps] Props logged", sourceId, new Date());
       }
       Firebase.fdb.collection("Store").add(this.store);

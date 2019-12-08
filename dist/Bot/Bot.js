@@ -95,7 +95,7 @@ class Bot {
     //  DialogFlow assist
     this.dialogFlow = new _DialogFlow.dialogFlow(this);
 
-    //  Events listen assist
+    //   Events listen assist
     this.handler = new _Bot.handlerBot(this);
     _Bot.SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
@@ -106,12 +106,12 @@ class Bot {
     const sourceIds = this.getId(props.event.source);
 
     Object.keys(sourceIds).map(type => {
-      _Bot.SharedProps.store[sourceIds[type]] = _extends({}, _Bot.SharedProps.store[sourceIds[type]], {
+      _Bot.SharedProps.store.set([sourceIds[type]], _extends({}, _Bot.SharedProps.store.get([sourceIds[type]]), {
         event: props.event
-      });
+      }));
     });
 
-    return _Bot.SharedProps.store[sourceIds.origin];
+    return _Bot.SharedProps.store.get([sourceIds.origin]);
   }
 
   getProfile() {

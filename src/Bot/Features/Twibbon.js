@@ -291,12 +291,14 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
+      SharedProps.store.set([
+        userId, "twibbon"
+      ], {
         status: true,
         source: {
           id: originId
         }
-      };
+      });
       displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
@@ -349,14 +351,16 @@ export const Twibbon = Bot => {
       const {id, type} = data.twibbon;
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
+      SharedProps.store.set([
+        userId, "twibbon"
+      ], {
         id: id,
         type: type,
         status: true,
         source: {
           id: originId
         }
-      };
+      });
 
       Bot.getProfile().then(profile => {
         const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
@@ -413,21 +417,23 @@ export const Twibbon = Bot => {
     });
 
     //switch back
-    SharedProps.store[userId].twibbon.status = false;
+    SharedProps.store.set([
+      userId, "twibbon", "status"
+    ], false);
   };
 
   const listenImage = getContent => {
-    if (SharedProps.store[userId].twibbon) {
-      const userSwitch = SharedProps.store[userId].twibbon.status;
+    if (SharedProps.store.get([userId, "twibbon"])) {
+      const userSwitch = SharedProps.store.get([userId, "twibbon", "status"]);
 
-      const userInSameCommunal = SharedProps.store[userId].twibbon.source.id === originId;
+      const userInSameCommunal = SharedProps.store.get([userId, "twibbon", "source", "id"]) === originId;
 
-      const twibbonIdChosen = SharedProps.store[userId].twibbon.id !== undefined;
+      const twibbonIdChosen = SharedProps.store.get([userId, "twibbon", "id"]) !== undefined;
 
       if (userSwitch && userInSameCommunal && twibbonIdChosen) {
         const twibbonSetting = {
-          id: SharedProps.store[userId].twibbon.id,
-          type: SharedProps.store[userId].twibbon.type
+          id: SharedProps.store.get([userId, "twibbon", "id"]),
+          type: SharedProps.store.get([userId, "twibbon", "type"])
         };
 
         getContent().then(({originalContentPath, previewPath, originalContentUrl, previewImageUrl}) => {
