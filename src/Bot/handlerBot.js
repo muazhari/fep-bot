@@ -22,7 +22,7 @@ const destructCommand = chat => {
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  console.log({prefix, command, args});
+  console.log("[HandlerBot] Command destructed", {prefix, command, args});
   return {prefix, command, args};
 };
 
@@ -99,7 +99,7 @@ export class handlerBot {
   }
 
   eventListener(event) {
-    console.log(event);
+    console.log("[HandlerBot] Event:", event);
     // hidden error, need fix
     // const this.Bot = new Bot({ event });
     // this.Bot.log()
@@ -137,13 +137,13 @@ export class handlerBot {
         return this.Bot.replyText("Got followed event");
 
       case "unfollow":
-        return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
+        return console.log(`[HandlerBot] Unfollowed this bot: ${JSON.stringify(event)}`);
 
       case "join":
         return this.Bot.replyText(`Joined ${event.source.type}`);
 
       case "leave":
-        return console.log(`Left: ${JSON.stringify(event)}`);
+        return console.log(`[HandlerBot] Left: ${JSON.stringify(event)}`);
 
       case "postback":
         let {data} = event.postback;
@@ -154,7 +154,7 @@ export class handlerBot {
         const objectData = JSON.parse(data);
 
         const {Twibbon} = this.Bot.Features;
-        console.log("LISTENED POSTBACK", objectData);
+        console.log("[HandlerBot] Postback listened", objectData);
         Twibbon.listenPostback(objectData);
 
         break;
@@ -195,7 +195,7 @@ export class handlerBot {
     const imageLogPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
       await CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
-        console.log("Image Logged", imageLogPath);
+        console.log("[HandlerBot] Image Logged", imageLogPath);
       });
       fs.unlinkSync(imageLogPath);
     });
@@ -203,7 +203,6 @@ export class handlerBot {
     if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
-          console.log("getContentDownloaded", imageData.originalContentPath);
           cp.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
           return imageData;
         }).catch(err => {

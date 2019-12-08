@@ -48,9 +48,6 @@ export class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
-    // this.props = {
-    //   event: props
-    // };
     // console.log(this.props)
 
     // create LINE SDK client
@@ -158,7 +155,7 @@ export class Bot {
         resolve(downloadPath);
       });
       stream.on("error", err => {
-        console.log("[Bot] Content Download Failed ", downloadPath);
+        console.log("[Bot] Content Download Failed ", err);
         reject(err);
       });
     }));
