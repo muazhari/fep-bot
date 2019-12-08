@@ -17,7 +17,7 @@ class SharedPropsFactory {
     //   get: this._get
     // });
 
-    watch(this.store, () => {
+    this.observer = watch(this, "store", () => {
       this.storeUpdateListener();
     });
   }
@@ -25,10 +25,10 @@ class SharedPropsFactory {
     new Promise(async (resolve, reject) => {
       if (sourceId) {
         Firebase.fdb.collection("Props").add(this.store[sourceId]);
-        console.log("[LOG] Props logged", sourceId, this.store[sourceId].event.timestamp);
+        console.log("[SharedStore] Props logged", sourceId, new Date());
       } else {
         Firebase.fdb.collection("Store").add(this.store);
-        console.log("[LOG] Store logged", new Date());
+        console.log("[SharedStore] Store logged", new Date());
       }
     });
   }

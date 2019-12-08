@@ -74,7 +74,7 @@ export class Bot {
     //  Events listen assist
     this.handler = new handlerBot(this);
     SharedProps.log(this.getId().user);
-    console.log("Bot instanced");
+    console.log("[Bot] Instanced");
   }
 
   //should updated to implement firebase realtime database
@@ -94,16 +94,7 @@ export class Bot {
   getProfile() {
     return new Promise((resolve, reject) => {
       this.client.getProfile(this.getId().user).then(resolve).catch(reject);
-    });
-  }
-
-  setProps(data, id) {
-    console.log(data);
-    if (!id) 
-      id = this.getId().origin;
-    
-    Object.keys(data).map(key => {
-      SharedProps.store[id][key] = data[key];
+      console.log("[Bot] Got profile");
     });
   }
 
@@ -142,7 +133,10 @@ export class Bot {
     texts = Array.isArray(texts)
       ? texts
       : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => ({type: "text", text})));
+    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
+      console.log("[Bot] Sent Text, length: ", text.length);
+      return {type: "text", text};
+    }));
   }
 
   sendMessage(message) {
@@ -150,7 +144,7 @@ export class Bot {
       ? message
       : [message];
     return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("Message length", msg.length);
+      console.log("[Bot] Sent Message");
       return msg;
     }));
   }
@@ -159,8 +153,14 @@ export class Bot {
     return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
       const writeable = fs.createWriteStream(downloadPath);
       stream.pipe(writeable);
-      stream.on("end", () => resolve(downloadPath));
-      stream.on("error", reject);
+      stream.on("end", () => {
+        console.log("[Bot] Content Download Success", downloadPath);
+        resolve(downloadPath);
+      });
+      stream.on("error", err => {
+        console.log("[Bot] Content Download Failed ", downloadPath);
+        reject(err);
+      });
     }));
   }
 }
