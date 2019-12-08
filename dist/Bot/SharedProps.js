@@ -35,6 +35,8 @@ var _Firebase2 = _interopRequireDefault(_Firebase);
 
 var _melankeWatchjs = require("melanke-watchjs");
 
+var _melankeWatchjs2 = _interopRequireDefault(_melankeWatchjs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class SharedPropsFactory {
@@ -44,11 +46,11 @@ class SharedPropsFactory {
     //   set: this._set,
     //   get: this._get
     // });
-
-    this.observer = (0, _melankeWatchjs.watch)(this.store, () => {
+    this.observer = _melankeWatchjs2.default.watch(this.store, () => {
       this.storeUpdateListener();
     });
   }
+
   log(sourceId) {
     new Promise((resolve, reject) => {
       if (sourceId) {
