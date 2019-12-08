@@ -47,7 +47,10 @@ export class Bot {
   constructor(props) {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
-    this.props = this.initProps(props);
+    // this.props = this.initProps(props);
+    this.props = {
+      event: props
+    };
     // console.log(this.props)
 
     // create LINE SDK client
@@ -75,18 +78,18 @@ export class Bot {
   }
 
   //should updated to implement firebase realtime database
-  initProps(props) {
-    const sourceIds = this.getId(props.event.source);
+  // initProps(props) {
+  //   const sourceIds = this.getId(props.event.source);
 
-    Object.keys(sourceIds).map(type => {
-      SharedProps.store[sourceIds[type]] = {
-        ...SharedProps.store[sourceIds[type]],
-        event: props.event
-      };
-    });
+  //   Object.keys(sourceIds).map(type => {
+  //     SharedProps.store[sourceIds[type]] = {
+  //       ...SharedProps.store[sourceIds[type]],
+  //       event: props.event
+  //     };
+  //   });
 
-    return SharedProps.store[sourceIds.origin];
-  }
+  //   return SharedProps.store[sourceIds.origin];
+  // }
 
   getProfile() {
     return new Promise((resolve, reject) => {
@@ -96,9 +99,9 @@ export class Bot {
 
   log() {
     new Promise(async (resolve, reject) => {
-      const val = {
-        [this.props.event.timestamp]: this.props
-      };
+      // const val = {
+      //   [this.props.event.timestamp]: this.props
+      // };
       // let data = await Store.getStore("propsLogs");
       // if (data === undefined) {
       //   data = [val];

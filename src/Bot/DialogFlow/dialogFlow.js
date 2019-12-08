@@ -1,7 +1,7 @@
 import dialogflow from "dialogflow";
 import uuid from "uuid";
 import { default_agent } from "../../Config/DialogFlow";
-import { shared_props } from "../../Bot";
+import { SharedProps } from "../../Bot";
 import { handlerDialogFlow } from "./internal";
 
 export class dialogFlow {
