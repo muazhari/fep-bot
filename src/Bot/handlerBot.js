@@ -198,7 +198,6 @@ export class handlerBot {
         console.log("[HandlerBot] Image Logged", imageLogPath);
         fs.unlinkSync(imageLogPath);
       });
-      
     });
 
     if (message.contentProvider.type === "line") {
