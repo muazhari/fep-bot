@@ -40,10 +40,11 @@ class SharedPropsFactory {
     // });
   }
 
-  set(props) {
+  set(newObj) {
     const copySet = (newObj, oldObj) => {
       let temp = {};
-      const keys = Object.keys(newObj);
+      const newObjKeys = Object.keys(newObj);
+      const oldObjKeys = Object.keys(newObj);
 
       if (keys <= 0) {
         return old;
