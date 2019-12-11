@@ -196,8 +196,9 @@ export class handlerBot {
     this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
       await CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Image Logged", imageLogPath);
+        fs.unlinkSync(imageLogPath);
       });
-      fs.unlinkSync(imageLogPath);
+      
     });
 
     if (message.contentProvider.type === "line") {

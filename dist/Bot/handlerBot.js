@@ -217,8 +217,8 @@ class handlerBot {
     this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
       await _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Image Logged", imageLogPath);
+        _fsExtra2.default.unlinkSync(imageLogPath);
       });
-      _fsExtra2.default.unlinkSync(imageLogPath);
     });
 
     if (message.contentProvider.type === "line") {
