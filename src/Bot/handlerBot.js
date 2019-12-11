@@ -163,7 +163,7 @@ export class handlerBot {
         return this.Bot.replyText(`Got beacon: ${event.beacon}`);
 
       default:
-        throw new Error(`Unknown event: ${JSON.stringify(event)}`);
+        throw new Error(`[HandlerBot] Unknown event: ${JSON.stringify(event)}`);
     }
   }
 
