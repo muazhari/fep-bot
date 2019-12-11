@@ -44,21 +44,24 @@ class SharedPropsFactory {
     const copySet = (newObj, oldObj) => {
       let temp = {};
       const newObjKeys = Object.keys(newObj);
-      const oldObjKeys = Object.keys(newObj);
+      const oldObjKeys = Object.keys(oldObj);
 
-      if (keys <= 0) {
-        return old;
+      if (newObjKeys.length <= 0) { //base case kalau itu paling bottom, (value)
+        return newObj;
       } else {
-        keys.forEach(k => {
+        newObjKeys.forEach(k => {
+          // karena hashmap gabisa langsung assign tanpa key sebelumnya, jadi ditravel
           temp[k] = {
             ...oldObj[k],
-            ...copySet(newObj[k])
+            ...copySet(newObj[k], oldObj[k])
           };
         });
       }
 
       return temp;
     };
+
+    this.store = copySet(newObj, this.store);
   }
 
   log(sourceId) {
