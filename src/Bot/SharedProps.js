@@ -19,11 +19,11 @@ const merge = (oldObj, newObj) => {
     for(const key in newObj){
       if(isObject(newObj[key])){
         if(!oldObj[key]){
-          oldObj[key] = {.};
+          oldObj[key] = {};
         }
         merge(oldObj[key], newObj[key]);
       } else {
-        oldObj[key] = {...oldObj[key], [key]: newObj[key]};
+        oldObj[key] = newObj[key];
       }
     }   
   }
