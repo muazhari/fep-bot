@@ -13,7 +13,6 @@ const isObject = (item) => {
   return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
 }
 
-
 const merge = (oldObj, newObj) => {
   if(isObject(oldObj) && isObject(newObj)){
     for(const key in newObj){
