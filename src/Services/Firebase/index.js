@@ -17,7 +17,10 @@ class Firebase {
   initApp(config) {
     // const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
     // fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
-    return admin.initializeApp({ credential: admin.credential.cert(config.firebaseAdminConfig), databaseURL: config.firebaseDatabaseURL});
+    return admin.initializeApp({
+      credential: admin.credential.cert(config.firebaseAdminConfig),
+      databaseURL: config.firebaseDatabaseURL
+    });
   }
 
   initSetting() {
