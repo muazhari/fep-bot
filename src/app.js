@@ -29,9 +29,8 @@ app.use(logger("dev", {
 }));
 
 // serve static and downloaded files
-app.use("/static", express.static(path.join(__dirname, "../src/Bot/Assets/static")));
+app.use("/static", express.static(path.join(__dirname, "../assets/static")));
 app.use("/downloaded", express.static(path.join(__dirname, "../assets/downloaded")));
-
 app.use("/twibbons", express.static(path.join(__dirname, "../assets/twibbons")));
 
 app.use("/webhook", line.middleware(line_config));
