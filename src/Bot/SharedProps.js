@@ -9,22 +9,25 @@ import config from "../Config/Line";
 import Firebase from "../Services/Firebase";
 import observe from "observe";
 
-const copySet = (newObj, oldObj) => {
-  let temp = {};
-  const keys = Object.keys(newObj);
+const isObject = (item) => {
+  return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
+}
 
-  if (keys <= 0) {
-    return old;
-  } else {
-    keys.forEach(k => {
-      temp[k] = {
-        ...oldObj[k],
-        ...copySet(newObj[k])
-      };
-    });
+
+const merge = (oldObj, newObj) => {
+  if(isObject(oldObj) && isObject(newObj)){
+    for(const key in newObj){
+      if(isObject(newObj[key])){
+        if(!oldObj[key]){
+          oldObj[key] = {.};
+        }
+        merge(oldObj[key], newObj[key]);
+      } else {
+        oldObj[key] = {...oldObj[key], [key]: newObj[key]};
+      }
+    }   
   }
-
-  return temp;
+  return oldObj;
 };
 
 class SharedPropsFactory {
@@ -41,27 +44,8 @@ class SharedPropsFactory {
   }
 
   set(newObj) {
-    const copySet = (newObj, oldObj) => {
-      let temp = {};
-      const newObjKeys = Object.keys(newObj);
-      const oldObjKeys = Object.keys(oldObj);
 
-      if (newObjKeys.length <= 0) { //base case kalau itu paling bottom, (value)
-        return newObj;
-      } else {
-        newObjKeys.forEach(k => {
-          // karena hashmap gabisa langsung assign tanpa key sebelumnya, jadi ditravel
-          temp[k] = {
-            ...oldObj[k],
-            ...copySet(newObj[k], oldObj[k])
-          };
-        });
-      }
-
-      return temp;
-    };
-
-    this.store = copySet(newObj, this.store);
+    this.store = merge(this.store, newObj);
   }
 
   log(sourceId) {
