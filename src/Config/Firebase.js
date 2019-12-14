@@ -24,8 +24,11 @@ const firebaseAdminConfig = {
 
 const firebaseDatabaseURL = process.env.FIREBASE_ADMIN_DATABASE_URL;
 
+const firebaseAdminKeyPath = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+
 export {
   firebaseConfig,
   firebaseAdminConfig,
-  firebaseDatabaseURL
+  firebaseAdminKeyPath,
+  firebaseDatabaseURL,
 };
