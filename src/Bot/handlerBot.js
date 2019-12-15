@@ -186,16 +186,16 @@ export class handlerBot {
     let getContent;
 
     const imageData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
-      previewPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentPath: path.join(__dirname, "../../Assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: path.join(__dirname, "../../Assets/downloaded/images", `${message.id}-preview.jpg`),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
-    this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
-      await CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Image Logged", imageLogPath);
+    const imageLogPath = path.join(__dirname, "../../Assets/downloaded/images", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
+      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Image logged", imageLogPath);
         fs.unlinkSync(imageLogPath);
       });
     });
@@ -233,11 +233,19 @@ export class handlerBot {
     let getContent;
 
     const videoData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`),
-      previewPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentPath: path.join(__dirname, "../../Assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: path.join(__dirname, "../../Assets/downloaded/videos", `${message.id}-preview.mp4`),
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
+    
+    const videoLogPath = path.join(__dirname, "../../Assets/downloaded/videos", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, videoLogPath).then(() => {
+      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Video logged", videoLogPath);
+        fs.unlinkSync(videoLogPath);
+      });
+    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
@@ -267,9 +275,17 @@ export class handlerBot {
     let getContent;
 
     const audioData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentPath: path.join(__dirname, "../../Assets/downloaded/audios", `${message.id}.m4a`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
+    
+    const audioLogPath = path.join(__dirname, "../../Assets/downloaded/audios", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, audioLogPath).then(() => {
+      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Audio logged", audioLogPath);
+        fs.unlinkSync(audioLogPath);
+      });
+    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
