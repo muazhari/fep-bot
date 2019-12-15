@@ -43,7 +43,6 @@ class SharedPropsFactory {
   }
 
   set(newObj) {
-
     this.store = merge(this.store, newObj);
   }
 
