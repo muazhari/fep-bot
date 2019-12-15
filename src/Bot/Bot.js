@@ -16,7 +16,7 @@ import mkdirp from "mkdirp";
 import path from "path";
 import uuid from "uuid";
 
-import config from "../Config/Line";
+import lineKey from "../Config/Line";
 
 import {handlerBot, SharedProps} from "../Bot";
 
@@ -54,7 +54,7 @@ export class Bot {
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(config);
+    this.client = new line.Client(lineKey.config);
 
     //  Features creator
     this.Features = {

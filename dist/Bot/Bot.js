@@ -81,7 +81,7 @@ class Bot {
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(_Line2.default);
+    this.client = new line.Client(_Line2.default.config);
 
     //  Features creator
     this.Features = {

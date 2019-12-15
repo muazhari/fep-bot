@@ -69,7 +69,7 @@ app.use("/static", _express2.default.static(_path2.default.join(__dirname, "../a
 app.use("/downloaded", _express2.default.static(_path2.default.join(__dirname, "../assets/downloaded")));
 app.use("/twibbons", _express2.default.static(_path2.default.join(__dirname, "../assets/twibbons")));
 
-app.use("/webhook", line.middleware(_Line2.default));
+app.use("/webhook", line.middleware(_Line2.default.config));
 
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
