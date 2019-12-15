@@ -9,16 +9,16 @@ import {
   Courses,
   PosetLattice
 } from "./Features";
-import {dialogFlow} from "./DialogFlow";
+import { dialogFlow } from "./DialogFlow";
 import Store from "../Services/Store";
 import fs from "fs-extra";
 import mkdirp from "mkdirp";
 import path from "path";
 import uuid from "uuid";
 
-import lineKey from "../Config/Line";
+import lineConfig from "../Config/Line";
 
-import {handlerBot, SharedProps} from "../Bot";
+import { handlerBot, SharedProps } from "../Bot";
 
 import Firebase from "../Services/Firebase";
 
@@ -48,13 +48,10 @@ export class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
-    // this.props = {
-    //   event: props
-    // };
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(lineKey.config);
+    this.client = new line.Client(lineConfig);
 
     //  Features creator
     this.Features = {
@@ -93,14 +90,16 @@ export class Bot {
 
   getProfile() {
     return new Promise((resolve, reject) => {
-      this.client.getProfile(this.getId().user).then(resolve).catch(reject);
+      this.client
+        .getProfile(this.getId().user)
+        .then(resolve)
+        .catch(reject);
       console.log("[Bot] Got profile");
     });
   }
 
   getId(source) {
-    if (!source) 
-      source = this.props.event.source;
+    if (!source) source = this.props.event.source;
     const type = {};
 
     if (source.groupId) {
@@ -125,42 +124,45 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) 
-      return type;
-    }
-  
+    if (type) return type;
+  }
+
   replyText(texts) {
-    texts = Array.isArray(texts)
-      ? texts
-      : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
-      console.log("[Bot] Sent Text, length: ", text.length);
-      return {type: "text", text};
-    }));
+    texts = Array.isArray(texts) ? texts : [texts];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      texts.map(text => {
+        console.log("[Bot] Sent Text, length: ", text.length);
+        return { type: "text", text };
+      })
+    );
   }
 
   sendMessage(message) {
-    message = Array.isArray(message)
-      ? message
-      : [message];
-    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("[Bot] Sent Message");
-      return msg;
-    }));
+    message = Array.isArray(message) ? message : [message];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      message.map(msg => {
+        console.log("[Bot] Sent Message");
+        return msg;
+      })
+    );
   }
 
   downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
-      const writeable = fs.createWriteStream(downloadPath);
-      stream.pipe(writeable);
-      stream.on("end", () => {
-        console.log("[Bot] Content Successfuly Downloaded", downloadPath);
-        resolve(downloadPath);
-      });
-      stream.on("error", err => {
-        
-        reject(err);
-      });
-    }));
+    return this.client.getMessageContent(messageId).then(
+      stream =>
+        new Promise((resolve, reject) => {
+          const writeable = fs.createWriteStream(downloadPath);
+          stream.pipe(writeable);
+          stream.on("end", () => {
+            console.log("[Bot] Content Successfuly Downloaded", downloadPath);
+            resolve(downloadPath);
+          });
+          stream.on("error", err => {
+            reject(err);
+          });
+        })
+    );
   }
 }

@@ -8,5 +8,5 @@ const config = {
   channelSecret: process.env.LINE_CHANNEL_SECRET
 };
 
-exports.config = config;
+exports.default = config;
 //# sourceMappingURL=Line.js.map

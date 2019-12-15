@@ -7,10 +7,10 @@ import cloudinary from "cloudinary";
 
 import * as line from "@line/bot-sdk";
 
-import lineKey from "./Config/Line";
-import cloudinaryKey from "./Config/Cloudinary";
+import lineConfig from "./Config/Line";
+import cloudinaryConfig from "./Config/Cloudinary";
 
-cloudinary.config(cloudinaryKey);
+cloudinary.config(cloudinaryConfig);
 
 import Store from "./Services/Store";
 
@@ -33,7 +33,7 @@ app.use("/static", express.static(path.join(__dirname, "../assets/static")));
 app.use("/downloaded", express.static(path.join(__dirname, "../assets/downloaded")));
 app.use("/twibbons", express.static(path.join(__dirname, "../assets/twibbons")));
 
-app.use("/webhook", line.middleware(lineKey.config));
+app.use("/webhook", line.middleware(lineConfig));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

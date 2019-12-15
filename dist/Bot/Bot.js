@@ -75,13 +75,10 @@ class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
-    // this.props = {
-    //   event: props
-    // };
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(_Line2.default.config);
+    this.client = new line.Client(_Line2.default);
 
     //  Features creator
     this.Features = {
@@ -178,7 +175,6 @@ class Bot {
         resolve(downloadPath);
       });
       stream.on("error", err => {
-
         reject(err);
       });
     }));
