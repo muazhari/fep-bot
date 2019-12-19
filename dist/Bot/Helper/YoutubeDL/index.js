@@ -1,8 +1,24 @@
-import youtubedl from "youtube-dl";
-import ResponseCheck from "../../../Bot/Helper/ResponseCheck";
-import Store from "../../../Services/Store";
+"use strict";
 
-export default class YoutubeDL {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _youtubeDl = require("youtube-dl");
+
+var _youtubeDl2 = _interopRequireDefault(_youtubeDl);
+
+var _ResponseCheck = require("../../../Bot/Helper/ResponseCheck");
+
+var _ResponseCheck2 = _interopRequireDefault(_ResponseCheck);
+
+var _Store = require("../../../Services/Store");
+
+var _Store2 = _interopRequireDefault(_Store);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class YoutubeDL {
   constructor(url) {
     this.url = url;
     this.getInfo = this.getInfo.bind(this);
@@ -15,7 +31,7 @@ export default class YoutubeDL {
     const options = [];
 
     return new Promise((resolve, reject) => {
-      youtubedl.getInfo(this.url, options, (err, info) => {
+      _youtubeDl2.default.getInfo(this.url, options, (err, info) => {
         if (err) {
           reject(err);
           throw err;
@@ -27,17 +43,17 @@ export default class YoutubeDL {
 
   generateUrl(urlName, options) {
     return new Promise((resolve, reject) => {
-      Store.getStore("urlCache").then(urlCache => {
+      _Store2.default.getStore("urlCache").then(urlCache => {
         if (urlCache && urlCache[urlName] && options.force === false) {
-          ResponseCheck.status(urlCache[urlName].url).then(urlStatus => {
+          _ResponseCheck2.default.status(urlCache[urlName].url).then(urlStatus => {
             if (urlStatus !== 200) {
-              this.getInfo().then(({url, thumbnail}) => {
+              this.getInfo().then(({ url, thumbnail }) => {
                 urlCache[urlName] = {
                   url,
                   thumbnail
                 };
-                Store.setStore({urlCache: urlCache}).then(() => {
-                  resolve({url, thumbnail});
+                _Store2.default.setStore({ urlCache: urlCache }).then(() => {
+                  resolve({ url, thumbnail });
                 });
               }).catch(reject);
             } else {
@@ -46,12 +62,12 @@ export default class YoutubeDL {
           });
         } else {
           urlCache = {};
-          this.getInfo().then(({url, thumbnail}) => {
+          this.getInfo().then(({ url, thumbnail }) => {
             urlCache[urlName] = {
               url,
               thumbnail
             };
-            Store.setStore({urlCache: urlCache}).then(() => {
+            _Store2.default.setStore({ urlCache: urlCache }).then(() => {
               resolve(urlCache[urlName]);
             });
           }).catch(reject);
@@ -60,3 +76,5 @@ export default class YoutubeDL {
     });
   }
 }
+exports.default = YoutubeDL;
+//# sourceMappingURL=index.js.map
