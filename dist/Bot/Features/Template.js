@@ -139,14 +139,14 @@ const Template = exports.Template = Bot => {
       baseUrl: backgroundImageURL,
       altText: "BINUSHACK 2019",
       baseSize: {
-        width: 1040,
+        width: 735,
         height: 1040
       },
       actions: [{
         area: {
           x: 0,
           y: 0,
-          width: 1040,
+          width: 735,
           height: 1040
         },
         type: "uri",
