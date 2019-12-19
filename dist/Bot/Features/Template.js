@@ -91,6 +91,7 @@ const Template = exports.Template = Bot => {
     const options = {
       force: false
     };
+
     youtubeUrl.generateUrl("bifest", options).then(({ url: videoURL, thumbnail: thumbnailURL }) => {
       Bot.sendMessage({
         type: "imagemap",
