@@ -6,7 +6,6 @@ import routes from "./routes";
 import cloudinary from "cloudinary";
 
 import * as line from "@line/bot-sdk";
-
 import lineConfig from "./Config/Line";
 import cloudinaryConfig from "./Config/Cloudinary";
 
