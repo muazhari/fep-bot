@@ -136,7 +136,7 @@ export const Template = Bot => {
             x: 0,
             y: 0,
             width: 735,
-            height: 905
+            height: 1040
           },
           type: "uri",
           linkUri: "https://bit.ly/binushack"
