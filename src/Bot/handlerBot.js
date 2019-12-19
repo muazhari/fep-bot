@@ -55,7 +55,8 @@ const handleCommand = (features, command) => {
     say: Basic.say,
     twibbon: Twibbon.ready,
     algo: Courses.algo,
-    pl: PosetLattice.generate
+    pl: PosetLattice.generate,
+    hackbinus: Template.hackbinus
   };
 
   const {prefix: content_prefix, command: content_command, args: content_args} = destructCommand(command);
