@@ -372,6 +372,7 @@ export const Twibbon = Bot => {
       }
     });
   };
+
   const listenPostback = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;
@@ -440,8 +441,8 @@ export const Twibbon = Bot => {
           CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
         ]).then(fileMeta => {
           resolve({
-            twibbonOriginalUrl: `${fileMeta[0].secure_url}`,
-            twibbonPreviewUrl: `${fileMeta[1].secure_url}`
+            twibbonOriginalUrl: fileMeta[0].secure_url,
+            twibbonPreviewUrl: fileMeta[1].secure_url
           });
 
           fs.unlinkSync(data.originalContentPath);

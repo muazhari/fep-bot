@@ -207,13 +207,13 @@ class handlerBot {
     let getContent;
 
     const imageData = {
-      originalContentPath: _path2.default.join(__dirname, "../../Assets/downloaded/images", `${message.id}.jpg`),
-      previewPath: _path2.default.join(__dirname, "../../Assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-preview.jpg`),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = _path2.default.join(__dirname, "../../Assets/downloaded/images", `${message.id}-log.jpg`);
+    const imageLogPath = _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, imageLogPath).then(() => {
       _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Image logged", imageLogPath);
@@ -254,13 +254,13 @@ class handlerBot {
     let getContent;
 
     const videoData = {
-      originalContentPath: _path2.default.join(__dirname, "../../Assets/downloaded/videos", `${message.id}.mp4`),
-      previewPath: _path2.default.join(__dirname, "../../Assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
 
-    const videoLogPath = _path2.default.join(__dirname, "../../Assets/downloaded/videos", `${message.id}-log.jpg`);
+    const videoLogPath = _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, videoLogPath).then(() => {
       _CloudinaryUtils2.default.upload(videoData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Video logged", videoLogPath);
@@ -296,11 +296,11 @@ class handlerBot {
     let getContent;
 
     const audioData = {
-      originalContentPath: _path2.default.join(__dirname, "../../Assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    const audioLogPath = _path2.default.join(__dirname, "../../Assets/downloaded/audios", `${message.id}-log.jpg`);
+    const audioLogPath = _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, audioLogPath).then(() => {
       _CloudinaryUtils2.default.upload(audioData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Audio logged", audioLogPath);
