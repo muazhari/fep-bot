@@ -125,7 +125,7 @@ export const Template = Bot => {
     Bot.sendMessage({
       type: "imagemap",
       baseUrl: backgroundImageURL,
-      altText: "BINUSHACK 2019",
+      altText: "BINUSHACK: Christmas Edition",
       baseSize: {
         width: 735,
         height: 1040
@@ -148,13 +148,13 @@ export const Template = Bot => {
       type: "template",
       altText: "Register BINUSHACK",
       template: {
-        type: "confirm",
+        type: "buttons",
         text: "BINUSHACK: Christmas Edition",
         actions: [
           {
-            label: "Register",
             type: "uri",
-            linkUri: "https://bit.ly/binushack"
+            label: "Register",
+            uri: "https://bit.ly/binushack"
           }
         ]
       }
