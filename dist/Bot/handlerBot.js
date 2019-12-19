@@ -1,13 +1,34 @@
-import fs from "fs-extra";
-import path from "path";
-import cp from "child_process";
-import {SharedProps} from "../Bot";
-import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handlerBot = exports.command_prefix = exports.batch_list = exports.baseURL = undefined;
+
+var _fsExtra = require("fs-extra");
+
+var _fsExtra2 = _interopRequireDefault(_fsExtra);
+
+var _path = require("path");
+
+var _path2 = _interopRequireDefault(_path);
+
+var _child_process = require("child_process");
+
+var _child_process2 = _interopRequireDefault(_child_process);
+
+var _Bot = require("../Bot");
+
+var _CloudinaryUtils = require("../Bot/Helper/CloudinaryUtils");
+
+var _CloudinaryUtils2 = _interopRequireDefault(_CloudinaryUtils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // base URL for webhook server
-export const baseURL = process.env.BASE_URL;
+const baseURL = exports.baseURL = process.env.BASE_URL;
 
-export const batch_list = {
+const batch_list = exports.batch_list = {
   a: "22 - 27 JULI 2019",
   b: "29 JULI - 3 AGUSTUS 2019",
   c: "5 - 10 AGUSTUS 2019",
@@ -15,15 +36,15 @@ export const batch_list = {
   e: "26 - 03 SEPTEMBER 2019"
 };
 
-export const command_prefix = "/";
+const command_prefix = exports.command_prefix = "/";
 
 const destructCommand = chat => {
   const prefix = chat[0][0];
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  console.log("[HandlerBot] Command destructed", {prefix, command, args});
-  return {prefix, command, args};
+  console.log("[HandlerBot] Command destructed", { prefix, command, args });
+  return { prefix, command, args };
 };
 
 const handleCommand = (features, command) => {
@@ -59,7 +80,7 @@ const handleCommand = (features, command) => {
     binushack: Template.binushack
   };
 
-  const {prefix: content_prefix, command: content_command, args: content_args} = destructCommand(command);
+  const { prefix: content_prefix, command: content_command, args: content_args } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -89,10 +110,10 @@ const userQueue = userId => {
     }
   };
 
-  return {increment, decrement};
+  return { increment, decrement };
 };
 
-export class handlerBot {
+class handlerBot {
   constructor(Bot) {
     this.Bot = Bot;
     this.features = Bot.Features;
@@ -111,7 +132,7 @@ export class handlerBot {
 
     switch (event.type) {
       case "message":
-        const {message} = event;
+        const { message } = event;
         switch (message.type) {
           case "text":
             return this.handleText();
@@ -147,14 +168,14 @@ export class handlerBot {
         return console.log(`[HandlerBot] Left: ${JSON.stringify(event)}`);
 
       case "postback":
-        let {data} = event.postback;
+        let { data } = event.postback;
         if (data === "DATE" || data === "TIME" || data === "DATETIME") {
           data += `(${JSON.stringify(event.postback.params)})`;
         }
 
         const objectData = JSON.parse(data);
 
-        const {Twibbon} = this.Bot.Features;
+        const { Twibbon } = this.Bot.Features;
         console.log("[HandlerBot] Postback listened", objectData);
         Twibbon.listenPostback(objectData);
 
@@ -169,7 +190,7 @@ export class handlerBot {
   }
 
   handleText() {
-    const {message, replyToken, source} = this.Bot.props.event;
+    const { message, replyToken, source } = this.Bot.props.event;
 
     // The text query request.
     const splittedChat = message.text.split(" ");
@@ -183,28 +204,28 @@ export class handlerBot {
   }
 
   handleImage() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const imageData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}.jpg`),
-      previewPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-preview.jpg`),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = path.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
+    const imageLogPath = _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, imageLogPath).then(() => {
-      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
+      _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Image logged", imageLogPath);
-        fs.unlinkSync(imageLogPath);
+        _fsExtra2.default.unlinkSync(imageLogPath);
       });
     });
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
         return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
-          cp.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
+          _child_process2.default.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
           return imageData;
         }).catch(err => {
           throw err;
@@ -212,7 +233,7 @@ export class handlerBot {
       };
 
       // Twibbon switch
-      const {Twibbon} = this.Bot.Features;
+      const { Twibbon } = this.Bot.Features;
       Twibbon.listenImage(getContent);
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
@@ -220,7 +241,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl, previewImageUrl}) => {
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({
       //   type: "image",
       //   originalContentUrl: originalContentUrl,
@@ -230,21 +251,21 @@ export class handlerBot {
   }
 
   handleVideo() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const videoData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
-      previewPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
 
-    const videoLogPath = path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
+    const videoLogPath = _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, videoLogPath).then(() => {
-      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(() => {
+      _CloudinaryUtils2.default.upload(videoData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Video logged", videoLogPath);
-        fs.unlinkSync(videoLogPath);
+        _fsExtra2.default.unlinkSync(videoLogPath);
       });
     });
 
@@ -252,7 +273,7 @@ export class handlerBot {
       getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
         // FFmpeg and ImageMagick is needed here to run 'convert'
         // Please consider about security and performance by yourself
-        cp.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
+        _child_process2.default.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
 
         return videoData;
       });
@@ -262,7 +283,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl, previewImageUrl}) => {
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({
       //   type: "video",
       //   originalContentUrl,
@@ -272,19 +293,19 @@ export class handlerBot {
   }
 
   handleAudio() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const audioData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    const audioLogPath = path.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
+    const audioLogPath = _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, audioLogPath).then(() => {
-      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(() => {
+      _CloudinaryUtils2.default.upload(audioData.originalContentUrl, message.id).then(() => {
         console.log("[HandlerBot] Audio logged", audioLogPath);
-        fs.unlinkSync(audioLogPath);
+        _fsExtra2.default.unlinkSync(audioLogPath);
       });
     });
 
@@ -298,7 +319,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl}) => {
+    return getContent.then(({ originalContentUrl }) => {
       // this.Bot.sendMessage({
       //   type: "audio",
       //   originalContentUrl,
@@ -308,12 +329,12 @@ export class handlerBot {
   }
 
   handleLocation() {
-    const {message, replyToken} = this.Bot.props.event;
-    this.Bot.sendMessage({type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude});
+    const { message, replyToken } = this.Bot.props.event;
+    this.Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
   }
 
   handleSticker() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     // this.Bot.sendMessage({
     //   type: "sticker",
     //   packageId: message.packageId,
@@ -321,3 +342,5 @@ export class handlerBot {
     // });
   }
 }
+exports.handlerBot = handlerBot;
+//# sourceMappingURL=handlerBot.js.map

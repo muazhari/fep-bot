@@ -119,32 +119,31 @@ export const Template = Bot => {
     });
   };
 
-  const hackbinus = () => {
+  const binushack = () => {
     const backgroundImageURL = `https://res.cloudinary.com/fep-bot/image/upload/v1576792215/binushack.jpg`;
-
 
     Bot.sendMessage({
       type: "imagemap",
       baseUrl: backgroundImageURL,
-      altText: "Bifest 2019",
+      altText: "BINUSHACK 2019",
       baseSize: {
-        width: 1040,
-        height: 600
+        width: 905,
+        height: 1280
       },
       actions: [
         {
           area: {
             x: 0,
             y: 0,
-            width: 1040,
-            height: 600
+            width: 905,
+            height: 1280
           },
           type: "uri",
-          linkUri: "https://binus.ac.id/2019/05/binus-festival-2019-ajang-pameran-tahunan-yang-melahirkan-entrepreneur-berintegritas/"
+          linkUri: "https://bit.ly/binushack"
         }
       ]
     });
   };
 
-  return {button, confirm, bifest, hackbinus};
+  return {button, confirm, bifest, binushack};
 };
