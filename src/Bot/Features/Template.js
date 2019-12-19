@@ -120,23 +120,23 @@ export const Template = Bot => {
   };
 
   const binushack = () => {
-    const backgroundImageURL = `https://res.cloudinary.com/fep-bot/image/upload/v1576792215/binushack.jpg`;
+    const backgroundImageURL = `${baseURL}/static/binushack`;
 
     Bot.sendMessage({
       type: "imagemap",
       baseUrl: backgroundImageURL,
       altText: "BINUSHACK 2019",
       baseSize: {
-        width: 905,
-        height: 1280
+        width: 735,
+        height: 1040
       },
       actions: [
         {
           area: {
             x: 0,
             y: 0,
-            width: 905,
-            height: 1280
+            width: 735,
+            height: 905
           },
           type: "uri",
           linkUri: "https://bit.ly/binushack"
