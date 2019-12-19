@@ -1,4 +1,4 @@
-import { command_prefix, batch_list, baseURL, SharedProps } from "../../Bot";
+import {command_prefix, batch_list, baseURL, SharedProps} from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import CloudinaryUtils from "../../Bot/Helper/CloudinaryUtils";
 import cloudinary from "cloudinary";
@@ -8,16 +8,13 @@ import cp from "child_process";
 import path from "path";
 
 const objectsHaveSameKeys = (...objects) => {
-  const allKeys = objects.reduce(
-    (keys, object) => keys.concat(Object.keys(object)),
-    []
-  );
+  const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), []);
   const union = new Set(allKeys);
   return objects.every(object => union.size === Object.keys(object).length);
 };
 
 export const Twibbon = Bot => {
-  const { user: userId, origin: originId } = Bot.getId();
+  const {user: userId, origin: originId} = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -28,8 +25,7 @@ export const Twibbon = Bot => {
           height: size,
           format: "jpg",
           public_id: `${filename}-twibbon`
-        },
-        {
+        }, {
           overlay: twibbon_overlay,
           flags: "relative",
           width: size,
@@ -44,8 +40,7 @@ export const Twibbon = Bot => {
     twibbon_cs: {
       category: "socs",
       name: "Computer Science",
-      url:
-        "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -56,16 +51,14 @@ export const Twibbon = Bot => {
                 format: "jpg",
                 aspect_ratio: "1:1",
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 gravity: "auto",
                 crop: "fill_pad",
                 width: size,
                 height: size,
                 y: Math.floor(-size * 0.2),
                 x: Math.floor(size * 0.045)
-              },
-              {
+              }, {
                 overlay: "twibbon_cs.png",
                 flags: "relative",
                 width: size,
@@ -82,8 +75,7 @@ export const Twibbon = Bot => {
                 width: size,
                 height: size,
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_cs.png",
                 flags: "relative",
                 width: size,
@@ -99,8 +91,7 @@ export const Twibbon = Bot => {
     twibbon_tfi: {
       category: "tfi",
       name: "Teach For Indonesia",
-      url:
-        "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -115,14 +106,12 @@ export const Twibbon = Bot => {
                 x: Math.floor(size * 0.045),
                 y: Math.floor(-size * 0.2),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 gravity: "auto",
                 crop: "fill",
                 width: size,
                 height: size
-              },
-              {
+              }, {
                 overlay: "twibbon_tfi.png",
                 flags: "relative",
                 width: size,
@@ -140,8 +129,7 @@ export const Twibbon = Bot => {
                 width: size,
                 height: size,
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_tfi.png",
                 flags: "relative",
                 width: size,
@@ -157,8 +145,7 @@ export const Twibbon = Bot => {
     twibbon_binus1: {
       category: "binus",
       name: "Binus 1",
-      url:
-        "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbon_binus1.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbon_binus1.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -171,8 +158,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.2),
                 height: size - Math.floor(size * 0.2),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus1.png",
                 flags: "relative",
                 width: size,
@@ -190,8 +176,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.2125),
                 height: size - Math.floor(size * 0.2),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus1.png",
                 flags: "relative",
                 width: size,
@@ -207,8 +192,7 @@ export const Twibbon = Bot => {
     twibbon_binus2: {
       category: "binus",
       name: "Binus 2",
-      url:
-        "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbon_binus2.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbon_binus2.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -221,8 +205,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.225),
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus2.png",
                 flags: "relative",
                 width: size,
@@ -240,8 +223,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.225),
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus2.png",
                 flags: "relative",
                 width: size,
@@ -257,8 +239,7 @@ export const Twibbon = Bot => {
     twibbon_binus3: {
       category: "binus",
       name: "Binus 3",
-      url:
-        "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbon_binus3.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbon_binus3.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -271,8 +252,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.225),
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus3.png",
                 flags: "relative",
                 width: size,
@@ -290,8 +270,7 @@ export const Twibbon = Bot => {
                 width: size - Math.floor(size * 0.225),
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
-              },
-              {
+              }, {
                 overlay: "twibbon_binus3.png",
                 flags: "relative",
                 width: size,
@@ -325,23 +304,17 @@ export const Twibbon = Bot => {
   };
 
   const displayList = category => {
-    let selected = Object.keys(twibbon_list)
-      .map(twibbonId => twibbonId)
-      .filter(twibbonId => typeof twibbonId === "string");
+    let selected = Object.keys(twibbon_list).map(twibbonId => twibbonId).filter(twibbonId => typeof twibbonId === "string");
 
     if (category) {
-      selected = Object.keys(twibbon_list).filter(
-        twibbonId => twibbon_list[twibbonId].category === category
-      );
+      selected = Object.keys(twibbon_list).filter(twibbonId => twibbon_list[twibbonId].category === category);
       if (selected.length === 0) {
-        return Bot.replyText(
-          `Tidak ada kategori, lihat di ${command_prefix}twibbon`
-        );
+        return Bot.replyText(`Tidak ada kategori, lihat di ${command_prefix}twibbon`);
       }
     }
 
     const twibbonColumns = selected.map(id => {
-      const { url, name } = twibbon_list[id];
+      const {url, name} = twibbon_list[id];
       return {
         thumbnailImageUrl: url,
         imageBackgroundColor: "#FFFFFF",
@@ -350,12 +323,21 @@ export const Twibbon = Bot => {
           {
             type: "postback",
             label: "Auto-AI Mode",
-            data: JSON.stringify({ twibbon: { id: id, type: "auto" } })
-          },
-          {
+            data: JSON.stringify({
+              twibbon: {
+                id: id,
+                type: "auto"
+              }
+            })
+          }, {
             type: "postback",
             label: "Manual Mode",
-            data: JSON.stringify({ twibbon: { id: id, type: "manual" } })
+            data: JSON.stringify({
+              twibbon: {
+                id: id,
+                type: "manual"
+              }
+            })
           }
         ]
       };
@@ -375,7 +357,7 @@ export const Twibbon = Bot => {
 
   const listenPostback = data => {
     if (data.twibbon) {
-      const { id, type } = data.twibbon;
+      const {id, type} = data.twibbon;
 
       // ready-up switch
       SharedProps.store[userId]["twibbon"] = {
@@ -388,13 +370,9 @@ export const Twibbon = Bot => {
       };
 
       Bot.getProfile().then(profile => {
-        const messages = [
-          `Hai ${profile.displayName}, masukan gambar mu disini~`
-        ];
+        const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
         if (type === "manual") {
-          messages.push(
-            `Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`
-          );
+          messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
         }
         Bot.replyText(messages);
       });
@@ -402,48 +380,28 @@ export const Twibbon = Bot => {
   };
 
   const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
-    const result = cloudinary.url(
-      publicId,
-      twibbon_list[twibbonSetting.id].transform(filename, size)[
-        twibbonSetting.type
-      ]
-    );
+    const result = cloudinary.url(publicId, twibbon_list[twibbonSetting.id].transform(filename, size)[twibbonSetting.type]);
     return result;
   };
 
   const generate = data => {
     return new Promise((resolve, reject) => {
-      CloudinaryUtils.upload(data.url, data.filename).then(
-        twibbonBackgroundMeta => {
-          performTransformations(twibbonBackgroundMeta);
-        }
-      );
+      CloudinaryUtils.upload(data.url, data.filename).then(twibbonBackgroundMeta => {
+        performTransformations(twibbonBackgroundMeta);
+      });
 
       const performTransformations = twibbonBackgroundMeta => {
         const twibbonOriginalName = `${data.filename}-twibbon`;
-        const resultOriginalUrl = getTransformedFileUrl(
-          data.twibbonSetting,
-          twibbonBackgroundMeta.public_id,
-          twibbonOriginalName,
-          1040
-        );
+        const resultOriginalUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibbonOriginalName, 1040);
 
         const twibonPreviewName = `${data.filename}-twibbon-preview`;
-        const resultPreviewUrl = getTransformedFileUrl(
-          data.twibbonSetting,
-          twibbonBackgroundMeta.public_id,
-          twibonPreviewName,
-          240
-        );
+        const resultPreviewUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
         Promise.all([
           CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
           CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
         ]).then(fileMeta => {
-          resolve({
-            twibbonOriginalUrl: fileMeta[0].secure_url,
-            twibbonPreviewUrl: fileMeta[1].secure_url
-          });
+          resolve({twibbonOriginalUrl: fileMeta[0].secure_url, twibbonPreviewUrl: fileMeta[1].secure_url});
 
           fs.unlinkSync(data.originalContentPath);
           fs.unlinkSync(data.previewPath);
@@ -461,12 +419,8 @@ export const Twibbon = Bot => {
       filename: Bot.props.event.message.id
     };
 
-    generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      Bot.sendMessage({
-        type: "image",
-        originalContentUrl: twibbonOriginalUrl,
-        previewImageUrl: twibbonPreviewUrl
-      });
+    generate(data).then(({twibbonOriginalUrl, twibbonPreviewUrl}) => {
+      Bot.sendMessage({type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl});
     });
 
     //switch back
@@ -476,12 +430,8 @@ export const Twibbon = Bot => {
   const listenImage = getContent => {
     if (SharedProps.store[userId].twibbon) {
       const userSwitch = SharedProps.store[userId].twibbon.status;
-
-      const userInSameCommunal =
-        SharedProps.store[userId].twibbon.source.id === originId;
-
-      const twibbonIdChosen =
-        SharedProps.store[userId].twibbon.id !== undefined;
+      const userInSameCommunal = SharedProps.store[userId].twibbon.source.id === originId;
+      const twibbonIdChosen = SharedProps.store[userId].twibbon.id !== undefined;
 
       if (userSwitch && userInSameCommunal && twibbonIdChosen) {
         const twibbonSetting = {
@@ -489,24 +439,12 @@ export const Twibbon = Bot => {
           type: SharedProps.store[userId].twibbon.type
         };
 
-        getContent().then(
-          ({
-            originalContentPath,
-            previewPath,
-            originalContentUrl,
-            previewImageUrl
-          }) => {
-            make([
-              originalContentUrl,
-              originalContentPath,
-              previewPath,
-              twibbonSetting
-            ]);
-          }
-        );
+        getContent().then(({originalContentPath, previewPath, originalContentUrl, previewImageUrl}) => {
+          make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
+        });
       }
     }
   };
 
-  return { ready, listenImage, listenPostback };
+  return {ready, listenImage, listenPostback};
 };

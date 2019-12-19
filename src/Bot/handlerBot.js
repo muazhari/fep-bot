@@ -238,7 +238,7 @@ export class handlerBot {
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
-    
+
     const videoLogPath = path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, videoLogPath).then(() => {
       CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(() => {
@@ -278,7 +278,7 @@ export class handlerBot {
       originalContentPath: path.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
-    
+
     const audioLogPath = path.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
     this.Bot.downloadContent(message.id, audioLogPath).then(() => {
       CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(() => {
