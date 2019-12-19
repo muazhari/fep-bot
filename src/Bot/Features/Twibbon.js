@@ -433,7 +433,13 @@ export const Twibbon = Bot => {
     });
 
     //switch back
-    SharedProps.store[userId].twibbon.status = false;
+    SharedProps.set({
+      [userId]: {
+        twibbon: {
+          status: false
+        }
+      }
+    });
   };
 
   const listenImage = getContent => {
