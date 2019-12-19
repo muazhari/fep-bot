@@ -127,7 +127,7 @@ export const Template = Bot => {
       baseUrl: backgroundImageURL,
       altText: "BINUSHACK 2019",
       baseSize: {
-        width: 735,
+        width: 1040,
         height: 1040
       },
       actions: [
@@ -135,7 +135,7 @@ export const Template = Bot => {
           area: {
             x: 0,
             y: 0,
-            width: 735,
+            width: 1040,
             height: 1040
           },
           type: "uri",
