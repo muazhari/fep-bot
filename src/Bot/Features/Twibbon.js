@@ -291,12 +291,17 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
-        status: true,
-        source: {
-          id: originId
+      SharedProps.set({
+        [userId]: {
+          twibbon: {
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
+
       displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
@@ -360,14 +365,18 @@ export const Twibbon = Bot => {
       const {id, type} = data.twibbon;
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
-        id: id,
-        type: type,
-        status: true,
-        source: {
-          id: originId
+      SharedProps.set({
+        [userId]: {
+          twibbon: {
+            id: id,
+            type: type,
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
 
       Bot.getProfile().then(profile => {
         const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
