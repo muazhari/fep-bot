@@ -1,5 +1,5 @@
   touch /tmp/INSTALLED_PACKAGES
-PACKAGES=""
+PACKAGES="aria2c"
 if [ ! "$PACKAGES" == "$(cat /tmp/INSTALLED_PACKAGES)" ]; then
   cd /tmp
   rm -rf notroot
