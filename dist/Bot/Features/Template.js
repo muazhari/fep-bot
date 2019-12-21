@@ -154,19 +154,21 @@ const Template = exports.Template = Bot => {
       }]
     });
 
-    Bot.sendMessage({
-      type: "template",
-      altText: "Register BINUSHACK",
-      template: {
-        type: "buttons",
-        text: "BINUSHACK: Christmas Edition",
-        actions: [{
-          type: "uri",
-          label: "Register",
-          uri: "https://bit.ly/binushack"
-        }]
-      }
-    });
+    // Bot.sendMessage({
+    //   type: "template",
+    //   altText: "Register BINUSHACK",
+    //   template: {
+    //     type: "buttons",
+    //     text: "BINUSHACK: Christmas Edition",
+    //     actions: [
+    //       {
+    //         type: "uri",
+    //         label: "Register",
+    //         uri: "https://bit.ly/binushack"
+    //       }
+    //     ]
+    //   }
+    // });
   };
 
   const test = () => {
