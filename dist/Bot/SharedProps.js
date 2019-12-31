@@ -39,6 +39,26 @@ var _observe2 = _interopRequireDefault(_observe);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+const isObject = item => {
+  return item && typeof item === 'object' && !Array.isArray(item) && item !== null;
+};
+
+const merge = (oldObj, newObj) => {
+  if (isObject(oldObj) && isObject(newObj)) {
+    for (const key in newObj) {
+      if (isObject(newObj[key])) {
+        if (!oldObj[key]) {
+          oldObj[key] = {};
+        }
+        merge(oldObj[key], newObj[key]);
+      } else {
+        oldObj[key] = newObj[key];
+      }
+    }
+  }
+  return oldObj;
+};
+
 class SharedPropsFactory {
   constructor() {
     this.store = {};
@@ -50,6 +70,10 @@ class SharedPropsFactory {
     // this.store.on("change", change => {
     //   this.storeUpdateListener();
     // });
+  }
+
+  set(newObj) {
+    this.store = merge(this.store, newObj);
   }
 
   log(sourceId) {

@@ -38,12 +38,12 @@ class Firebase {
   }
 
   initApp(config) {
-    const serviceAccountKeyFile = "serviceAccountKey.json";
-    const serviceAccountKeyPath = _path2.default.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
-    //     const serviceAccountKeyPath = path.join(__dirname, "../../../src/Config", `${serviceAccountKeyFile}`);
     // const serviceAccountKeyData = JSON.stringify(config.firebaseAdminConfig);
     // fs.writeFile(serviceAccountKeyPath, serviceAccountKeyData, "utf8");
-    return _firebaseAdmin2.default.initializeApp({ credential: _firebaseAdmin2.default.credential.cert(serviceAccountKeyPath), databaseURL: config.firebaseDatabaseURL });
+    return _firebaseAdmin2.default.initializeApp({
+      credential: _firebaseAdmin2.default.credential.cert(config.firebaseAdminConfig),
+      databaseURL: config.firebaseDatabaseURL
+    });
   }
 
   initSetting() {

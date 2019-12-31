@@ -1,6 +1,6 @@
 import youtubedl from "youtube-dl";
-import ResponseCheck from '../../../Bot/Helper/ResponseCheck'
-import Store from '../../../Services/Store'
+import ResponseCheck from "../../../Bot/Helper/ResponseCheck";
+import Store from "../../../Services/Store";
 
 export default class YoutubeDL {
   constructor(url) {
@@ -27,32 +27,32 @@ export default class YoutubeDL {
 
   generateUrl(urlName, options) {
     return new Promise((resolve, reject) => {
-      Store.getStore("url_cache").then(url_cache => {
-        if (url_cache[urlName] && options.force === false) {
-          ResponseCheck.status(url_cache[urlName].url).then(url_status => {
-            if (url_status !== 200) {
+      Store.getStore("urlCache").then(urlCache => {
+        if (urlCache && urlCache[urlName] && options.force === false) {
+          ResponseCheck.status(urlCache[urlName].url).then(urlStatus => {
+            if (urlStatus !== 200) {
               this.getInfo().then(({url, thumbnail}) => {
-                url_cache[urlName] = {
+                urlCache[urlName] = {
                   url,
                   thumbnail
                 };
-                Store.setStore({url_cache: url_cache}).then(() => {
+                Store.setStore({urlCache: urlCache}).then(() => {
                   resolve({url, thumbnail});
                 });
               }).catch(reject);
             } else {
-              resolve(url_cache[urlName]);
+              resolve(urlCache[urlName]);
             }
           });
         } else {
-          url_cache = {};
+          urlCache = {};
           this.getInfo().then(({url, thumbnail}) => {
-            url_cache[urlName] = {
+            urlCache[urlName] = {
               url,
               thumbnail
             };
-            Store.setStore({url_cache: url_cache}).then(() => {
-              resolve(url_cache[urlName]);
+            Store.setStore({urlCache: urlCache}).then(() => {
+              resolve(urlCache[urlName]);
             });
           }).catch(reject);
         }

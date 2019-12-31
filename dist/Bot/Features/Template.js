@@ -91,6 +91,7 @@ const Template = exports.Template = Bot => {
     const options = {
       force: false
     };
+
     youtubeUrl.generateUrl("bifest", options).then(({ url: videoURL, thumbnail: thumbnailURL }) => {
       Bot.sendMessage({
         type: "imagemap",
@@ -130,6 +131,50 @@ const Template = exports.Template = Bot => {
     });
   };
 
-  return { button, confirm, bifest };
+  const binushack = () => {
+    const backgroundImageURL = `${_Bot.baseURL}/static/binushack`;
+
+    Bot.sendMessage({
+      type: "imagemap",
+      baseUrl: backgroundImageURL,
+      altText: "BINUSHACK: Christmas Edition",
+      baseSize: {
+        width: 735,
+        height: 1040
+      },
+      actions: [{
+        area: {
+          x: 0,
+          y: 0,
+          width: 735,
+          height: 1040
+        },
+        type: "uri",
+        linkUri: "https://bit.ly/binushack"
+      }]
+    });
+
+    // Bot.sendMessage({
+    //   type: "template",
+    //   altText: "Register BINUSHACK",
+    //   template: {
+    //     type: "buttons",
+    //     text: "BINUSHACK: Christmas Edition",
+    //     actions: [
+    //       {
+    //         type: "uri",
+    //         label: "Register",
+    //         uri: "https://bit.ly/binushack"
+    //       }
+    //     ]
+    //   }
+    // });
+  };
+
+  const test = () => {
+    // Bot.sendMessage();
+  };
+
+  return { button, confirm, bifest, binushack, test };
 };
 //# sourceMappingURL=Template.js.map

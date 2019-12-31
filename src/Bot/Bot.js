@@ -16,7 +16,7 @@ import mkdirp from "mkdirp";
 import path from "path";
 import uuid from "uuid";
 
-import config from "../Config/Line";
+import lineConfig from "../Config/Line";
 
 import {handlerBot, SharedProps} from "../Bot";
 
@@ -48,13 +48,10 @@ export class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
-    // this.props = {
-    //   event: props
-    // };
     // console.log(this.props)
 
     // create LINE SDK client
-    this.client = new line.Client(config);
+    this.client = new line.Client(lineConfig);
 
     //  Features creator
     this.Features = {
@@ -125,16 +122,15 @@ export class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) 
-      return type;
-    }
-  
+    return type;
+  }
+
   replyText(texts) {
     texts = Array.isArray(texts)
       ? texts
       : [texts];
     return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
-      console.log("[Bot] Sent Text, length: ", text.length);
+      console.log("[Bot] Send Text, length: ", text.length);
       return {type: "text", text};
     }));
   }
@@ -144,7 +140,7 @@ export class Bot {
       ? message
       : [message];
     return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("[Bot] Sent Message");
+      console.log("[Bot] Send Message");
       return msg;
     }));
   }
@@ -158,7 +154,6 @@ export class Bot {
         resolve(downloadPath);
       });
       stream.on("error", err => {
-        
         reject(err);
       });
     }));

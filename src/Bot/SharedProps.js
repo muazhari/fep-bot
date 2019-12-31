@@ -9,6 +9,26 @@ import config from "../Config/Line";
 import Firebase from "../Services/Firebase";
 import observe from "observe";
 
+const isObject = (item) => {
+  return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
+}
+
+const merge = (oldObj, newObj) => {
+  if(isObject(oldObj) && isObject(newObj)){
+    for(const key in newObj){
+      if(isObject(newObj[key])){
+        if(!oldObj[key]){
+          oldObj[key] = {};
+        }
+        merge(oldObj[key], newObj[key]);
+      } else {
+        oldObj[key] = newObj[key];
+      }
+    }   
+  }
+  return oldObj;
+};
+
 class SharedPropsFactory {
   constructor() {
     this.store = {};
@@ -20,6 +40,10 @@ class SharedPropsFactory {
     // this.store.on("change", change => {
     //   this.storeUpdateListener();
     // });
+  }
+
+  set(newObj) {
+    this.store = merge(this.store, newObj);
   }
 
   log(sourceId) {

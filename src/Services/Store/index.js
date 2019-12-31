@@ -6,7 +6,7 @@ import path from "path";
 
 const init = async () => {
   await storage.init({
-    dir: path.join(__dirname, "../../../src/Logs"),
+    dir: path.join(__dirname, "../../../Logs"),
     stringify: JSON.stringify,
     parse: JSON.parse,
     encoding: "utf8",

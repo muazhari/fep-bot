@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const init = async () => {
   await _nodePersist2.default.init({
-    dir: _path2.default.join(__dirname, "../../../src/Logs"),
+    dir: _path2.default.join(__dirname, "../../../Logs"),
     stringify: JSON.stringify,
     parse: JSON.parse,
     encoding: "utf8",

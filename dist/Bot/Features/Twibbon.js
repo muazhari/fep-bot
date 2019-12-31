@@ -299,12 +299,17 @@ const Twibbon = exports.Twibbon = Bot => {
       };
 
       // ready-up switch
-      _Bot.SharedProps.store[userId]["twibbon"] = {
-        status: true,
-        source: {
-          id: originId
+      _Bot.SharedProps.set({
+        [userId]: {
+          twibbon: {
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
+
       displayList(data.category);
     } else {
       Bot.replyText(`${_Bot.command_prefix}twibbon <type>`);
@@ -326,15 +331,25 @@ const Twibbon = exports.Twibbon = Bot => {
       return {
         thumbnailImageUrl: url,
         imageBackgroundColor: "#FFFFFF",
-        text: `${name}`,
+        text: name,
         actions: [{
           type: "postback",
           label: "Auto-AI Mode",
-          data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+          data: JSON.stringify({
+            twibbon: {
+              id: id,
+              type: "auto"
+            }
+          })
         }, {
           type: "postback",
           label: "Manual Mode",
-          data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+          data: JSON.stringify({
+            twibbon: {
+              id: id,
+              type: "manual"
+            }
+          })
         }]
       };
     });
@@ -350,19 +365,24 @@ const Twibbon = exports.Twibbon = Bot => {
       }
     });
   };
+
   const listenPostback = data => {
     if (data.twibbon) {
       const { id, type } = data.twibbon;
 
       // ready-up switch
-      _Bot.SharedProps.store[userId]["twibbon"] = {
-        id: id,
-        type: type,
-        status: true,
-        source: {
-          id: originId
+      _Bot.SharedProps.set({
+        [userId]: {
+          twibbon: {
+            id: id,
+            type: type,
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
 
       Bot.getProfile().then(profile => {
         const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
@@ -393,7 +413,7 @@ const Twibbon = exports.Twibbon = Bot => {
         const resultPreviewUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
         Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]).then(fileMeta => {
-          resolve({ twibbonOriginalUrl: `${fileMeta[0].secure_url}`, twibbonPreviewUrl: `${fileMeta[1].secure_url}` });
+          resolve({ twibbonOriginalUrl: fileMeta[0].secure_url, twibbonPreviewUrl: fileMeta[1].secure_url });
 
           _fsExtra2.default.unlinkSync(data.originalContentPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
@@ -416,15 +436,19 @@ const Twibbon = exports.Twibbon = Bot => {
     });
 
     //switch back
-    _Bot.SharedProps.store[userId].twibbon.status = false;
+    _Bot.SharedProps.set({
+      [userId]: {
+        twibbon: {
+          status: false
+        }
+      }
+    });
   };
 
   const listenImage = getContent => {
     if (_Bot.SharedProps.store[userId].twibbon) {
       const userSwitch = _Bot.SharedProps.store[userId].twibbon.status;
-
       const userInSameCommunal = _Bot.SharedProps.store[userId].twibbon.source.id === originId;
-
       const twibbonIdChosen = _Bot.SharedProps.store[userId].twibbon.id !== undefined;
 
       if (userSwitch && userInSameCommunal && twibbonIdChosen) {

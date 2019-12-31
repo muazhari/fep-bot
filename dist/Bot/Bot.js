@@ -75,9 +75,6 @@ class Bot {
     // console.log(SharedProps.store)
     // only access by? user, group, room, origin
     this.props = this.initProps(props);
-    // this.props = {
-    //   event: props
-    // };
     // console.log(this.props)
 
     // create LINE SDK client
@@ -150,13 +147,13 @@ class Bot {
       type["user"] = source.userId;
     }
 
-    if (type) return type;
+    return type;
   }
 
   replyText(texts) {
     texts = Array.isArray(texts) ? texts : [texts];
     return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
-      console.log("[Bot] Sent Text, length: ", text.length);
+      console.log("[Bot] Send Text, length: ", text.length);
       return { type: "text", text };
     }));
   }
@@ -164,7 +161,7 @@ class Bot {
   sendMessage(message) {
     message = Array.isArray(message) ? message : [message];
     return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("[Bot] Sent Message");
+      console.log("[Bot] Send Message");
       return msg;
     }));
   }
@@ -178,7 +175,6 @@ class Bot {
         resolve(downloadPath);
       });
       stream.on("error", err => {
-
         reject(err);
       });
     }));

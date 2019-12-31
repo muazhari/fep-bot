@@ -44,6 +44,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const uploadQueue = {};
 
+// const upload = file => {
+//   return new Promise(resolve => {
+//     cloudinary.uploader.upload(file, result => {
+//       resolve({url: result.url, id: result.public_id});
+//     }, {resource_type: "auto"});
+//   });
+// };
+
 const upload = (url, filename) => {
   return new Promise((resolve, reject) => {
     _cloudinary2.default.uploader.upload(url, { public_id: filename }).then(file => {
@@ -70,8 +78,5 @@ const waitForAllUploads = (type, limit, fileMeta, callback) => {
   }
 };
 
-exports.default = {
-  upload,
-  waitForAllUploads
-};
+exports.default = { upload, waitForAllUploads };
 //# sourceMappingURL=index.js.map

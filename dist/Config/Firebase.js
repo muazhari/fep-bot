@@ -18,7 +18,7 @@ const firebaseAdminConfig = {
   type: process.env.FIREBASE_ADMIN_TYPE,
   project_id: process.env.FIREBASE_ADMIN_PROJECT_ID,
   private_key_id: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+  private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(new RegExp("\\\\n", "g"), "\n"),
   client_email: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
   client_id: process.env.FIREBASE_ADMIN_CLIENT_ID,
   auth_uri: process.env.FIREBASE_ADMIN_AUTH_URI,
@@ -29,7 +29,10 @@ const firebaseAdminConfig = {
 
 const firebaseDatabaseURL = process.env.FIREBASE_ADMIN_DATABASE_URL;
 
+const firebaseAdminKeyPath = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+
 exports.firebaseConfig = firebaseConfig;
 exports.firebaseAdminConfig = firebaseAdminConfig;
+exports.firebaseAdminKeyPath = firebaseAdminKeyPath;
 exports.firebaseDatabaseURL = firebaseDatabaseURL;
 //# sourceMappingURL=Firebase.js.map

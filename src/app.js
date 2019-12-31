@@ -6,23 +6,10 @@ import routes from "./routes";
 import cloudinary from "cloudinary";
 
 import * as line from "@line/bot-sdk";
+import lineConfig from "./Config/Line";
+import cloudinaryConfig from "./Config/Cloudinary";
 
-import line_config from "./Config/Line";
-import cloudinary_config from "./Config/Cloudinary";
-
-cloudinary.config(cloudinary_config);
-
-exports.uploads = file => {
-  return new Promise(resolve => {
-    cloudinary.uploader.upload(
-      file,
-      result => {
-        resolve({ url: result.url, id: result.public_id });
-      },
-      { resource_type: "auto" }
-    );
-  });
-};
+cloudinary.config(cloudinaryConfig);
 
 import Store from "./Services/Store";
 
@@ -36,31 +23,19 @@ app.disable("x-powered-by");
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "pug");
 
-app.use(
-  logger("dev", {
-    skip: () => app.get("env") === "test"
-  })
-);
+app.use(logger("dev", {
+  skip: () => app.get("env") === "test"
+}));
 
 // serve static and downloaded files
-app.use(
-  "/static",
-  express.static(path.join(__dirname, "../src/Bot/Assets/static"))
-);
-app.use(
-  "/downloaded",
-  express.static(path.join(__dirname, "../src/Bot/Assets/downloaded"))
-);
+app.use("/static", express.static(path.join(__dirname, "../assets/static")));
+app.use("/downloaded", express.static(path.join(__dirname, "../assets/downloaded")));
+app.use("/twibbons", express.static(path.join(__dirname, "../assets/twibbons")));
 
-app.use(
-  "/twibbons",
-  express.static(path.join(__dirname, "../src/Bot/Assets/twibbons"))
-);
-
-app.use("/webhook", line.middleware(line_config));
+app.use("/webhook", line.middleware(lineConfig));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "../public")));
 
 //  Routes
@@ -87,7 +62,7 @@ app.use((req, res, next) => {
 // Error handler
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
-  res.status(err.status || 500).render("error", { message: err.message });
+  res.status(err.status || 500).render("error", {message: err.message});
 });
 
 export default app;

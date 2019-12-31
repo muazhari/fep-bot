@@ -55,7 +55,9 @@ const handleCommand = (features, command) => {
     say: Basic.say,
     twibbon: Twibbon.ready,
     algo: Courses.algo,
-    pl: PosetLattice.generate
+    pl: PosetLattice.generate,
+    binushack: Template.binushack,
+    test: Template.test,
   };
 
   const {prefix: content_prefix, command: content_command, args: content_args} = destructCommand(command);
@@ -163,7 +165,7 @@ export class handlerBot {
         return this.Bot.replyText(`Got beacon: ${event.beacon}`);
 
       default:
-        throw new Error(`Unknown event: ${JSON.stringify(event)}`);
+        throw new Error(`[HandlerBot] Unknown event: ${JSON.stringify(event)}`);
     }
   }
 
@@ -186,18 +188,18 @@ export class handlerBot {
     let getContent;
 
     const imageData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}.jpg`),
-      previewPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}.jpg`),
+      previewPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}-preview.jpg`),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = path.join(__dirname, "../../src/Bot/Assets/downloaded/images", `${message.id}-log.jpg`);
-    this.Bot.downloadContent(message.id, imageLogPath).then(async () => {
-      await CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Image Logged", imageLogPath);
+    const imageLogPath = path.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
+      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Image logged", imageLogPath);
+        fs.unlinkSync(imageLogPath);
       });
-      fs.unlinkSync(imageLogPath);
     });
 
     if (message.contentProvider.type === "line") {
@@ -233,11 +235,19 @@ export class handlerBot {
     let getContent;
 
     const videoData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}.mp4`),
-      previewPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
+      previewPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
+
+    const videoLogPath = path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, videoLogPath).then(() => {
+      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Video logged", videoLogPath);
+        fs.unlinkSync(videoLogPath);
+      });
+    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
@@ -267,9 +277,17 @@ export class handlerBot {
     let getContent;
 
     const audioData = {
-      originalContentPath: path.join(__dirname, "../../src/Bot/Assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentPath: path.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
+
+    const audioLogPath = path.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
+    this.Bot.downloadContent(message.id, audioLogPath).then(() => {
+      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(() => {
+        console.log("[HandlerBot] Audio logged", audioLogPath);
+        fs.unlinkSync(audioLogPath);
+      });
+    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {

@@ -291,12 +291,17 @@ export const Twibbon = Bot => {
       };
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
-        status: true,
-        source: {
-          id: originId
+      SharedProps.set({
+        [userId]: {
+          twibbon: {
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
+
       displayList(data.category);
     } else {
       Bot.replyText(`${command_prefix}twibbon <type>`);
@@ -318,16 +323,26 @@ export const Twibbon = Bot => {
       return {
         thumbnailImageUrl: url,
         imageBackgroundColor: "#FFFFFF",
-        text: `${name}`,
+        text: name,
         actions: [
           {
             type: "postback",
             label: "Auto-AI Mode",
-            data: `{"twibbon":{"id":"${id}","type":"auto"}}`
+            data: JSON.stringify({
+              twibbon: {
+                id: id,
+                type: "auto"
+              }
+            })
           }, {
             type: "postback",
             label: "Manual Mode",
-            data: `{"twibbon":{"id":"${id}","type":"manual"}}`
+            data: JSON.stringify({
+              twibbon: {
+                id: id,
+                type: "manual"
+              }
+            })
           }
         ]
       };
@@ -344,19 +359,24 @@ export const Twibbon = Bot => {
       }
     });
   };
+
   const listenPostback = data => {
     if (data.twibbon) {
       const {id, type} = data.twibbon;
 
       // ready-up switch
-      SharedProps.store[userId]["twibbon"] = {
-        id: id,
-        type: type,
-        status: true,
-        source: {
-          id: originId
+      SharedProps.set({
+        [userId]: {
+          twibbon: {
+            id: id,
+            type: type,
+            status: true,
+            source: {
+              id: originId
+            }
+          }
         }
-      };
+      });
 
       Bot.getProfile().then(profile => {
         const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
@@ -390,7 +410,7 @@ export const Twibbon = Bot => {
           CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
           CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
         ]).then(fileMeta => {
-          resolve({twibbonOriginalUrl: `${fileMeta[0].secure_url}`, twibbonPreviewUrl: `${fileMeta[1].secure_url}`});
+          resolve({twibbonOriginalUrl: fileMeta[0].secure_url, twibbonPreviewUrl: fileMeta[1].secure_url});
 
           fs.unlinkSync(data.originalContentPath);
           fs.unlinkSync(data.previewPath);
@@ -413,15 +433,19 @@ export const Twibbon = Bot => {
     });
 
     //switch back
-    SharedProps.store[userId].twibbon.status = false;
+    SharedProps.set({
+      [userId]: {
+        twibbon: {
+          status: false
+        }
+      }
+    });
   };
 
   const listenImage = getContent => {
     if (SharedProps.store[userId].twibbon) {
       const userSwitch = SharedProps.store[userId].twibbon.status;
-
       const userInSameCommunal = SharedProps.store[userId].twibbon.source.id === originId;
-
       const twibbonIdChosen = SharedProps.store[userId].twibbon.id !== undefined;
 
       if (userSwitch && userInSameCommunal && twibbonIdChosen) {

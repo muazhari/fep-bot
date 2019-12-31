@@ -58,7 +58,6 @@ const Access = exports.Access = Bot => {
     }
 
     // const validate = {validate_user, validate_group, validate_room, validate_type}
-
     return validate;
   };
 
