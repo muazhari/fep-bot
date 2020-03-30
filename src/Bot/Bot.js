@@ -98,7 +98,13 @@ export class Bot {
   getId(source) {
     if (!source) 
       source = this.props.event.source;
-    const type = {};
+     
+    const type = {
+      origin: null,
+      group: null,
+      room: null,
+      user: null
+    };
 
     if (source.groupId) {
       type["origin"] = source.groupId;
