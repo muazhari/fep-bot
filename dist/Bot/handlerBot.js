@@ -268,8 +268,10 @@ class handlerBot {
       if (!listenStatus) {
         _fsExtra2.default.unlinkSync(imageData.originalContentPath);
         _fsExtra2.default.unlinkSync(imageData.previewPath);
-        console.log("[HandlerBot] Image listen status false", imageLogData.originalContentPath);
-      }els;
+        console.log("[HandlerBot] Image listen status verdict is unused", imageLogData.originalContentPath);
+      } else {
+        console.log("[HandlerBot] Image listen status verdict is used", imageLogData.originalContentPath);
+      }
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
@@ -296,45 +298,33 @@ class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`
     };
 
-    // const videoLogData = {
-    //   originalContentPath: path.join(
-    //     __dirname,
-    //     "../../assets/downloaded/videos",
-    //     `${message.id}-log.mp4`
-    //   ),
-    //   originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
-    // };
+    const videoLogData = {
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.mp4`),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
+    };
 
-    // this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
-    //   () => {
-    //     CloudinaryUtils.upload(
-    //       videoLogData.originalContentUrl,
-    //       `logs/videos/${message.id}`
-    //     )
-    //       .then(() => {
-    //         fs.unlinkSync(videoLogData.originalContentPath);
-    //         console.log(
-    //           "[HandlerBot] Video log success",
-    //           videoLogData.originalContentPath
-    //         );
-    //       })
-    //       .catch(err => {
-    //         console.log(
-    //           "[HandlerBot] Video log failed",
-    //           videoLogData.originalContentPath
-    //         );
-    //       });
-    //   }
-    // );
+    this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(() => {
+      _CloudinaryUtils2.default.upload(videoLogData.originalContentUrl, `logs/videos/${message.id}`).then(() => {
+        _fsExtra2.default.unlinkSync(videoLogData.originalContentPath);
+        console.log("[HandlerBot] Video log success", videoLogData.originalContentPath);
+      }).catch(err => {
+        console.log("[HandlerBot] Video log failed", videoLogData.originalContentPath);
+      });
+    });
 
     if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
-        // FFmpeg and ImageMagick is needed here to run 'convert'
-        // Please consider about security and performance by yourself
-        _child_process2.default.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
+      // getContent = this.Bot.downloadContent(
+      //   message.id,
+      //   videoData.originalContentPath
+      // ).then(() => {
+      //   // FFmpeg and ImageMagick is needed here to run 'convert'
+      //   // Please consider about security and performance by yourself
+      //   cp.execSync(
+      //     `convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`
+      //   );
 
-        return videoData;
-      });
+      //   return videoData;
+      // });
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
@@ -359,41 +349,28 @@ class handlerBot {
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    //     const audioLogData = {
-    //       originalContentPath: path.join(
-    //         __dirname,
-    //         "../../assets/downloaded/audios",
-    //         `${message.id}-log.m4a`
-    //       ),
-    //       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
-    //     };
+    const audioLogData = {
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.m4a`),
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
+    };
 
-    //     this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
-    //       () => {
-    //         CloudinaryUtils.upload(
-    //           audioLogData.originalContentUrl,
-    //           `logs/audios/${message.id}`
-    //         )
-    //           .then(() => {
-    //             fs.unlinkSync(audioLogData.originalContentPath);
-    //             console.log(
-    //               "[HandlerBot] Audio log success",
-    //               audioLogData.originalContentPath
-    //             );
-    //           })
-    //           .catch(err => {
-    //             console.log(
-    //               "[HandlerBot] Audio log failed",
-    //               audioLogData.originalContentPath
-    //             );
-    //           });
-    //       }
-    //     );
-    // // 
-    if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
-        return audioData;
+    this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(() => {
+      _CloudinaryUtils2.default.upload(audioLogData.originalContentUrl, `logs/audios/${message.id}`).then(() => {
+        _fsExtra2.default.unlinkSync(audioLogData.originalContentPath);
+        console.log("[HandlerBot] Audio log success", audioLogData.originalContentPath);
+      }).catch(err => {
+        console.log("[HandlerBot] Audio log failed", audioLogData.originalContentPath);
       });
+    });
+    // 
+
+    if (message.contentProvider.type === "line") {
+      // getContent = this.Bot.downloadContent(
+      //   message.id,
+      //   audioData.originalContentPath
+      // ).then(() => {
+      //   return audioData;
+      // });
     } else {
       getContent = () => {
         return Promise.resolve(message.contentProvider);

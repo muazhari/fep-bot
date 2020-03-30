@@ -269,11 +269,15 @@ export class handlerBot {
         fs.unlinkSync(imageData.originalContentPath);
         fs.unlinkSync(imageData.previewPath);
         console.log(
-          "[HandlerBot] Image listen status false",
+          "[HandlerBot] Image listen status verdict is unused",
           imageLogData.originalContentPath
         );
-      } els
-
+      } else {
+        console.log(
+          "[HandlerBot] Image listen status verdict is used",
+          imageLogData.originalContentPath
+        );
+      }
 
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
@@ -309,50 +313,50 @@ export class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`
     };
 
-    // const videoLogData = {
-    //   originalContentPath: path.join(
-    //     __dirname,
-    //     "../../assets/downloaded/videos",
-    //     `${message.id}-log.mp4`
-    //   ),
-    //   originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
-    // };
+    const videoLogData = {
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/videos",
+        `${message.id}-log.mp4`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
+    };
 
-    // this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
-    //   () => {
-    //     CloudinaryUtils.upload(
-    //       videoLogData.originalContentUrl,
-    //       `logs/videos/${message.id}`
-    //     )
-    //       .then(() => {
-    //         fs.unlinkSync(videoLogData.originalContentPath);
-    //         console.log(
-    //           "[HandlerBot] Video log success",
-    //           videoLogData.originalContentPath
-    //         );
-    //       })
-    //       .catch(err => {
-    //         console.log(
-    //           "[HandlerBot] Video log failed",
-    //           videoLogData.originalContentPath
-    //         );
-    //       });
-    //   }
-    // );
+    this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
+      () => {
+        CloudinaryUtils.upload(
+          videoLogData.originalContentUrl,
+          `logs/videos/${message.id}`
+        )
+          .then(() => {
+            fs.unlinkSync(videoLogData.originalContentPath);
+            console.log(
+              "[HandlerBot] Video log success",
+              videoLogData.originalContentPath
+            );
+          })
+          .catch(err => {
+            console.log(
+              "[HandlerBot] Video log failed",
+              videoLogData.originalContentPath
+            );
+          });
+      }
+    );
 
     if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(
-        message.id,
-        videoData.originalContentPath
-      ).then(() => {
-        // FFmpeg and ImageMagick is needed here to run 'convert'
-        // Please consider about security and performance by yourself
-        cp.execSync(
-          `convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`
-        );
+      // getContent = this.Bot.downloadContent(
+      //   message.id,
+      //   videoData.originalContentPath
+      // ).then(() => {
+      //   // FFmpeg and ImageMagick is needed here to run 'convert'
+      //   // Please consider about security and performance by yourself
+      //   cp.execSync(
+      //     `convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`
+      //   );
 
-        return videoData;
-      });
+      //   return videoData;
+      // });
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
@@ -381,44 +385,45 @@ export class handlerBot {
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    //     const audioLogData = {
-    //       originalContentPath: path.join(
-    //         __dirname,
-    //         "../../assets/downloaded/audios",
-    //         `${message.id}-log.m4a`
-    //       ),
-    //       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
-    //     };
+    const audioLogData = {
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/audios",
+        `${message.id}-log.m4a`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
+    };
 
-    //     this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
-    //       () => {
-    //         CloudinaryUtils.upload(
-    //           audioLogData.originalContentUrl,
-    //           `logs/audios/${message.id}`
-    //         )
-    //           .then(() => {
-    //             fs.unlinkSync(audioLogData.originalContentPath);
-    //             console.log(
-    //               "[HandlerBot] Audio log success",
-    //               audioLogData.originalContentPath
-    //             );
-    //           })
-    //           .catch(err => {
-    //             console.log(
-    //               "[HandlerBot] Audio log failed",
-    //               audioLogData.originalContentPath
-    //             );
-    //           });
-    //       }
-    //     );
-    // // 
+    this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
+      () => {
+        CloudinaryUtils.upload(
+          audioLogData.originalContentUrl,
+          `logs/audios/${message.id}`
+        )
+          .then(() => {
+            fs.unlinkSync(audioLogData.originalContentPath);
+            console.log(
+              "[HandlerBot] Audio log success",
+              audioLogData.originalContentPath
+            );
+          })
+          .catch(err => {
+            console.log(
+              "[HandlerBot] Audio log failed",
+              audioLogData.originalContentPath
+            );
+          });
+      }
+    );
+    // 
+
     if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(
-        message.id,
-        audioData.originalContentPath
-      ).then(() => {
-        return audioData;
-      });
+      // getContent = this.Bot.downloadContent(
+      //   message.id,
+      //   audioData.originalContentPath
+      // ).then(() => {
+      //   return audioData;
+      // });
     } else {
       getContent = () => {
         return Promise.resolve(message.contentProvider);
