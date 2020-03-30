@@ -68,7 +68,7 @@ const Twibbon = exports.Twibbon = Bot => {
     twibbon_cs: {
       category: "socs",
       name: "Computer Science",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbon_cs.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbons/twibbon_cs.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -115,7 +115,7 @@ const Twibbon = exports.Twibbon = Bot => {
     twibbon_tfi: {
       category: "tfi",
       name: "Teach For Indonesia",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbon_tfi.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbons/twibbon_tfi.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -165,7 +165,7 @@ const Twibbon = exports.Twibbon = Bot => {
     twibbon_binus1: {
       category: "binus",
       name: "Binus 1",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbon_binus1.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbons/twibbon_binus1.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -208,7 +208,7 @@ const Twibbon = exports.Twibbon = Bot => {
     twibbon_binus2: {
       category: "binus",
       name: "Binus 2",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbon_binus2.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbons/twibbon_binus2.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -251,7 +251,7 @@ const Twibbon = exports.Twibbon = Bot => {
     twibbon_binus3: {
       category: "binus",
       name: "Binus 3",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbon_binus3.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbons/twibbon_binus3.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -281,6 +281,49 @@ const Twibbon = exports.Twibbon = Bot => {
               public_id: `${filename}-twibbon`
             }, {
               overlay: "twibbon_binus3.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }]
+          }
+        };
+      }
+    },
+
+    twibbon_binus3: {
+      category: "covid",
+      name: "Covid #DiRumahAja",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbon_covid.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }]
+          },
+          manual: {
+            transformation: [{
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbon_covid.png",
               flags: "relative",
               width: size,
               height: size,
