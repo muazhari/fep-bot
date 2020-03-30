@@ -52,9 +52,9 @@ const uploadQueue = {};
 //   });
 // };
 
-const upload = (url, filename) => {
+const upload = (url, filePath) => {
   return new Promise((resolve, reject) => {
-    _cloudinary2.default.uploader.upload(url, { public_id: filename }).then(file => {
+    _cloudinary2.default.uploader.upload(url, { public_id: filePath }).then(file => {
       console.log("** File Upload (Promise)");
       console.log("* " + file.public_id);
       console.log("* " + file.url);

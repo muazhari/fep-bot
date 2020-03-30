@@ -223,7 +223,10 @@ export class handlerBot {
 
     this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(
       () => {
-        CloudinaryUtils.upload(imageLogData.originalContentUrl, message.id)
+        CloudinaryUtils.upload(
+          imageLogData.originalContentUrl,
+          `log/${message.id}`
+        )
           .then(() => {
             fs.unlinkSync(imageLogData.originalContentPath);
             console.log(
@@ -294,19 +297,36 @@ export class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
 
-    const videoLogPath = path.join(
-      __dirname,
-      "../../assets/downloaded/videos",
-      `${message.id}-log.jpg`
+    const videoLogData = {
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/videos",
+        `${message.id}-log.jpg`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.jpg`
+    };
+
+    this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
+      () => {
+        CloudinaryUtils.upload(
+          videoLogData.originalContentUrl,
+          `log/videos/${message.id}`
+        )
+          .then(() => {
+            fs.unlinkSync(videoLogData.originalContentPath);
+            console.log(
+              "[HandlerBot] Video log success",
+              videoLogData.originalContentPath
+            );
+          })
+          .catch(err => {
+            console.log(
+              "[HandlerBot] Video log failed",
+              videoLogData.originalContentPath
+            );
+          });
+      }
     );
-    this.Bot.downloadContent(message.id, videoLogPath).then(() => {
-      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(
-        () => {
-          console.log("[HandlerBot] Video logged", videoLogPath);
-          fs.unlinkSync(videoLogPath);
-        }
-      );
-    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(
@@ -349,19 +369,36 @@ export class handlerBot {
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    const audioLogPath = path.join(
-      __dirname,
-      "../../assets/downloaded/audios",
-      `${message.id}-log.jpg`
+    const audioLogData = {
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/videos",
+        `${message.id}-log.jpg`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.jpg`
+    };
+
+    this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
+      () => {
+        CloudinaryUtils.upload(
+          audioLogData.originalContentUrl,
+          `log/audios/${message.id}`
+        )
+          .then(() => {
+            fs.unlinkSync(audioLogData.originalContentPath);
+            console.log(
+              "[HandlerBot] Audio log success",
+              audioLogData.originalContentPath
+            );
+          })
+          .catch(err => {
+            console.log(
+              "[HandlerBot] Audio log failed",
+              audioLogData.originalContentPath
+            );
+          });
+      }
     );
-    this.Bot.downloadContent(message.id, audioLogPath).then(() => {
-      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(
-        () => {
-          console.log("[HandlerBot] Audio logged", audioLogPath);
-          fs.unlinkSync(audioLogPath);
-        }
-      );
-    });
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(
