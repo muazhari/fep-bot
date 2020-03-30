@@ -81,7 +81,11 @@ const handleCommand = (features, command) => {
     test: Template.test
   };
 
-  const { prefix: content_prefix, command: content_command, args: content_args } = destructCommand(command);
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -215,11 +219,17 @@ class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
-    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
-      _CloudinaryUtils2.default.upload(imageData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Image logged", imageLogPath);
-        _fsExtra2.default.unlinkSync(imageLogPath);
+    const imageLogData = {
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`),
+      originalContentUrl: `${baseURL}/downloaded/images/${message.id}-log.jpg`
+    };
+
+    this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(() => {
+      _CloudinaryUtils2.default.upload(imageLogData.originalContentUrl, message.id).then(() => {
+        _fsExtra2.default.unlinkSync(imageLogData.originalContentPath);
+        console.log("[HandlerBot] Image log success", imageLogData.originalContentPath);
+      }).catch(err => {
+        console.log("[HandlerBot] Image log failed", imageLogData.originalContentPath);
       });
     });
 
@@ -331,7 +341,13 @@ class handlerBot {
 
   handleLocation() {
     const { message, replyToken } = this.Bot.props.event;
-    this.Bot.sendMessage({ type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude });
+    this.Bot.sendMessage({
+      type: "location",
+      title: message.title,
+      address: message.address,
+      latitude: message.latitude,
+      longitude: message.longitude
+    });
   }
 
   handleSticker() {

@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import cp from "child_process";
-import {SharedProps} from "../Bot";
+import { SharedProps } from "../Bot";
 import CloudinaryUtils from "../Bot/Helper/CloudinaryUtils";
 
 // base URL for webhook server
@@ -22,8 +22,8 @@ const destructCommand = chat => {
   const command = chat[0].slice(1, chat[0].length);
   const args = chat.slice(1, chat.length).map(item => item.trim());
 
-  console.log("[HandlerBot] Command destructed", {prefix, command, args});
-  return {prefix, command, args};
+  console.log("[HandlerBot] Command destructed", { prefix, command, args });
+  return { prefix, command, args };
 };
 
 const handleCommand = (features, command) => {
@@ -57,10 +57,14 @@ const handleCommand = (features, command) => {
     algo: Courses.algo,
     pl: PosetLattice.generate,
     binushack: Template.binushack,
-    test: Template.test,
+    test: Template.test
   };
 
-  const {prefix: content_prefix, command: content_command, args: content_args} = destructCommand(command);
+  const {
+    prefix: content_prefix,
+    command: content_command,
+    args: content_args
+  } = destructCommand(command);
 
   if (Object.keys(commandList).includes(content_command)) {
     if (commandList[content_command].length >= 1) {
@@ -90,7 +94,7 @@ const userQueue = userId => {
     }
   };
 
-  return {increment, decrement};
+  return { increment, decrement };
 };
 
 export class handlerBot {
@@ -112,7 +116,7 @@ export class handlerBot {
 
     switch (event.type) {
       case "message":
-        const {message} = event;
+        const { message } = event;
         switch (message.type) {
           case "text":
             return this.handleText();
@@ -131,15 +135,21 @@ export class handlerBot {
         }
 
       case "memberJoined":
-        return this.Bot.client.getProfile(event.joined.members[0].userId).then(profile => {
-          this.Bot.replyText(`Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`);
-        });
+        return this.Bot.client
+          .getProfile(event.joined.members[0].userId)
+          .then(profile => {
+            this.Bot.replyText(
+              `Welcome ${profile.displayName}! Jangan lupa cek notes di group ya!`
+            );
+          });
 
       case "follow":
         return this.Bot.replyText("Got followed event");
 
       case "unfollow":
-        return console.log(`[HandlerBot] Unfollowed this bot: ${JSON.stringify(event)}`);
+        return console.log(
+          `[HandlerBot] Unfollowed this bot: ${JSON.stringify(event)}`
+        );
 
       case "join":
         return this.Bot.replyText(`Joined ${event.source.type}`);
@@ -148,14 +158,14 @@ export class handlerBot {
         return console.log(`[HandlerBot] Left: ${JSON.stringify(event)}`);
 
       case "postback":
-        let {data} = event.postback;
+        let { data } = event.postback;
         if (data === "DATE" || data === "TIME" || data === "DATETIME") {
           data += `(${JSON.stringify(event.postback.params)})`;
         }
 
         const objectData = JSON.parse(data);
 
-        const {Twibbon} = this.Bot.Features;
+        const { Twibbon } = this.Bot.Features;
         console.log("[HandlerBot] Postback listened", objectData);
         Twibbon.listenPostback(objectData);
 
@@ -170,7 +180,7 @@ export class handlerBot {
   }
 
   handleText() {
-    const {message, replyToken, source} = this.Bot.props.event;
+    const { message, replyToken, source } = this.Bot.props.event;
 
     // The text query request.
     const splittedChat = message.text.split(" ");
@@ -184,36 +194,71 @@ export class handlerBot {
   }
 
   handleImage() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const imageData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}.jpg`),
-      previewPath: path.join(__dirname, "../../assets/downloaded/images", `${message.id}-preview.jpg`),
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/images",
+        `${message.id}.jpg`
+      ),
+      previewPath: path.join(
+        __dirname,
+        "../../assets/downloaded/images",
+        `${message.id}-preview.jpg`
+      ),
       originalContentUrl: `${baseURL}/downloaded/images/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogPath = path.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`);
-    this.Bot.downloadContent(message.id, imageLogPath).then(() => {
-      CloudinaryUtils.upload(imageData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Image logged", imageLogPath);
-        fs.unlinkSync(imageLogPath);
-      });
-    });
+    const imageLogData = {
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/images",
+        `${message.id}-log.jpg`
+      ),
+      originalContentUrl: `${baseURL}/downloaded/images/${message.id}-log.jpg`
+    };
+
+    this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(
+      () => {
+        CloudinaryUtils.upload(imageLogData.originalContentUrl, message.id)
+          .then(() => {
+            fs.unlinkSync(imageLogData.originalContentPath);
+            console.log(
+              "[HandlerBot] Image log success",
+              imageLogData.originalContentPath
+            );
+          })
+          .catch(err => {
+            console.log(
+              "[HandlerBot] Image log failed",
+              imageLogData.originalContentPath
+            );
+          });
+      }
+    );
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
-        return this.Bot.downloadContent(message.id, imageData.originalContentPath).then(() => {
-          cp.execSync(`convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`);
-          return imageData;
-        }).catch(err => {
-          throw err;
-        });
+        return this.Bot.downloadContent(
+          message.id,
+          imageData.originalContentPath
+        )
+          .then(() => {
+            cp.execSync(
+              `convert -resize 240x jpg:${imageData.originalContentPath} jpg:${imageData.previewPath}`
+            );
+            return imageData;
+          })
+          .catch(err => {
+            throw err;
+          });
       };
 
       // Twibbon switch
-      const {Twibbon} = this.Bot.Features;
+      const { Twibbon } = this.Bot.Features;
       Twibbon.listenImage(getContent);
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
@@ -221,7 +266,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl, previewImageUrl}) => {
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({
       //   type: "image",
       //   originalContentUrl: originalContentUrl,
@@ -231,29 +276,48 @@ export class handlerBot {
   }
 
   handleVideo() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const videoData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
-      previewPath: path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/videos",
+        `${message.id}.mp4`
+      ),
+      previewPath: path.join(
+        __dirname,
+        "../../assets/downloaded/videos",
+        `${message.id}-preview.mp4`
+      ),
       originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
     };
 
-    const videoLogPath = path.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`);
+    const videoLogPath = path.join(
+      __dirname,
+      "../../assets/downloaded/videos",
+      `${message.id}-log.jpg`
+    );
     this.Bot.downloadContent(message.id, videoLogPath).then(() => {
-      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Video logged", videoLogPath);
-        fs.unlinkSync(videoLogPath);
-      });
+      CloudinaryUtils.upload(videoData.originalContentUrl, message.id).then(
+        () => {
+          console.log("[HandlerBot] Video logged", videoLogPath);
+          fs.unlinkSync(videoLogPath);
+        }
+      );
     });
 
     if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
+      getContent = this.Bot.downloadContent(
+        message.id,
+        videoData.originalContentPath
+      ).then(() => {
         // FFmpeg and ImageMagick is needed here to run 'convert'
         // Please consider about security and performance by yourself
-        cp.execSync(`convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`);
+        cp.execSync(
+          `convert mp4:${videoData.originalContentPath} jpeg:${videoData.previewPath}`
+        );
 
         return videoData;
       });
@@ -263,7 +327,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl, previewImageUrl}) => {
+    return getContent.then(({ originalContentUrl, previewImageUrl }) => {
       // this.Bot.sendMessage({
       //   type: "video",
       //   originalContentUrl,
@@ -273,24 +337,37 @@ export class handlerBot {
   }
 
   handleAudio() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     let getContent;
 
     const audioData = {
-      originalContentPath: path.join(__dirname, "../../assets/downloaded/audios", `${message.id}.m4a`),
+      originalContentPath: path.join(
+        __dirname,
+        "../../assets/downloaded/audios",
+        `${message.id}.m4a`
+      ),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    const audioLogPath = path.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`);
+    const audioLogPath = path.join(
+      __dirname,
+      "../../assets/downloaded/audios",
+      `${message.id}-log.jpg`
+    );
     this.Bot.downloadContent(message.id, audioLogPath).then(() => {
-      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(() => {
-        console.log("[HandlerBot] Audio logged", audioLogPath);
-        fs.unlinkSync(audioLogPath);
-      });
+      CloudinaryUtils.upload(audioData.originalContentUrl, message.id).then(
+        () => {
+          console.log("[HandlerBot] Audio logged", audioLogPath);
+          fs.unlinkSync(audioLogPath);
+        }
+      );
     });
 
     if (message.contentProvider.type === "line") {
-      getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
+      getContent = this.Bot.downloadContent(
+        message.id,
+        audioData.originalContentPath
+      ).then(() => {
         return audioData;
       });
     } else {
@@ -299,7 +376,7 @@ export class handlerBot {
       };
     }
 
-    return getContent.then(({originalContentUrl}) => {
+    return getContent.then(({ originalContentUrl }) => {
       // this.Bot.sendMessage({
       //   type: "audio",
       //   originalContentUrl,
@@ -309,12 +386,18 @@ export class handlerBot {
   }
 
   handleLocation() {
-    const {message, replyToken} = this.Bot.props.event;
-    this.Bot.sendMessage({type: "location", title: message.title, address: message.address, latitude: message.latitude, longitude: message.longitude});
+    const { message, replyToken } = this.Bot.props.event;
+    this.Bot.sendMessage({
+      type: "location",
+      title: message.title,
+      address: message.address,
+      latitude: message.latitude,
+      longitude: message.longitude
+    });
   }
 
   handleSticker() {
-    const {message, replyToken} = this.Bot.props.event;
+    const { message, replyToken } = this.Bot.props.event;
     // this.Bot.sendMessage({
     //   type: "sticker",
     //   packageId: message.packageId,
