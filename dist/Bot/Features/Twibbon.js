@@ -367,7 +367,7 @@ const Twibbon = exports.Twibbon = Bot => {
 
     const twibbonColumns = selected.map(twibbon => {
       return {
-        thumbnailImageUrl: url,
+        thumbnailImageUrl: twibbon.url,
         imageBackgroundColor: "#FFFFFF",
         text: twibbon.name,
         actions: [{
@@ -424,7 +424,7 @@ const Twibbon = exports.Twibbon = Bot => {
 
       Bot.getProfile().then(profile => {
         const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
-        if (type === "manual") {
+        if (twibbon.type === "manual") {
           messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
         }
         Bot.replyText(messages);
@@ -478,9 +478,9 @@ const Twibbon = exports.Twibbon = Bot => {
     _Bot.SharedProps.set({
       [userId]: {
         twibbon: {
-          id: twibbon.id,
-          type: twibbon.type,
-          status: fal,
+          id: null,
+          type: null,
+          status: false,
           source: {
             id: originId
           }
