@@ -36,299 +36,299 @@ export const Twibbon = Bot => {
     };
   };
 
-  const twibbon_list = {
-    twibbon_covid: {
-      category: "covid",
-      name: "Covid #DiRumahAja",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_covid.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_covid.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-    twibbon_cs: {
-      category: "socs",
-      name: "Computer Science",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbons/twibbon_cs.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                aspect_ratio: "1:1",
-                public_id: `${filename}-twibbon`
-              }, {
-                gravity: "auto",
-                crop: "fill_pad",
-                width: size,
-                height: size,
-                y: Math.floor(-size * 0.2),
-                x: Math.floor(size * 0.045)
-              }, {
-                overlay: "twibbons/twibbon_cs.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                width: size,
-                height: size,
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_cs.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-
-    twibbon_tfi: {
-      category: "tfi",
-      name: "Teach For Indonesia",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbons/twibbon_tfi.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size + Math.floor(-size * 0.045),
-                height: size + Math.floor(size * 0.2),
-                x: Math.floor(size * 0.045),
-                y: Math.floor(-size * 0.2),
-                public_id: `${filename}-twibbon`
-              }, {
-                gravity: "auto",
-                crop: "fill",
-                width: size,
-                height: size
-              }, {
-                overlay: "twibbons/twibbon_tfi.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size,
-                height: size,
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_tfi.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-
-    twibbon_binus1: {
-      category: "binus",
-      name: "Binus 1",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbons/twibbon_binus1.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.2),
-                height: size - Math.floor(size * 0.2),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus1.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.2125),
-                height: size - Math.floor(size * 0.2),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus1.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-
-    twibbon_binus2: {
-      category: "binus",
-      name: "Binus 2",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598545/twibbons/twibbon_binus2.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus2.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus2.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-
-    twibbon_binus3: {
-      category: "binus",
-      name: "Binus 3",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598544/twibbons/twibbon_binus3.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus3.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbons/twibbon_binus3.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    },
-  };
+  const twibbon_list = [{
+    id: "twibbon_covid",
+    category: "covid",
+    name: "Covid #DiRumahAja",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_covid.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_covid.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  },
+  {
+    id: "twibbon_cs",
+    category: "socs",
+    name: "Computer Science",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbons/twibbon_cs.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              aspect_ratio: "1:1",
+              public_id: `${filename}-twibbon`
+            }, {
+              gravity: "auto",
+              crop: "fill_pad",
+              width: size,
+              height: size,
+              y: Math.floor(-size * 0.2),
+              x: Math.floor(size * 0.045)
+            }, {
+              overlay: "twibbons/twibbon_cs.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              width: size,
+              height: size,
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_cs.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  },
+  {
+    id: "twibbon_tfi",
+    category: "tfi",
+    name: "Teach For Indonesia",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbons/twibbon_tfi_old.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size + Math.floor(-size * 0.045),
+              height: size + Math.floor(size * 0.2),
+              x: Math.floor(size * 0.045),
+              y: Math.floor(-size * 0.2),
+              public_id: `${filename}-twibbon`
+            }, {
+              gravity: "auto",
+              crop: "fill",
+              width: size,
+              height: size
+            }, {
+              overlay: "twibbons/twibbon_tfi.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size,
+              height: size,
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_tfi.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  },
+  {
+    id: "twibbon_binus1",
+    category: "binus",
+    name: "Binus 1",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbons/twibbon_binus1.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.2),
+              height: size - Math.floor(size * 0.2),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus1.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.2125),
+              height: size - Math.floor(size * 0.2),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus1.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  },
+  {
+    id: "twibbon_binus2",
+    category: "binus",
+    name: "Binus 2",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598545/twibbons/twibbon_binus2.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus2.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus2.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  }, {
+    id: "twibbon_binus3",
+    category: "binus",
+    name: "Binus 3",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598544/twibbons/twibbon_binus3.png",
+    transform: (filename, size) => {
+      return {
+        auto: {
+          transformation: [
+            {
+              gravity: "auto",
+              crop: "fill",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus3.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        },
+        manual: {
+          transformation: [
+            {
+              crop: "fit",
+              format: "jpg",
+              // aspect_ratio: "1:1",
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
+              public_id: `${filename}-twibbon`
+            }, {
+              overlay: "twibbons/twibbon_binus3.png",
+              flags: "relative",
+              width: size,
+              height: size,
+              aspect_ratio: "1:1"
+            }
+          ]
+        }
+      };
+    }
+  },
+  ];
 
   const ready = args => {
     if (args.length <= 1) {
@@ -355,10 +355,10 @@ export const Twibbon = Bot => {
   };
 
   const displayList = category => {
-    let selected = Object.keys(twibbon_list).map(twibbonId => twibbonId).filter(twibbonId => typeof twibbonId === "string");
+    let selected = twibbon_list.map(twibbon => twibbon.id).filter(twibbonId => typeof twibbonId === "string");
 
     if (category) {
-      selected = Object.keys(twibbon_list).filter(twibbonId => twibbon_list[twibbonId].category === category);
+      selected = twibbon_list.filter(twibbon => twibbon.category == category);
       if (selected.length === 0) {
         return Bot.replyText(`Tidak ada kategori, lihat di ${command_prefix}twibbon`);
       }
