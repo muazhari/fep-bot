@@ -37,6 +37,52 @@ export const Twibbon = Bot => {
   };
 
   const twibbon_list = {
+    twibbon_covid: {
+      category: "covid",
+      name: "Covid #DiRumahAja",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [
+              {
+                gravity: "auto",
+                crop: "fill",
+                format: "jpg",
+                // aspect_ratio: "1:1",
+                width: size - Math.floor(size * 0.225),
+                height: size - Math.floor(size * 0.225),
+                public_id: `${filename}-twibbon`
+              }, {
+                overlay: "twibbon_covid.png",
+                flags: "relative",
+                width: size,
+                height: size,
+                aspect_ratio: "1:1"
+              }
+            ]
+          },
+          manual: {
+            transformation: [
+              {
+                crop: "fit",
+                format: "jpg",
+                // aspect_ratio: "1:1",
+                width: size - Math.floor(size * 0.225),
+                height: size - Math.floor(size * 0.225),
+                public_id: `${filename}-twibbon`
+              }, {
+                overlay: "twibbon_covid.png",
+                flags: "relative",
+                width: size,
+                height: size,
+                aspect_ratio: "1:1"
+              }
+            ]
+          }
+        };
+      }
+    },
     twibbon_cs: {
       category: "socs",
       name: "Computer Science",
@@ -192,7 +238,7 @@ export const Twibbon = Bot => {
     twibbon_binus2: {
       category: "binus",
       name: "Binus 2",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372079/twibbons/twibbon_binus2.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598545/twibbons/twibbon_binus2.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -239,7 +285,7 @@ export const Twibbon = Bot => {
     twibbon_binus3: {
       category: "binus",
       name: "Binus 3",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372078/twibbons/twibbon_binus3.png",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598544/twibbons/twibbon_binus3.png",
       transform: (filename, size) => {
         return {
           auto: {
@@ -282,53 +328,6 @@ export const Twibbon = Bot => {
         };
       }
     },
-
-    twibbon_binus3: {
-      category: "covid",
-      name: "Covid #DiRumahAja",
-      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
-      transform: (filename, size) => {
-        return {
-          auto: {
-            transformation: [
-              {
-                gravity: "auto",
-                crop: "fill",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbon_covid.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          },
-          manual: {
-            transformation: [
-              {
-                crop: "fit",
-                format: "jpg",
-                // aspect_ratio: "1:1",
-                width: size - Math.floor(size * 0.225),
-                height: size - Math.floor(size * 0.225),
-                public_id: `${filename}-twibbon`
-              }, {
-                overlay: "twibbon_covid.png",
-                flags: "relative",
-                width: size,
-                height: size,
-                aspect_ratio: "1:1"
-              }
-            ]
-          }
-        };
-      }
-    }
   };
 
   const ready = args => {
