@@ -54,7 +54,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_covid.png",
+                overlay: "twibbons/twibbon_covid.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -72,7 +72,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_covid.png",
+                overlay: "twibbons/twibbon_covid.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -105,7 +105,7 @@ export const Twibbon = Bot => {
                 y: Math.floor(-size * 0.2),
                 x: Math.floor(size * 0.045)
               }, {
-                overlay: "twibbon_cs.png",
+                overlay: "twibbons/twibbon_cs.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -122,7 +122,7 @@ export const Twibbon = Bot => {
                 height: size,
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_cs.png",
+                overlay: "twibbons/twibbon_cs.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -158,7 +158,7 @@ export const Twibbon = Bot => {
                 width: size,
                 height: size
               }, {
-                overlay: "twibbon_tfi.png",
+                overlay: "twibbons/twibbon_tfi.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -176,7 +176,7 @@ export const Twibbon = Bot => {
                 height: size,
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_tfi.png",
+                overlay: "twibbons/twibbon_tfi.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -205,7 +205,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.2),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus1.png",
+                overlay: "twibbons/twibbon_binus1.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -223,7 +223,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.2),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus1.png",
+                overlay: "twibbons/twibbon_binus1.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -252,7 +252,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus2.png",
+                overlay: "twibbons/twibbon_binus2.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -270,7 +270,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus2.png",
+                overlay: "twibbons/twibbon_binus2.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -299,7 +299,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus3.png",
+                overlay: "twibbons/twibbon_binus3.png",
                 flags: "relative",
                 width: size,
                 height: size,
@@ -317,7 +317,7 @@ export const Twibbon = Bot => {
                 height: size - Math.floor(size * 0.225),
                 public_id: `${filename}-twibbon`
               }, {
-                overlay: "twibbon_binus3.png",
+                overlay: "twibbons/twibbon_binus3.png",
                 flags: "relative",
                 width: size,
                 height: size,
