@@ -225,7 +225,7 @@ export class handlerBot {
       () => {
         CloudinaryUtils.upload(
           imageLogData.originalContentUrl,
-          `log/${message.id}`
+          `logs/i${message.id}`
         )
           .then(() => {
             fs.unlinkSync(imageLogData.originalContentPath);
@@ -293,24 +293,24 @@ export class handlerBot {
         "../../assets/downloaded/videos",
         `${message.id}-preview.mp4`
       ),
-      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
-      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`,
+      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`
     };
 
     const videoLogData = {
       originalContentPath: path.join(
         __dirname,
         "../../assets/downloaded/videos",
-        `${message.id}-log.jpg`
+        `${message.id}-log.mp4`
       ),
-      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.jpg`
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
     };
 
     this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
       () => {
         CloudinaryUtils.upload(
           videoLogData.originalContentUrl,
-          `log/videos/${message.id}`
+          `logs/videos/${message.id}`
         )
           .then(() => {
             fs.unlinkSync(videoLogData.originalContentPath);
@@ -372,7 +372,7 @@ export class handlerBot {
     const audioLogData = {
       originalContentPath: path.join(
         __dirname,
-        "../../assets/downloaded/videos",
+        "../../assets/downloaded/audios",
         `${message.id}-log.jpg`
       ),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.jpg`
@@ -382,7 +382,7 @@ export class handlerBot {
       () => {
         CloudinaryUtils.upload(
           audioLogData.originalContentUrl,
-          `log/audios/${message.id}`
+          `logs/audios/${message.id}`
         )
           .then(() => {
             fs.unlinkSync(audioLogData.originalContentPath);

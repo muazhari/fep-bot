@@ -225,7 +225,7 @@ class handlerBot {
     };
 
     this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(imageLogData.originalContentUrl, `log/${message.id}`).then(() => {
+      _CloudinaryUtils2.default.upload(imageLogData.originalContentUrl, `logs/${message.id}`).then(() => {
         _fsExtra2.default.unlinkSync(imageLogData.originalContentPath);
         console.log("[HandlerBot] Image log success", imageLogData.originalContentPath);
       }).catch(err => {
@@ -268,17 +268,17 @@ class handlerBot {
     const videoData = {
       originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}.mp4`),
       previewPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-preview.mp4`),
-      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`,
-      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.jpg`
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`,
+      previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`
     };
 
     const videoLogData = {
-      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`),
-      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.jpg`
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.mp4`),
+      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
     };
 
     this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(videoLogData.originalContentUrl, `log/videos/${message.id}`).then(() => {
+      _CloudinaryUtils2.default.upload(videoLogData.originalContentUrl, `logs/videos/${message.id}`).then(() => {
         _fsExtra2.default.unlinkSync(videoLogData.originalContentPath);
         console.log("[HandlerBot] Video log success", videoLogData.originalContentPath);
       }).catch(err => {
@@ -319,12 +319,12 @@ class handlerBot {
     };
 
     const audioLogData = {
-      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.jpg`),
+      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.jpg`),
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.jpg`
     };
 
     this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(audioLogData.originalContentUrl, `log/audios/${message.id}`).then(() => {
+      _CloudinaryUtils2.default.upload(audioLogData.originalContentUrl, `logs/audios/${message.id}`).then(() => {
         _fsExtra2.default.unlinkSync(audioLogData.originalContentPath);
         console.log("[HandlerBot] Audio log success", audioLogData.originalContentPath);
       }).catch(err => {
