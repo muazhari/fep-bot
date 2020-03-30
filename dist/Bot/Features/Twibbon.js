@@ -406,14 +406,14 @@ const Twibbon = exports.Twibbon = Bot => {
 
   const listenPostback = data => {
     if (data.twibbon) {
-      const { id, type } = data.twibbon;
+      const { twibbon } = data;
 
       // ready-up switch
       _Bot.SharedProps.set({
         [userId]: {
           twibbon: {
-            id: id,
-            type: type,
+            id: twibbon.id,
+            type: twibbon.type,
             status: true,
             source: {
               id: originId
@@ -478,7 +478,12 @@ const Twibbon = exports.Twibbon = Bot => {
     _Bot.SharedProps.set({
       [userId]: {
         twibbon: {
-          status: false
+          id: twibbon.id,
+          type: twibbon.type,
+          status: fal,
+          source: {
+            id: originId
+          }
         }
       }
     });
