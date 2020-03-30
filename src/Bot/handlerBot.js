@@ -225,7 +225,7 @@ export class handlerBot {
       () => {
         CloudinaryUtils.upload(
           imageLogData.originalContentUrl,
-          `logs/i${message.id}`
+          `logs/images/${message.id}`
         )
           .then(() => {
             fs.unlinkSync(imageLogData.originalContentPath);
@@ -373,9 +373,9 @@ export class handlerBot {
       originalContentPath: path.join(
         __dirname,
         "../../assets/downloaded/audios",
-        `${message.id}-log.jpg`
+        `${message.id}-log.m4a`
       ),
-      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.jpg`
+      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
     };
 
     this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
