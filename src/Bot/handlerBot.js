@@ -261,8 +261,20 @@ export class handlerBot {
       };
 
       // Twibbon switch
+      let listenStatus = true;
       const { Twibbon } = this.Bot.Features;
-      Twibbon.listenImage(getContent);
+      listenStatus = Twibbon.listenImage(getContent);
+
+      if (!listenStatus) {
+        fs.unlinkSync(imageData.originalContentPath);
+        fs.unlinkSync(imageData.previewPath);
+        console.log(
+          "[HandlerBot] Image listen status false",
+          imageLogData.originalContentPath
+        );
+      } els
+
+
     } else if (message.contentProvider.type === "external") {
       getContent = () => {
         return Promise.resolve(message.contentProvider);

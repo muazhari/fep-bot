@@ -496,22 +496,28 @@ export const Twibbon = Bot => {
   };
 
   const listenImage = getContent => {
-    if (SharedProps.store[userId].twibbon) {
-      const userSwitch = SharedProps.store[userId].twibbon.status;
-      const userInSameCommunal = SharedProps.store[userId].twibbon.source.id === originId;
-      const twibbonIdChosen = SharedProps.store[userId].twibbon.id !== undefined;
-
-      if (userSwitch && userInSameCommunal && twibbonIdChosen) {
-        const twibbonSetting = {
-          id: SharedProps.store[userId].twibbon.id,
-          type: SharedProps.store[userId].twibbon.type
-        };
-
-        getContent().then(({ originalContentPath, previewPath, originalContentUrl, previewImageUrl }) => {
-          make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
-        });
-      }
+    if (!SharedProps.store[userId].twibbon) {
+      return false
     }
+
+    const userSwitch = SharedProps.store[userId].twibbon.status;
+    const userInSameCommunal = SharedProps.store[userId].twibbon.source.id === originId;
+    const twibbonIdChosen = SharedProps.store[userId].twibbon.id !== undefined;
+
+    if (!(userSwitch && userInSameCommunal && twibbonIdChosen)) {
+      return false
+    }
+    
+    const twibbonSetting = {
+      id: SharedProps.store[userId].twibbon.id,
+      type: SharedProps.store[userId].twibbon.type
+    };
+
+    getContent().then(({ originalContentPath, previewPath, originalContentUrl, previewImageUrl }) => {
+      make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
+    });
+
+    return true;
   };
 
   return { ready, listenImage, listenPostback };
