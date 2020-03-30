@@ -50,8 +50,8 @@ export const Twibbon = Bot => {
               crop: "fill",
               format: "jpg",
               // aspect_ratio: "1:1",
-              width: size - Math.floor(size * 0.255),
-              height: size - Math.floor(size * 0.255),
+              width: size - Math.floor(size * 0.225),
+              height: size - Math.floor(size * 0.225),
               public_id: `${filename}-twibbon`
             }, {
               overlay: "twibbons:twibbon_covid.png",

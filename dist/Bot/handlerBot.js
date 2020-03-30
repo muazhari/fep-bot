@@ -219,19 +219,36 @@ class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/images/${message.id}.jpg`
     };
 
-    const imageLogData = {
-      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/images", `${message.id}-log.jpg`),
-      originalContentUrl: `${baseURL}/downloaded/images/${message.id}-log.jpg`
-    };
+    // const imageLogData = {
+    //   originalContentPath: path.join(
+    //     __dirname,
+    //     "../../assets/downloaded/images",
+    //     `${message.id}-log.jpg`
+    //   ),
+    //   originalContentUrl: `${baseURL}/downloaded/images/${message.id}-log.jpg`
+    // };
 
-    this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(imageLogData.originalContentUrl, `logs/images/${message.id}`).then(() => {
-        _fsExtra2.default.unlinkSync(imageLogData.originalContentPath);
-        console.log("[HandlerBot] Image log success", imageLogData.originalContentPath);
-      }).catch(err => {
-        console.log("[HandlerBot] Image log failed", imageLogData.originalContentPath);
-      });
-    });
+    // this.Bot.downloadContent(message.id, imageLogData.originalContentPath).then(
+    //   () => {
+    //     CloudinaryUtils.upload(
+    //       imageLogData.originalContentUrl,
+    //       `logs:images:${message.id}`
+    //     )
+    //       .then(() => {
+    //         fs.unlinkSync(imageLogData.originalContentPath);
+    //         console.log(
+    //           "[HandlerBot] Image log success",
+    //           imageLogData.originalContentPath
+    //         );
+    //       })
+    //       .catch(err => {
+    //         console.log(
+    //           "[HandlerBot] Image log failed",
+    //           imageLogData.originalContentPath
+    //         );
+    //       });
+    //   }
+    // );
 
     if (message.contentProvider.type === "line") {
       getContent = () => {
@@ -272,19 +289,36 @@ class handlerBot {
       previewImageUrl: `${baseURL}/downloaded/videos/${message.id}.mp4`
     };
 
-    const videoLogData = {
-      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/videos", `${message.id}-log.mp4`),
-      originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
-    };
+    // const videoLogData = {
+    //   originalContentPath: path.join(
+    //     __dirname,
+    //     "../../assets/downloaded/videos",
+    //     `${message.id}-log.mp4`
+    //   ),
+    //   originalContentUrl: `${baseURL}/downloaded/videos/${message.id}-log.mp4`
+    // };
 
-    this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(videoLogData.originalContentUrl, `logs/videos/${message.id}`).then(() => {
-        _fsExtra2.default.unlinkSync(videoLogData.originalContentPath);
-        console.log("[HandlerBot] Video log success", videoLogData.originalContentPath);
-      }).catch(err => {
-        console.log("[HandlerBot] Video log failed", videoLogData.originalContentPath);
-      });
-    });
+    // this.Bot.downloadContent(message.id, videoLogData.originalContentPath).then(
+    //   () => {
+    //     CloudinaryUtils.upload(
+    //       videoLogData.originalContentUrl,
+    //       `logs/videos/${message.id}`
+    //     )
+    //       .then(() => {
+    //         fs.unlinkSync(videoLogData.originalContentPath);
+    //         console.log(
+    //           "[HandlerBot] Video log success",
+    //           videoLogData.originalContentPath
+    //         );
+    //       })
+    //       .catch(err => {
+    //         console.log(
+    //           "[HandlerBot] Video log failed",
+    //           videoLogData.originalContentPath
+    //         );
+    //       });
+    //   }
+    // );
 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, videoData.originalContentPath).then(() => {
@@ -318,20 +352,37 @@ class handlerBot {
       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}.m4a`
     };
 
-    const audioLogData = {
-      originalContentPath: _path2.default.join(__dirname, "../../assets/downloaded/audios", `${message.id}-log.m4a`),
-      originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
-    };
+    //     const audioLogData = {
+    //       originalContentPath: path.join(
+    //         __dirname,
+    //         "../../assets/downloaded/audios",
+    //         `${message.id}-log.m4a`
+    //       ),
+    //       originalContentUrl: `${baseURL}/downloaded/audios/${message.id}-log.m4a`
+    //     };
 
-    this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(() => {
-      _CloudinaryUtils2.default.upload(audioLogData.originalContentUrl, `logs/audios/${message.id}`).then(() => {
-        _fsExtra2.default.unlinkSync(audioLogData.originalContentPath);
-        console.log("[HandlerBot] Audio log success", audioLogData.originalContentPath);
-      }).catch(err => {
-        console.log("[HandlerBot] Audio log failed", audioLogData.originalContentPath);
-      });
-    });
-
+    //     this.Bot.downloadContent(message.id, audioLogData.originalContentPath).then(
+    //       () => {
+    //         CloudinaryUtils.upload(
+    //           audioLogData.originalContentUrl,
+    //           `logs/audios/${message.id}`
+    //         )
+    //           .then(() => {
+    //             fs.unlinkSync(audioLogData.originalContentPath);
+    //             console.log(
+    //               "[HandlerBot] Audio log success",
+    //               audioLogData.originalContentPath
+    //             );
+    //           })
+    //           .catch(err => {
+    //             console.log(
+    //               "[HandlerBot] Audio log failed",
+    //               audioLogData.originalContentPath
+    //             );
+    //           });
+    //       }
+    //     );
+    // // 
     if (message.contentProvider.type === "line") {
       getContent = this.Bot.downloadContent(message.id, audioData.originalContentPath).then(() => {
         return audioData;
