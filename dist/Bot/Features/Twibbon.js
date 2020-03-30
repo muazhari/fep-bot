@@ -339,6 +339,8 @@ const Twibbon = exports.Twibbon = Bot => {
       _Bot.SharedProps.set({
         [userId]: {
           twibbon: {
+            id: null,
+            type: null,
             status: true,
             source: {
               id: originId
@@ -354,27 +356,26 @@ const Twibbon = exports.Twibbon = Bot => {
   };
 
   const displayList = category => {
-    let selected = twibbon_list.map(twibbon => twibbon.id).filter(twibbonId => typeof twibbonId === "string");
+    let selected = twibbon_list.filter(twibbon => typeof twibbon.category === "string");
 
     if (category) {
-      selected = twibbon_list.filter(twibbon => twibbon.category == category);
+      selected = selected.filter(twibbon => twibbon.category == category);
       if (selected.length === 0) {
         return Bot.replyText(`Tidak ada kategori, lihat di ${_Bot.command_prefix}twibbon`);
       }
     }
 
-    const twibbonColumns = selected.map(id => {
-      const { url, name } = twibbon_list[id];
+    const twibbonColumns = selected.map(twibbon => {
       return {
         thumbnailImageUrl: url,
         imageBackgroundColor: "#FFFFFF",
-        text: name,
+        text: twibbon.name,
         actions: [{
           type: "postback",
           label: "Auto-AI Mode",
           data: JSON.stringify({
             twibbon: {
-              id: id,
+              id: twibbon.id,
               type: "auto"
             }
           })
@@ -383,7 +384,7 @@ const Twibbon = exports.Twibbon = Bot => {
           label: "Manual Mode",
           data: JSON.stringify({
             twibbon: {
-              id: id,
+              id: twibbon.id,
               type: "manual"
             }
           })
@@ -432,7 +433,8 @@ const Twibbon = exports.Twibbon = Bot => {
   };
 
   const getTransformedFileUrl = (twibbonSetting, publicId, filename, size) => {
-    const result = _cloudinary2.default.url(publicId, twibbon_list[twibbonSetting.id].transform(filename, size)[twibbonSetting.type]);
+    const getTwibbonById = twibbon_list.filter(twibbon => twibbon.id === twibbonSetting.id)[0];
+    const result = _cloudinary2.default.url(publicId, getTwibbonById.transform(filename, size)[twibbonSetting.type]);
     return result;
   };
 
