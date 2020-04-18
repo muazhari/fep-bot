@@ -1,4 +1,9 @@
-import { command_prefix, batch_list, baseURL, SharedProps } from "../../Bot";
+import {
+  command_prefix,
+  batch_list,
+  baseURL,
+  SharedProps
+} from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 import CloudinaryUtils from "../../Bot/Helper/CloudinaryUtils";
 import cloudinary from "cloudinary";
@@ -14,38 +19,38 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 export const Twibbon = Bot => {
-  const { user: userId, origin: originId } = Bot.getId();
+  const {
+    user: userId,
+    origin: originId
+  } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
-      transformation: [
-        {
-          crop: "fit",
-          width: size,
-          height: size,
-          format: "jpg",
-          public_id: `${filename}-twibbon`
-        }, {
-          overlay: twibbon_overlay,
-          flags: "relative",
-          width: size,
-          height: size,
-          aspect_ratio: "1:1"
-        }
-      ]
+      transformation: [{
+        crop: "fit",
+        width: size,
+        height: size,
+        format: "jpg",
+        public_id: `${filename}-twibbon`
+      }, {
+        overlay: twibbon_overlay,
+        flags: "relative",
+        width: size,
+        height: size,
+        aspect_ratio: "1:1"
+      }]
     };
   };
 
   const twibbon_list = [{
-    id: "twibbon_covid",
-    category: "covid",
-    name: "Covid #DiRumahAja",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+      id: "twibbon_covid",
+      category: "covid",
+      name: "Covid #DiRumahAja",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585597597/twibbons/twibbon_covid.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -59,12 +64,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               // aspect_ratio: "1:1",
@@ -77,22 +80,20 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  },
-  {
-    id: "twibbon_cs",
-    category: "socs",
-    name: "Computer Science",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbons/twibbon_cs.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+            }]
+          }
+        };
+      }
+    },
+    {
+      id: "twibbon_cs",
+      category: "socs",
+      name: "Computer Science",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1564639746/twibbons/twibbon_cs.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -111,12 +112,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               width: size,
@@ -128,22 +127,20 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  },
-  {
-    id: "twibbon_tfi",
-    category: "tfi",
-    name: "Teach For Indonesia",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585599615/twibbons/twibbon_tfi.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+            }]
+          }
+        };
+      }
+    },
+    {
+      id: "twibbon_tfi",
+      category: "tfi",
+      name: "Teach For Indonesia",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585599615/twibbons/twibbon_tfi.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -164,12 +161,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               // aspect_ratio: "1:1",
@@ -182,22 +177,20 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  },
-  {
-    id: "twibbon_binus1",
-    category: "binus",
-    name: "Binus 1",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbons/twibbon_binus1.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+            }]
+          }
+        };
+      }
+    },
+    {
+      id: "twibbon_binus1",
+      category: "binus",
+      name: "Binus 1",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1565372081/twibbons/twibbon_binus1.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -211,12 +204,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               // aspect_ratio: "1:1",
@@ -229,22 +220,20 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  },
-  {
-    id: "twibbon_binus2",
-    category: "binus",
-    name: "Binus 2",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598545/twibbons/twibbon_binus2.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+            }]
+          }
+        };
+      }
+    },
+    {
+      id: "twibbon_binus2",
+      category: "binus",
+      name: "Binus 2",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598545/twibbons/twibbon_binus2.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -258,12 +247,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               // aspect_ratio: "1:1",
@@ -276,21 +263,19 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  }, {
-    id: "twibbon_binus3",
-    category: "binus",
-    name: "Binus 3",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598544/twibbons/twibbon_binus3.png",
-    transform: (filename, size) => {
-      return {
-        auto: {
-          transformation: [
-            {
+            }]
+          }
+        };
+      }
+    }, {
+      id: "twibbon_binus3",
+      category: "binus",
+      name: "Binus 3",
+      url: "https://res.cloudinary.com/fep-bot/image/upload/v1585598544/twibbons/twibbon_binus3.png",
+      transform: (filename, size) => {
+        return {
+          auto: {
+            transformation: [{
               gravity: "auto",
               crop: "fill",
               format: "jpg",
@@ -304,12 +289,10 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        },
-        manual: {
-          transformation: [
-            {
+            }]
+          },
+          manual: {
+            transformation: [{
               crop: "fit",
               format: "jpg",
               // aspect_ratio: "1:1",
@@ -322,12 +305,11 @@ export const Twibbon = Bot => {
               width: size,
               height: size,
               aspect_ratio: "1:1"
-            }
-          ]
-        }
-      };
-    }
-  },
+            }]
+          }
+        };
+      }
+    },
   ];
 
   const ready = args => {
@@ -371,27 +353,25 @@ export const Twibbon = Bot => {
         thumbnailImageUrl: twibbon.url,
         imageBackgroundColor: "#FFFFFF",
         text: twibbon.name,
-        actions: [
-          {
-            type: "postback",
-            label: "Auto-AI Mode",
-            data: JSON.stringify({
-              twibbon: {
-                id: twibbon.id,
-                type: "auto"
-              }
-            })
-          }, {
-            type: "postback",
-            label: "Manual Mode",
-            data: JSON.stringify({
-              twibbon: {
-                id: twibbon.id,
-                type: "manual"
-              }
-            })
-          }
-        ]
+        actions: [{
+          type: "postback",
+          label: "Auto-AI Mode",
+          data: JSON.stringify({
+            twibbon: {
+              id: twibbon.id,
+              type: "auto"
+            }
+          })
+        }, {
+          type: "postback",
+          label: "Manual Mode",
+          data: JSON.stringify({
+            twibbon: {
+              id: twibbon.id,
+              type: "manual"
+            }
+          })
+        }]
       };
     });
 
@@ -409,7 +389,9 @@ export const Twibbon = Bot => {
 
   const listenPostback = data => {
     if (data.twibbon) {
-      const { twibbon } = data;
+      const {
+        twibbon
+      } = data;
 
       // ready-up switch
       SharedProps.set({
@@ -458,7 +440,10 @@ export const Twibbon = Bot => {
           CloudinaryUtils.upload(resultOriginalUrl, twibbonOriginalName),
           CloudinaryUtils.upload(resultPreviewUrl, twibonPreviewName)
         ]).then(fileMeta => {
-          resolve({ twibbonOriginalUrl: fileMeta[0].secure_url, twibbonPreviewUrl: fileMeta[1].secure_url });
+          resolve({
+            twibbonOriginalUrl: fileMeta[0].secure_url,
+            twibbonPreviewUrl: fileMeta[1].secure_url
+          });
 
           fs.unlinkSync(data.originalContentPath);
           fs.unlinkSync(data.previewPath);
@@ -476,8 +461,15 @@ export const Twibbon = Bot => {
       filename: Bot.props.event.message.id
     };
 
-    generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
+    generate(data).then(({
+      twibbonOriginalUrl,
+      twibbonPreviewUrl
+    }) => {
+      Bot.sendMessage({
+        type: "image",
+        originalContentUrl: twibbonOriginalUrl,
+        previewImageUrl: twibbonPreviewUrl
+      });
     });
 
     //switch back
@@ -507,18 +499,27 @@ export const Twibbon = Bot => {
     if (!(userSwitch && userInSameCommunal && twibbonIdChosen)) {
       return false
     }
-    
+
     const twibbonSetting = {
       id: SharedProps.store[userId].twibbon.id,
       type: SharedProps.store[userId].twibbon.type
     };
 
-    getContent().then(({ originalContentPath, previewPath, originalContentUrl, previewImageUrl }) => {
+    getContent().then(({
+      originalContentPath,
+      previewPath,
+      originalContentUrl,
+      previewImageUrl
+    }) => {
       make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
     });
 
     return true;
   };
 
-  return { ready, listenImage, listenPostback };
+  return {
+    ready,
+    listenImage,
+    listenPostback
+  };
 };

@@ -35,7 +35,9 @@ app.use("/twibbons", express.static(path.join(__dirname, "../assets/twibbons")))
 app.use("/webhook", line.middleware(lineConfig));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(express.static(path.join(__dirname, "../public")));
 
 //  Routes
@@ -61,7 +63,17 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).render("error", {message: err.message});
+  res.status(err.status || 500).render("error", {
+    message: err.message
+  });
 });
+
+
+// Debug
+app.use((err, req, res, next) => {
+  console.log(`REQ ${req}`);
+  console.log(`RES ${res}`);
+});
+
 
 export default app;

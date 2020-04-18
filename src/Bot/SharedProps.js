@@ -14,17 +14,17 @@ const isObject = (item) => {
 }
 
 const merge = (oldObj, newObj) => {
-  if(isObject(oldObj) && isObject(newObj)){
-    for(const key in newObj){
-      if(isObject(newObj[key])){
-        if(!oldObj[key]){
+  if (isObject(oldObj) && isObject(newObj)) {
+    for (const key in newObj) {
+      if (isObject(newObj[key])) {
+        if (!oldObj[key]) {
           oldObj[key] = {};
         }
         merge(oldObj[key], newObj[key]);
       } else {
         oldObj[key] = newObj[key];
       }
-    }   
+    }
   }
   return oldObj;
 };

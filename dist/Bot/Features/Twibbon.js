@@ -44,7 +44,10 @@ const objectsHaveSameKeys = (...objects) => {
 };
 
 const Twibbon = exports.Twibbon = Bot => {
-  const { user: userId, origin: originId } = Bot.getId();
+  const {
+    user: userId,
+    origin: originId
+  } = Bot.getId();
 
   const manual_transform = (twibbon_overlay, filename, size) => {
     return {
@@ -406,7 +409,9 @@ const Twibbon = exports.Twibbon = Bot => {
 
   const listenPostback = data => {
     if (data.twibbon) {
-      const { twibbon } = data;
+      const {
+        twibbon
+      } = data;
 
       // ready-up switch
       _Bot.SharedProps.set({
@@ -452,7 +457,10 @@ const Twibbon = exports.Twibbon = Bot => {
         const resultPreviewUrl = getTransformedFileUrl(data.twibbonSetting, twibbonBackgroundMeta.public_id, twibonPreviewName, 240);
 
         Promise.all([_CloudinaryUtils2.default.upload(resultOriginalUrl, twibbonOriginalName), _CloudinaryUtils2.default.upload(resultPreviewUrl, twibonPreviewName)]).then(fileMeta => {
-          resolve({ twibbonOriginalUrl: fileMeta[0].secure_url, twibbonPreviewUrl: fileMeta[1].secure_url });
+          resolve({
+            twibbonOriginalUrl: fileMeta[0].secure_url,
+            twibbonPreviewUrl: fileMeta[1].secure_url
+          });
 
           _fsExtra2.default.unlinkSync(data.originalContentPath);
           _fsExtra2.default.unlinkSync(data.previewPath);
@@ -470,8 +478,15 @@ const Twibbon = exports.Twibbon = Bot => {
       filename: Bot.props.event.message.id
     };
 
-    generate(data).then(({ twibbonOriginalUrl, twibbonPreviewUrl }) => {
-      Bot.sendMessage({ type: "image", originalContentUrl: twibbonOriginalUrl, previewImageUrl: twibbonPreviewUrl });
+    generate(data).then(({
+      twibbonOriginalUrl,
+      twibbonPreviewUrl
+    }) => {
+      Bot.sendMessage({
+        type: "image",
+        originalContentUrl: twibbonOriginalUrl,
+        previewImageUrl: twibbonPreviewUrl
+      });
     });
 
     //switch back
@@ -507,13 +522,22 @@ const Twibbon = exports.Twibbon = Bot => {
       type: _Bot.SharedProps.store[userId].twibbon.type
     };
 
-    getContent().then(({ originalContentPath, previewPath, originalContentUrl, previewImageUrl }) => {
+    getContent().then(({
+      originalContentPath,
+      previewPath,
+      originalContentUrl,
+      previewImageUrl
+    }) => {
       make([originalContentUrl, originalContentPath, previewPath, twibbonSetting]);
     });
 
     return true;
   };
 
-  return { ready, listenImage, listenPostback };
+  return {
+    ready,
+    listenImage,
+    listenPostback
+  };
 };
 //# sourceMappingURL=Twibbon.js.map
