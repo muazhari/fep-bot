@@ -138,7 +138,7 @@ export const Twibbon = Bot => {
     id: "twibbon_tfi",
     category: "tfi",
     name: "Teach For Indonesia",
-    url: "https://res.cloudinary.com/fep-bot/image/upload/v1565361689/twibbons/twibbon_tfi_old.png",
+    url: "https://res.cloudinary.com/fep-bot/image/upload/v1585599615/twibbons/twibbon_tfi.png",
     transform: (filename, size) => {
       return {
         auto: {
