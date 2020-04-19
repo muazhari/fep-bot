@@ -13,6 +13,9 @@ const routes = Router();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 routes.post("/webhook", (req, res) => {
+  const t0 = new Date().getTime();
+  console.log(`[ROUTES] /webhook transmission at time ${t0}`);
+  
   if (req.body.destination) {
     console.log("Destination User ID: ", req.body.destination);
   }
@@ -34,6 +37,10 @@ routes.post("/webhook", (req, res) => {
       res.status(500).end();
       throw err;
     });
+  
+  const t1 = new Date().getTime();
+  const tDelta = t1 - t0;
+  console.log(`[ROUTES] /webhook transmission done in ${tDelta}`);
 });
 
 /**
