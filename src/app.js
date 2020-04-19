@@ -70,10 +70,10 @@ app.use((err, req, res, next) => {
 
 
 // Debug
-app.use((err, req, res, next) => {
-  console.log(`REQ ${req}`);
-  console.log(`RES ${res}`);
-});
+// app.use((err, req, res, next) => {
+//   console.log(`REQ ${req}`);
+//   console.log(`RES ${res}`);
+// });
 
 
 export default app;
