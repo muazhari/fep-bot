@@ -80,31 +80,30 @@ app.use(_express2.default.static(_path2.default.join(__dirname, "../public")));
 //  Routes
 app.use("/", _routes2.default);
 
-// app.use((err, req, res, next) => {
-//   if (err instanceof line.SignatureValidationFailed) {
-//     res.status(401).send(err.signature);
-//     return;
-//   } else if (err instanceof line.JSONParseError) {
-//     res.status(400).send(err.raw);
-//     return;
-//   }
-//   next(err); // will throw default 500
-// });
+app.use((err, req, res, next) => {
+  if (err instanceof line.SignatureValidationFailed) {
+    res.status(401).send(err.signature);
+    return;
+  } else if (err instanceof line.JSONParseError) {
+    res.status(400).send(err.raw);
+    return;
+  }
+  next(err); // will throw default 500
+});
 
-// // Catch 404 and forward to error handler
-// app.use((req, res, next) => {
-//   const err = new Error("Not Found");
-//   err.status = 404;
-//   next(err);
-// });
+// Catch 404 and forward to error handler
+app.use((req, res, next) => {
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+});
 
-// // Error handler
-// app.use((err, req, res, next) => {
-//   res.status(err.status || 500).render("error", {
-//     message: err.message
-//   });
-// });
-
+// Error handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).render("error", {
+    message: err.message
+  });
+});
 
 // Debug
 // app.use((err, req, res, next) => {

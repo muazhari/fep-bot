@@ -50,11 +50,11 @@ routes.post("/webhook", (req, res) => {
     console.log(`[ROUTES] /webhook ERROR: ${err}`);
     res.status(500).end();
     throw err;
+  }).finally(() => {
+    const t1 = new Date();
+    const tDelta = t1.getTime() - t0.getTime();
+    console.log(`[ROUTES] /webhook transmission done from time ${t0} to ${t1} in ${tDelta}ms`);
   });
-
-  const t1 = new Date();
-  const tDelta = t1.getTime() - t0.getTime();;
-  console.log(`[ROUTES] /webhook transmission done at time ${t1} in ${tDelta}ms`);
 });
 
 /**
@@ -76,9 +76,7 @@ routes.get("/", (req, res) => {
  * your use case.
  */
 routes.get("/list", (req, res, next) => {
-  const {
-    title
-  } = req.query;
+  const { title } = req.query;
 
   if (title == null || title === "") {
     // You probably want to set the response HTTP status to 400 Bad Request
