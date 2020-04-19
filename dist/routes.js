@@ -29,7 +29,7 @@ const routes = (0, _express.Router)();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 routes.post("/webhook", (req, res) => {
-  const t0 = new Date().getTime();
+  const t0 = new Date();
   console.log(`[ROUTES] /webhook transmission at time ${t0}`);
 
   if (req.body.destination) {
@@ -47,14 +47,14 @@ routes.post("/webhook", (req, res) => {
       event
     });
   })).then(result => res.json(result)).catch(err => {
-    console.log(err);
+    console.log(`[ROUTES] /webhook ERROR: ${err}`);
     res.status(500).end();
     throw err;
   });
 
-  const t1 = new Date().getTime();
-  const tDelta = t1 - t0;
-  console.log(`[ROUTES] /webhook transmission done in ${tDelta}ms`);
+  const t1 = new Date();
+  const tDelta = t1.getTime() - t0.getTime();;
+  console.log(`[ROUTES] /webhook transmission done at time ${t1} in ${tDelta}ms`);
 });
 
 /**
