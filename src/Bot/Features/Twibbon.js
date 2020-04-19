@@ -408,7 +408,7 @@ export const Twibbon = Bot => {
       });
 
       Bot.getProfile().then(profile => {
-        const messages = [`Hai ${profile.displayName}, masukan gambar mu disini~`];
+        const messages = [`Hai ${profile.displayName}, masukin gambar mu disini ya!`];
         if (twibbon.type === "manual") {
           messages.push(`Pastikan 1:1 ya fotonya~\n\nTips: gunakan in-app camera line disamping kolom chat dan set ratio ke 1:1`);
         }

@@ -1,8 +1,12 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 import axios from "axios";
 import * as line from "@line/bot-sdk";
 
-import { Bot } from "./Bot";
+import {
+  Bot
+} from "./Bot";
 
 const routes = Router();
 
@@ -15,7 +19,7 @@ const routes = Router();
 routes.post("/webhook", (req, res) => {
   const t0 = new Date().getTime();
   console.log(`[ROUTES] /webhook transmission at time ${t0}`);
-  
+
   if (req.body.destination) {
     console.log("Destination User ID: ", req.body.destination);
   }
@@ -27,27 +31,31 @@ routes.post("/webhook", (req, res) => {
 
   //handle events separately
   Promise.all(
-    req.body.events.map(event => {
-      new Bot({ event });
-    })
-  )
+      req.body.events.map(event => {
+        new Bot({
+          event
+        });
+      })
+    )
     .then(result => res.json(result))
     .catch(err => {
       console.log(err);
       res.status(500).end();
       throw err;
     });
-  
+
   const t1 = new Date().getTime();
   const tDelta = t1 - t0;
-  console.log(`[ROUTES] /webhook transmission done in ${tDelta}`);
+  console.log(`[ROUTES] /webhook transmission done at timein ${tDelta}ms`);
 });
 
 /**
  * GET home page
  */
 routes.get("/", (req, res) => {
-  res.render("index", { title: "fep-bot splash web yeah!" });
+  res.render("index", {
+    title: "fep-bot splash web yeah!"
+  });
 });
 
 /**
@@ -60,7 +68,9 @@ routes.get("/", (req, res) => {
  * your use case.
  */
 routes.get("/list", (req, res, next) => {
-  const { title } = req.query;
+  const {
+    title
+  } = req.query;
 
   if (title == null || title === "") {
     // You probably want to set the response HTTP status to 400 Bad Request
@@ -71,7 +81,9 @@ routes.get("/list", (req, res, next) => {
     return;
   }
 
-  res.render("index", { title });
+  res.render("index", {
+    title
+  });
 });
 
 export default routes;
