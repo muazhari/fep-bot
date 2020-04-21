@@ -1,4 +1,4 @@
-  touch /tmp/INSTALLED_PACKAGES
+touch /tmp/INSTALLED_PACKAGES
 PACKAGES=""
 if [ ! "$PACKAGES" == "$(cat /tmp/INSTALLED_PACKAGES)" ]; then
   cd /tmp
