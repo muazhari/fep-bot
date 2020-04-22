@@ -1,2 +1,2 @@
-export * from "./dialogFlow"
-export * from "./handlerDialogFlow"
+export * from "./MainDialogFlow"
+export * from "./HandlerDialogFlow"

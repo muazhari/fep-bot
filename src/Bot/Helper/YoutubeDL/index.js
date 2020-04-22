@@ -27,34 +27,38 @@ export default class YoutubeDL {
 
   generateUrl(urlName, options) {
     return new Promise((resolve, reject) => {
-      Store.getStore("urlCache").then(urlCache => {
+      Store.getStore("urlCache").then((urlCache) => {
         if (urlCache && urlCache[urlName] && options.force === false) {
-          ResponseCheck.status(urlCache[urlName].url).then(urlStatus => {
+          ResponseCheck.status(urlCache[urlName].url).then((urlStatus) => {
             if (urlStatus !== 200) {
-              this.getInfo().then(({url, thumbnail}) => {
-                urlCache[urlName] = {
-                  url,
-                  thumbnail
-                };
-                Store.setStore({urlCache: urlCache}).then(() => {
-                  resolve({url, thumbnail});
-                });
-              }).catch(reject);
+              this.getInfo()
+                .then(({ url, thumbnail }) => {
+                  urlCache[urlName] = {
+                    url,
+                    thumbnail,
+                  };
+                  Store.setStore({ urlCache }).then(() => {
+                    resolve({ url, thumbnail });
+                  });
+                })
+                .catch(reject);
             } else {
               resolve(urlCache[urlName]);
             }
           });
         } else {
           urlCache = {};
-          this.getInfo().then(({url, thumbnail}) => {
-            urlCache[urlName] = {
-              url,
-              thumbnail
-            };
-            Store.setStore({urlCache: urlCache}).then(() => {
-              resolve(urlCache[urlName]);
-            });
-          }).catch(reject);
+          this.getInfo()
+            .then(({ url, thumbnail }) => {
+              urlCache[urlName] = {
+                url,
+                thumbnail,
+              };
+              Store.setStore({ urlCache }).then(() => {
+                resolve(urlCache[urlName]);
+              });
+            })
+            .catch(reject);
         }
       });
     });

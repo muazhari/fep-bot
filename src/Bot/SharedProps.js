@@ -10,8 +10,10 @@ import Firebase from "../Services/Firebase";
 import observe from "observe";
 
 const isObject = (item) => {
-  return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
-}
+  return (
+    item && typeof item === "object" && !Array.isArray(item) && item !== null
+  );
+};
 
 const merge = (oldObj, newObj) => {
   if (isObject(oldObj) && isObject(newObj)) {
@@ -65,6 +67,4 @@ class SharedPropsFactory {
 
 const SharedProps = new SharedPropsFactory();
 
-export {
-  SharedProps
-};
+export { SharedProps };

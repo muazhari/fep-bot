@@ -22,19 +22,20 @@ routes.post("/webhook", (req, res) => {
 
   // req.body.events should be an array of events
   if (!Array.isArray(req.body.events)) {
+      console.log(`[ROUTES] /webhook EVENTS ERROR: ${err}`);
     return res.status(500).end();
   }
 
   //handle events separately
   Promise.all(
-    req.body.events.map(event => {
+    req.body.events.map((event) => {
       new Bot({
-        event
+        event,
       });
     })
   )
-    .then(result => res.json(result))
-    .catch(err => {
+    .then((result) => res.status(200).json(result))
+    .catch((err) => {
       console.log(`[ROUTES] /webhook ERROR: ${err}`);
       res.status(500).end();
       throw err;
@@ -53,7 +54,7 @@ routes.post("/webhook", (req, res) => {
  */
 routes.get("/", (req, res) => {
   res.render("index", {
-    title: "fep-bot splash web yeah!"
+    title: "fep-bot splash web yeah!",
   });
 });
 
@@ -79,7 +80,7 @@ routes.get("/list", (req, res, next) => {
   }
 
   res.render("index", {
-    title
+    title,
   });
 });
 

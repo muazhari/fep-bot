@@ -1,5 +1,5 @@
 export * from "./Bot";
-export * from "./handlerBot";
+export * from "./HandlerBot";
 export * from "./Features";
 export * from "./DialogFlow";
 export * from "./SharedProps";

@@ -1,17 +1,30 @@
-import app from './app';
+import http from "http";
+import https from "https";
+import fs from "fs-extra";
+import app from "./app";
 
-const { PORT } = process.env;
+const { PORT, PORT_SSL, BASE_URL } = process.env;
 
-let baseURL = process.env.BASE_URL
+const { SSL_PRIVATE_KEY, SSL_CERTIFICATE, SSL_CHAIN } = process.env;
 
-app.listen(PORT, () => {
-  if (baseURL) {
-    console.log(`listening on ${baseURL}:${PORT}`);
-  } else {
-    // ngrok.connect(PORT, (err, url) => {
-    //   if (err) throw err;
-    //   console.log(`listening on ${url}`);
-    // });
-  }
+// Certificate
+const privateKey = fs.readFileSync(SSL_PRIVATE_KEY, "utf8");
+const certificate = fs.readFileSync(SSL_CERTIFICATE, "utf8");
+const chain = fs.readFileSync(SSL_CHAIN, "utf8");
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: chain,
+};
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(PORT, () => {
+  console.log(`HTTP Server running on ${BASE_URL}:${PORT}`);
 });
 
+httpsServer.listen(PORT_SSL, () => {
+  console.log(`HTTPS Server running on ${BASE_URL}:${PORT_SSL}`);
+});

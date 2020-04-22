@@ -1,4 +1,6 @@
 import * as line from "@line/bot-sdk";
+import fs from "fs-extra";
+import { MainDialogFlow } from "./DialogFlow";
 import {
   FEPList,
   StoreAdvance,
@@ -7,20 +9,13 @@ import {
   Template,
   Twibbon,
   Courses,
-  PosetLattice
+  PosetLattice,
 } from "./Features";
-import {dialogFlow} from "./DialogFlow";
-import Store from "../Services/Store";
-import fs from "fs-extra";
-import mkdirp from "mkdirp";
-import path from "path";
-import uuid from "uuid";
 
 import lineConfig from "../Config/Line";
 
-import {handlerBot, SharedProps} from "../Bot";
+import { HandlerBot, SharedProps } from "../Bot";
 
-import Firebase from "../Services/Firebase";
 
 // share worker props by groupId
 // export const listener_stack = {
@@ -62,26 +57,26 @@ export class Bot {
       Template: Template(this),
       Twibbon: Twibbon(this),
       Courses: Courses(this),
-      PosetLattice: PosetLattice(this)
+      PosetLattice: PosetLattice(this),
     };
 
     //  DialogFlow assist
-    this.dialogFlow = new dialogFlow(this);
+    this.dialogFlow = new MainDialogFlow(this);
 
     //  Events listen assist
-    this.handler = new handlerBot(this);
+    this.handler = new HandlerBot(this);
     SharedProps.log(this.getId().user);
     console.log("[Bot] Instanced");
   }
 
-  //should updated to implement firebase realtime database
+  // should updated to implement firebase realtime database
   initProps(props) {
     const sourceIds = this.getId(props.event.source);
 
-    Object.keys(sourceIds).map(type => {
+    Object.keys(sourceIds).map((type) => {
       SharedProps.store[sourceIds[type]] = {
         ...SharedProps.store[sourceIds[type]],
-        event: props.event
+        event: props.event,
       };
     });
 
@@ -96,72 +91,72 @@ export class Bot {
   }
 
   getId(source) {
-    if (!source) 
-      source = this.props.event.source;
-     
+    if (!source) source = this.props.event.source;
+
     const type = {
       origin: null,
       group: null,
       room: null,
-      user: null
+      user: null,
     };
 
     if (source.groupId) {
-      type["origin"] = source.groupId;
-    } else {
-      if (source.roomId) {
-        type["origin"] = source.roomId;
-      } else {
-        if (source.userId) {
-          type["origin"] = source.userId;
-        }
-      }
+      type.origin = source.groupId;
+    } else if (source.roomId) {
+      type.origin = source.roomId;
+    } else if (source.userId) {
+      type.origin = source.userId;
     }
 
     if (source.groupId) {
-      type["group"] = source.groupId;
+      type.group = source.groupId;
     }
     if (source.roomId) {
-      type["room"] = source.roomId;
+      type.room = source.roomId;
     }
     if (source.userId) {
-      type["user"] = source.userId;
+      type.user = source.userId;
     }
 
     return type;
   }
 
   replyText(texts) {
-    texts = Array.isArray(texts)
-      ? texts
-      : [texts];
-    return this.client.replyMessage(this.props.event.replyToken, texts.map(text => {
-      console.log("[Bot] Send Text, length: ", text.length);
-      return {type: "text", text};
-    }));
+    texts = Array.isArray(texts) ? texts : [texts];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      texts.map((text) => {
+        console.log("[Bot] Send Text, length: ", text.length);
+        return { type: "text", text };
+      })
+    );
   }
 
   sendMessage(message) {
-    message = Array.isArray(message)
-      ? message
-      : [message];
-    return this.client.replyMessage(this.props.event.replyToken, message.map(msg => {
-      console.log("[Bot] Send Message");
-      return msg;
-    }));
+    message = Array.isArray(message) ? message : [message];
+    return this.client.replyMessage(
+      this.props.event.replyToken,
+      message.map((msg) => {
+        console.log("[Bot] Send Message");
+        return msg;
+      })
+    );
   }
 
   downloadContent(messageId, downloadPath) {
-    return this.client.getMessageContent(messageId).then(stream => new Promise((resolve, reject) => {
-      const writeable = fs.createWriteStream(downloadPath);
-      stream.pipe(writeable);
-      stream.on("end", () => {
-        console.log("[Bot] Content Successfuly Downloaded", downloadPath);
-        resolve(downloadPath);
-      });
-      stream.on("error", err => {
-        reject(err);
-      });
-    }));
+    return this.client.getMessageContent(messageId).then(
+      (stream) =>
+        new Promise((resolve, reject) => {
+          const writeable = fs.createWriteStream(downloadPath);
+          stream.pipe(writeable);
+          stream.on("end", () => {
+            console.log("[Bot] Content Successfuly Downloaded", downloadPath);
+            resolve(downloadPath);
+          });
+          stream.on("error", (err) => {
+            reject(err);
+          });
+        })
+    );
   }
 }

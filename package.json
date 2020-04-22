@@ -7,7 +7,7 @@
   "license": "Modified MIT",
   "main": "dist/index.js",
   "engines": {
-    "node": "~10.15.1",
+    "node": "~10",
     "npm": ">=6.4.0"
   },
   "scripts": {
@@ -15,6 +15,7 @@
     "run": "node dist/index.js",
     "start": "bash start.sh",
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
+    "dev-pm2": "pm2 start pm2_config.json | pm2 monit fep-bot",
     "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
     "test": "jest --watch",
@@ -34,6 +35,7 @@
   ],
   "dependencies": {
     "@line/bot-sdk": "^6.8.3",
+    "acorn": "^7.1.1",
     "axios": "^0.19.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -42,6 +44,7 @@
     "body-parser": "^1.19.0",
     "cloudinary": "^1.17.0",
     "dialogflow": "^0.14.1",
+    "dotenv": "^7.0.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.8.0",
     "firebase-functions": "^3.3.0",
@@ -60,13 +63,16 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.5.0",
     "babel-register": "^6.26.0",
-    "dotenv": "^7.0.0",
-    "eslint": "^5.15.2",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^22.4.1",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-watch": "^5.0.1",
     "jest": "^24.5.0",
     "nodemon": "^1.18.10",
+    "prettier": "^2.0.5",
     "supertest": "^4.0.2"
   },
   "babel": {

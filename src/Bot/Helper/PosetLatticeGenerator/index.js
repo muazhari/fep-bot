@@ -1,23 +1,22 @@
-import {batch_list} from "../../../Bot";
 import axios from "axios";
 import cp from "child_process";
 import path from "path";
+import { BATCH_LIST } from "../../../Bot";
 
-const run = args => {
-  const {filePath, setList, relation, node, edge} = args;
+const run = (args) => {
+  const { filePath, setList, relation, node, edge } = args;
   const scriptPath = path.join(__dirname, "main.py");
-  let command = `python3 ${scriptPath} filePath=${filePath} setList=${setList} relation=${relation}`;
+  const command = `python3 ${scriptPath} filePath=${filePath} setList=${setList} relation=${relation}`;
   if (node) {
-    command + ` node=${node}`;
+    `${command} node=${node}`;
   }
   if (edge) {
-    command + ` edge=${edge}`;
+    `${command} edge=${edge}`;
   }
 
   return new Promise((resolve, reject) => {
     cp.exec(command, (error, stdout, stderr) => {
-      if (error || stderr) 
-        reject(error);
+      if (error || stderr) reject(error);
       else {
         resolve(stdout);
       }
@@ -25,4 +24,4 @@ const run = args => {
   });
 };
 
-export default {run};
+export default { run };

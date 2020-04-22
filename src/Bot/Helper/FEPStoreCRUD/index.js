@@ -1,10 +1,10 @@
-import { batch_list } from "../../../Bot";
 import storage from "node-persist";
+import { BATCH_LIST } from "../../../Bot";
 import Store from "../../../Services/Store";
 
-const set_store = async data => {
+const set_store = async (data) => {
   return new Promise(async (resolve, reject) => {
-    if (!Object.keys(batch_list).includes(data.batch)) {
+    if (!Object.keys(BATCH_LIST).includes(data.batch)) {
       return reject("Not in a proper batch");
     }
 
@@ -12,7 +12,7 @@ const set_store = async data => {
     if (store === undefined) {
       store = { [data.batch]: [] };
     }
-    if(!Object.keys(store).includes(data.batch)){
+    if (!Object.keys(store).includes(data.batch)) {
       store[data.batch] = [];
     }
 
@@ -23,9 +23,9 @@ const set_store = async data => {
   });
 };
 
-const update_store = async data => {
+const update_store = async (data) => {
   return new Promise(async (resolve, reject) => {
-    if (!Object.keys(batch_list).includes(data.batch)) {
+    if (!Object.keys(BATCH_LIST).includes(data.batch)) {
       return reject("Not in a proper batch");
     }
 
@@ -37,12 +37,12 @@ const update_store = async data => {
   });
 };
 
-const delete_store = async data => {
+const delete_store = async (data) => {
   return new Promise(async (resolve, reject) => {
-    if (!Object.keys(batch_list).includes(data.batch)) {
+    if (!Object.keys(BATCH_LIST).includes(data.batch)) {
       return reject("Not in a proper batch");
     }
-    
+
     const store = await Store.getStore("fep");
     if (store[data.batch].length > 0) {
       store[data.batch].splice(parseInt(data.num, 10) - 1, 1);
@@ -56,5 +56,5 @@ const delete_store = async data => {
 export default {
   set_store,
   delete_store,
-  update_store
+  update_store,
 };

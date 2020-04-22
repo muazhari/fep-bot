@@ -1,16 +1,16 @@
-import { command_prefix, batch_list } from "../../Bot";
+import { SharedProps, COMMAND_PREFIX, BATCH_LIST } from "../../Bot";
 import FEPStoreCRUD from "../../Bot/Helper/FEPStoreCRUD";
 
 import Store from "../../Services/Store";
 
-export const FEPList = Bot => {
-  const add = async args => {
+export const FEPList = (Bot) => {
+  const add = async (args) => {
     if (args.length === 4) {
       const data = {
         batch: args[0],
         name: args[1],
         campus: args[2],
-        room: args[3]
+        room: args[3],
       };
 
       FEPStoreCRUD.set_store(data)
@@ -18,22 +18,22 @@ export const FEPList = Bot => {
           Bot.Features.StoreAdvance.backup_store("silent");
           Bot.replyText(`Done!\n${data.name} - ${data.campus} - ${data.room}`);
         })
-        .catch(err => {
+        .catch((err) => {
           Bot.replyText(`${err}`);
         });
     } else {
-      Bot.replyText(`${command_prefix}add <batch> <name> <campus> <room>`);
+      Bot.replyText(`${COMMAND_PREFIX}add <batch> <name> <campus> <room>`);
     }
   };
 
-  const update = async args => {
+  const update = async (args) => {
     if (args.length === 5) {
       const data = {
         batch: args[0],
         num: args[1],
         name: args[2],
         campus: args[3],
-        room: args[4]
+        room: args[4],
       };
       FEPStoreCRUD.update_store(data)
         .then(() => {
@@ -42,21 +42,21 @@ export const FEPList = Bot => {
             `Done update!\n${data.name} - ${data.campus} - ${data.room}`
           );
         })
-        .catch(err => {
+        .catch((err) => {
           Bot.replyText(`${err}`);
         });
     } else {
       Bot.replyText(
-        `${command_prefix}upd <batch> <number> <name> <campus> <room>`
+        `${COMMAND_PREFIX}upd <batch> <number> <name> <campus> <room>`
       );
     }
   };
 
-  const remove = async args => {
+  const remove = async (args) => {
     if (args.length === 2) {
       const data = {
         batch: args[0],
-        num: args[1]
+        num: args[1],
       };
       FEPStoreCRUD.delete_store(data)
         .then(() => {
@@ -65,18 +65,18 @@ export const FEPList = Bot => {
             `Done remove!\n${data.name} - ${data.campus} - ${data.room}`
           );
         })
-        .catch(err => {
+        .catch((err) => {
           Bot.replyText(`${err}`);
         });
     } else {
-      Bot.replyText(`${command_prefix}del <batch> <number>`);
+      Bot.replyText(`${COMMAND_PREFIX}del <batch> <number>`);
     }
   };
 
-  const view = async args => {
+  const view = async (args) => {
     if (args.length === 1) {
       const data = {
-        batch: args[0]
+        batch: args[0],
       };
 
       const store = await Store.getStore("fep");
@@ -85,10 +85,10 @@ export const FEPList = Bot => {
         const selected_batch =
           data.batch === "all" ? Object.keys(store).sort() : [data.batch];
 
-        if (selected_batch.every(item => Object.keys(store).includes(item))) {
+        if (selected_batch.every((item) => Object.keys(store).includes(item))) {
           let msg = `FEP BINUSIAN IT\n(Nama - Kampus - Nomor Ruangan)\n\n`;
 
-          selected_batch.forEach(batch => {
+          selected_batch.forEach((batch) => {
             msg += `${batch.toUpperCase()}. ${batch_list[batch]}\n`;
 
             for (let i = 0; i < store[batch].length; i += 1) {
@@ -102,7 +102,7 @@ export const FEPList = Bot => {
         }
       }
     } else {
-      Bot.replyText(`${command_prefix}view <batch || all>`);
+      Bot.replyText(`${COMMAND_PREFIX}view <batch || all>`);
     }
   };
 
@@ -110,6 +110,6 @@ export const FEPList = Bot => {
     add,
     update,
     remove,
-    view
+    view,
   };
 };

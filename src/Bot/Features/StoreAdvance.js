@@ -1,4 +1,4 @@
-import { command_prefix, batch_list } from "../../Bot";
+import { SharedProps, COMMAND_PREFIX, BATCH_LIST } from "../../Bot";
 import FEPCleaner from "../../Bot/Helper/FEPCleaner";
 import Store from "../../Services/Store";
 import storage from "node-persist";
@@ -8,23 +8,23 @@ import axios from "axios";
 const defaultBackupUrl =
   "https://gist.githubusercontent.com/muazhari/38a5819eb228a20a693db0516e76bedb/raw/7716b10d92b526be02d94750c5cfc347ad7ed47d/feplist";
 
-export const StoreAdvance = Bot => {
-  const reset_store = async args => {
+export const StoreAdvance = (Bot) => {
+  const reset_store = async (args) => {
     if (args.length === 1) {
       await Store.setStore({ [args[0]]: {} });
       Bot.replyText("Done!");
     }
   };
 
-  const pre_store = async args => {
+  const pre_store = async (args) => {
     if (args.length === 1) {
       const data = {
-        url: args[0]
+        url: args[0],
       };
 
       const response = await axios({
         method: "get",
-        url: data.url
+        url: data.url,
         // responseType: "text"
       });
 
@@ -37,13 +37,13 @@ export const StoreAdvance = Bot => {
       await Store.setStore({ fep: response.data });
       Bot.replyText("Done!");
     } else {
-      Bot.replyText(`${command_prefix}pre_store <url>`);
+      Bot.replyText(`${COMMAND_PREFIX}pre_store <url>`);
     }
   };
 
-  const backup_store = async args => {
+  const backup_store = async (args) => {
     const headers = {
-      "Content-type": "application/json"
+      "Content-type": "application/json",
     };
 
     const fep = await Store.getStore("fep");
@@ -70,6 +70,6 @@ export const StoreAdvance = Bot => {
   return {
     reset_store,
     pre_store,
-    backup_store
+    backup_store,
   };
 };

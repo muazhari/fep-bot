@@ -1,0 +1,10 @@
+{
+    "apps": [
+        {
+            "name": "fep-bot",
+            "script": "npm run dev",
+            "watch": false,
+            "exec_mode": "fork"
+        }
+    ]
+}

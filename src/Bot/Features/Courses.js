@@ -1,4 +1,4 @@
-import { StoreAdvance, command_prefix } from "../../Bot";
+import { SharedProps, COMMAND_PREFIX } from "../../Bot";
 
 const coursesList = {
   algo: [
@@ -9,7 +9,7 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2Falgo6.jpg?v=1569974062520",
       fileURL:
-        "https://drive.google.com/file/d/19HVfWnc8WpwHVGFcCthtQo1U_t36j-7u/view"
+        "https://drive.google.com/file/d/19HVfWnc8WpwHVGFcCthtQo1U_t36j-7u/view",
     },
     {
       sessionID: "9",
@@ -18,7 +18,7 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2Fb4217f31-7075-4835-ac71-c395ec5b55a9.image.png?v=1569978617229",
       fileURL:
-        "https://drive.google.com/open?id=1HB0maKwS3bOZFDL42T-bDvgIcwm5J19B"
+        "https://drive.google.com/open?id=1HB0maKwS3bOZFDL42T-bDvgIcwm5J19B",
     },
     {
       sessionID: "12",
@@ -27,7 +27,7 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2F5f56696b-4375-496a-adb7-7b979bd89fac.image.png?v=1569978704524",
       fileURL:
-        "https://drive.google.com/file/d/19HVfWnc8WpwHVGFcCthtQo1U_t36j-7u/view"
+        "https://drive.google.com/file/d/19HVfWnc8WpwHVGFcCthtQo1U_t36j-7u/view",
     },
     {
       sessionID: "17",
@@ -36,7 +36,7 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2Fc9b47332-69ed-47c0-841c-7356c1c5d0d6.image.png?v=1569978925517",
       fileURL:
-        "https://drive.google.com/open?id=1cPbjT7UGDm9iEoU9XpnAJQrSeXkM29VR"
+        "https://drive.google.com/open?id=1cPbjT7UGDm9iEoU9XpnAJQrSeXkM29VR",
     },
     {
       sessionID: "20",
@@ -45,7 +45,7 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2F64e64b45-df5f-4a02-81f3-d0952c34a76a.image.png?v=1569978942289",
       fileURL:
-        "https://drive.google.com/open?id=10idtEp0bmhv4LPIPz2Fax9nYUEoDlxPa"
+        "https://drive.google.com/open?id=10idtEp0bmhv4LPIPz2Fax9nYUEoDlxPa",
     },
     {
       sessionID: "21",
@@ -54,19 +54,19 @@ const coursesList = {
       thumbnailURL:
         "https://cdn.glitch.com/4f9c0695-9885-46cf-9502-8a0e1cd81f5b%2F3b57dc6f-f3c4-4dc8-8fcc-e9b1f502d972.image.png?v=1569978958399",
       fileURL:
-        "https://drive.google.com/open?id=1k1EtXq1y_t_VTee5DzZySdSLxClwQ5d7"
-    }
-  ]
+        "https://drive.google.com/open?id=1k1EtXq1y_t_VTee5DzZySdSLxClwQ5d7",
+    },
+  ],
 };
 
-const searchCourseByDate = courseName => {
+const searchCourseByDate = (courseName) => {
   const currentDate = new Date();
   const tomorrowDate = new Date();
 
   currentDate.setHours(0, 0, 0, 0);
   tomorrowDate.setDate(currentDate.getDate() + 1);
 
-  const sessionsData = coursesList[courseName].filter(course => {
+  const sessionsData = coursesList[courseName].filter((course) => {
     const courseDate = new Date(course.date).getTime();
     return courseDate >= currentDate && courseDate <= tomorrowDate;
   });
@@ -75,7 +75,7 @@ const searchCourseByDate = courseName => {
 };
 
 const searchCourseBySessionID = (courseName, sessionID) => {
-  const sessionsData = coursesList[courseName].filter(course => {
+  const sessionsData = coursesList[courseName].filter((course) => {
     return course.sessionID === sessionID;
   });
 
@@ -97,8 +97,8 @@ const searchSession = (courseName, args) => {
   return sessionsData;
 };
 
-export const Courses = Bot => {
-  const algo = args => {
+export const Courses = (Bot) => {
+  const algo = (args) => {
     const sessionsData = searchSession("algo", args);
 
     if (sessionsData.length === 0) {
@@ -115,9 +115,9 @@ export const Courses = Bot => {
             {
               type: "uri",
               label: "Open",
-              uri: fileURL
-            }
-          ]
+              uri: fileURL,
+            },
+          ],
         };
       }
     );
@@ -129,8 +129,8 @@ export const Courses = Bot => {
         type: "carousel",
         columns: sessionsContents,
         imageAspectRatio: "square",
-        imageSize: "cover"
-      }
+        imageSize: "cover",
+      },
     });
   };
 
