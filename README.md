@@ -1,5 +1,5 @@
 # fep-bot
-Line Bot for Freshmen Year Program BINUS.   
+Unofficial Line Bot for Freshmen Year Program BINUS.   
   
 ## Features
 - Command templates
